@@ -8,16 +8,21 @@
 <body>
 
 <div id="punadmin" class="pun">
+
+<div id="header" class="block">
+	<div class="box">
+		<pun_navlinks>
+	</div>
+	<div id="header-logo">
+		<a href="index.php"></a>
+	</div>
+</div>
+
 <div class="top-box"><div><!-- Top Corners --></div></div>
 <div class="punwrap">
 
 <div id="brdheader" class="block">
 	<div class="box">
-		<div id="brdtitle" class="inbox">
-			<pun_title>
-			<pun_desc>
-		</div>
-		<pun_navlinks>
 		<pun_status>
 	</div>
 </div>

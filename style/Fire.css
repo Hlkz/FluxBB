@@ -165,6 +165,9 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 
 .pun {
 	padding: 30px 40px;
+	margin: 0 auto;
+	width: 87%;
+	min-width: 960px;
 }
 
 #punredirect, #punmaint {
@@ -176,34 +179,61 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 .pun .punwrap {
-	border: 1px solid;
+	margin-left:21px;
+	margin-right:21px;
 	padding: 18px;
 }
 
-.pun .top-box {
-	height: 18px;
-	margin-bottom: -18px;
-	position: relative;
-	background: url(Fire/img/main_top.png) top left no-repeat;
+.pun .mainbox-left {
+	background-image: url('Fire/img/cadre_mid-left.png');
+	background-repeat: repeat-y;
+}
+.pun .mainbox-right {
+	background-image: url('Fire/img/cadre_mid-right.png');
+	background-repeat: repeat-y;
+	background-position: right;
 }
 
-.pun .top-box div {
-	height: 18px;
-	margin-left: 50%;
-	background: url(Fire/img/main_top.png) top right no-repeat;
+.pun .mainbox-top {
+	height: 16px;
+	background: url(Fire/img/cadre_top.png);
+}
+.pun .mainbox-topleft {
+	margin-left: -8px;
+	margin-top: -21px;
+	position: absolute;
+	height: 47px;
+	width: 81px;
+	background: url(Fire/img/cadre_top-left.png);
+}
+.pun .mainbox-topright {
+	float: right;
+	margin-right: -8px;
+	margin-top: -21px;
+	height: 47px;
+	width: 81px;
+	background: url(Fire/img/cadre_top-right.png);
 }
 
-.pun .end-box {
-	margin-top: -17px;
-	height: 18px;
-	position: relative;
-	background: url(Fire/img/main_end.png) bottom left no-repeat;
+.pun .mainbox-bot {
+	height: 16px;
+	background: url(Fire/img/cadre_bot.png);
 }
-
-.pun .end-box div {
-	height: 18px;
-	margin-left: 50%;
-	background: url(Fire/img/main_end.png) bottom right no-repeat;
+.pun .mainbox-botleft {
+	margin-left: -8px;
+	margin-top: -42px;
+	position: absolute;
+	height: 47px;
+	width: 81px;
+	background: url(Fire/img/cadre_bot-left.png);
+}
+.pun .mainbox-botright {
+	float: right;
+	margin-right: -8px;
+	margin-top: -42px;
+	height: 47px;
+	width: 81px;
+	background: url(Fire/img/cadre_bot-right.png);
 }
 
 #punredirect h2, #punmaint h2 {
@@ -222,7 +252,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	padding: 12px 0;
 }
 
-#punindex #brdmain {
+#punforum #brdmain {
 	padding-top: 24px;
 }
 
@@ -259,39 +289,60 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 /* Logo, Description and Main Menu
 ----------------------------------------------------------------*/
 
-#brdtitle h1 {
-	padding: 0 0 10px 0;
+#header {
+	min-width: 1146px;
 }
 
-#brddesc {
-	border-top-style: dotted;
-	border-top-width: 1px;
-	padding: 10px 0;
+#headerlogo a  {
+	left:50%;
+	top:0;
+	margin-left:-400px;
+	height:150px;
+	width:800px;
+	position: absolute;
 }
 
-#brddesc p {
-	padding: 0;
+#headermenu {
+	padding:0;
+	background: transparent url(Fire/img/header.png) no-repeat 50% 0;
+	height: 222px;
+	margin: 0 auto;
+	padding-top: 50px;
 }
 
-#brdmenu ul {
-	padding: 0;
+#headermenu ul {
+   clear:left;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   padding-top: 69px;
+   position:relative;
+   left:50%;
+   text-align:center;
 }
 
-#brdmenu li {
-	float: left;
+#headermenu li {
+   display:block;
+   float:left;
+   position:relative;
+   right:50%;
 }
 
-#brdmenu a:link, #brdmenu a:visited {
-	border-right-style: solid;
-	border-width: 1px;
-	display: block;
-	min-width: 60px;
-	padding: 12px 16px 6px 8px;
-	white-space: nowrap;
-}
-
-#brdmenu a:hover, #brmenu a:active, #brdmenu a:focus {
+#headermenu a:link, #headermenu a:visited {
+	font-family: "Adobe Garamond Pro",Garamond,Baskerville,"Baskerville Old Face","Hoefler Text","Times New Roman",serif;
+	color: #d1d3d5;
+	text-align: center;
 	text-decoration: none;
+	text-transform: uppercase;
+	padding: 23px 0 11px 0;
+	margin: 2px;
+	display: inline-block;
+	min-width: 130px;
+}
+
+#headermenu a:hover, #headermenu a:active, #headermenu a:focus {
+	background: url(Fire/img/header-hover.png) no-repeat 50% 0;
 }
 
 /* Welcome Box
@@ -512,11 +563,11 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	top: 33px;
 }
 
-#punindex .subscribelink {
+#punforum .subscribelink {
 	top: 0px;
 }
 
-#punindex .linksb {
+#punforum .linksb {
 	height: 12px;
 }
 
@@ -528,7 +579,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	position: relative;
 }
 
-#punindex #brdmain .blocktable h2, #punsearch #vf h2 {
+#punforum #brdmain .blocktable h2, #punsearch #vf h2 {
 	font: 1em/1.462em Arial, Helvetica, sans-serif;
 	font-weight: bold;
 	margin: 1px 1px 0 1px;
@@ -539,7 +590,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	z-index: 100;
 }
 
-#punindex .blocktable th.tcl, #punsearch #vf th.tcl {
+#punforum .blocktable th.tcl, #punsearch #vf th.tcl {
 	font-size: 0;
 	text-indent: -9999em;
 }
@@ -654,12 +705,12 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	white-space: normal
 }
 
-#punindex .tcr .byuser {
+#punforum .tcr .byuser {
 	display: block
 }
 
-#punindex td.tc2, #punindex td.tc3, #punindex td.tcr, .pun #vf td.tc2, .pun #vf td.tc3,
-.pun #vf td.tcr, #punindex td.tcl div.forumdesc, .pun #vf td.tcl span {
+#punforum td.tc2, #punforum td.tc3, #punforum td.tcr, .pun #vf td.tc2, .pun #vf td.tc3,
+.pun #vf td.tcr, #punforum td.tcl div.forumdesc, .pun #vf td.tcl span {
 	font-size: 0.923em;
 }
 
@@ -1417,8 +1468,16 @@ COLOUR SCHEME
 /* Basic defaults and Common Items
 ----------------------------------------------------------------*/
 
+html {
+	margin:0;
+	padding:0;
+	background: url(Fire/img/background.jpg) no-repeat center fixed; 
+	-webkit-background-size: cover; /* pour Chrome et Safari */
+	-moz-background-size: cover; /* pour Firefox */
+	-o-background-size: cover; /* pour Opera */
+	background-size: cover; /* version standardisée */
+}
 html, body, .pun {
-	background: #eeedea;
 	color: #333;
 }
 
@@ -1449,25 +1508,6 @@ html, body, .pun {
 	border-color: #f60;
 }
 
-/* Primary Navigation
-----------------------------------------------------------------*/
-
-#brdmenu {
-	background: #990000;
-}
-
-#brdmenu a, #brdmenu a:link, #brdmenu a:visited {
-	background: #990000;
-	border-color: #fff;
-	color: #ddd;
-}
-
-#brdmenu a:hover, #brdmenu a:active, #brdmenu a:focus {
-	background: #f60;
-	border-color: #fff;
-	color: #fff;
-}
-
 /* Main Tables
 ----------------------------------------------------------------*/
 
@@ -1476,7 +1516,7 @@ html, body, .pun {
 	border-color: #cec7b9 #e7e2d9;
 }
 
-#punindex .blocktable h2, .pun #vf h2 {
+#punforum .blocktable h2, .pun #vf h2 {
 	color: #836359;
 }
 
