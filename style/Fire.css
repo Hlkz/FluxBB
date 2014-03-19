@@ -172,6 +172,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 
 #punredirect, #punmaint {
 	padding: 60px 20% 12px 20%;
+	width:60%;
 }
 
 #puninstall, #pundb_update {

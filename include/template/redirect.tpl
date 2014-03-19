@@ -8,7 +8,11 @@
 <body>
 
 <div id="punredirect" class="pun">
-<div class="top-box"><div><!-- Top Corners --></div></div>
+<div class="mainbox-top"></div>
+<div class="mainbox-topleft"></div>
+<div class="mainbox-topright"></div>
+<div class="mainbox-left">
+<div class="mainbox-right">
 <div class="punwrap">
 
 <div id="brdmain">
@@ -18,8 +22,11 @@
 <pun_footer>
 
 </div>
-<div class="end-box"><div><!-- Bottom Corners --></div></div>
 </div>
+</div>
+<div class="mainbox-bot">
+</div><div class="mainbox-botleft"></div>
+<div class="mainbox-botright"></div>
 
 </body>
 </html>
