@@ -4,7 +4,7 @@
 $lang_profile = array(
  
 // Navigation and sections
-'Profile menu'			=>	'Menu profil',
+'Profile menu'			=>	'Membre',
 'Section essentials'		=>	'Principal',
 'Section personal'		=>	'Personnel',
 'Section messaging'		=>	'Messagerie',
