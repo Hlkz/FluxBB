@@ -65,6 +65,7 @@ if (isset($footer_style) && ($footer_style == 'viewforum' || $footer_style == 'v
 
 echo "\t\t\t".'<div class="conl">'."\n";
 
+/*
 // Display the "Jump to" drop list
 if ($pun_config['o_quickjump'] == '1')
 {
@@ -81,6 +82,7 @@ if ($pun_config['o_quickjump'] == '1')
 		require FORUM_CACHE_DIR.'cache_quickjump_'.$pun_user['g_id'].'.php';
 	}
 }
+*/
 
 echo "\t\t\t".'</div>'."\n";
 
@@ -91,12 +93,14 @@ echo "\t\t\t".'</div>'."\n";
 // If no footer style has been specified, we use the default (only copyright/debug info)
 $footer_style = isset($footer_style) ? $footer_style : NULL;
 
-if ($footer_style == 'index')
+if ($footer_style == 'forum')
 {
+	/*
 	if ($pun_config['o_feed_type'] == '1')
 		echo "\t\t\t\t".'<p id="feedlinks"><span class="rss"><a href="extern.php?action=feed&amp;type=rss">'.$lang_common['RSS active topics feed'].'</a></span></p>'."\n";
 	else if ($pun_config['o_feed_type'] == '2')
 		echo "\t\t\t\t".'<p id="feedlinks"><span class="atom"><a href="extern.php?action=feed&amp;type=atom">'.$lang_common['Atom active topics feed'].'</a></span></p>'."\n";
+	*/
 }
 else if ($footer_style == 'viewforum')
 {
@@ -114,7 +118,7 @@ else if ($footer_style == 'viewtopic')
 }
 
 ?>
-				<p id="poweredby"><?php printf($lang_common['Powered by'], '<a href="http://fluxbb.org/">FluxBB</a>'.(($pun_config['o_show_version'] == '1') ? ' '.$pun_config['o_cur_version'] : '')) ?></p>
+				<!--<p id="poweredby"><?php /*printf($lang_common['Powered by'], '<a href="http://fluxbb.org/">FluxBB</a>'.(($pun_config['o_show_version'] == '1') ? ' '.$pun_config['o_cur_version'] : ''))*/ ?></p>-->
 			</div>
 			<div class="clearer"></div>
 		</div>
