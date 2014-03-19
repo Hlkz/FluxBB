@@ -236,7 +236,7 @@ if (count($languages) > 1)
 	$tpl_temp .= '<select onchange="this.form.submit();" name="lang">';
 	foreach ($languages as $temp)
 	{
-		if ($change_lang == $temp)
+		if ($pun_user['language'] == $temp)
 			$tpl_temp .= "\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";
 		else
 			$tpl_temp .= "\t\t\t\t\t".'<option value="'.$temp.'">'.$temp.'</option>'."\n";

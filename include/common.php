@@ -173,6 +173,19 @@ if ($pun_user['is_guest'])
 	else
 		$change_lang = $pun_config['o_default_lang'];
 }
+else if ($pun_user['id'])
+{
+	if (isset($_GET['lang']))
+	{
+		$change_lang = $_GET['lang'];
+		if (in_array($change_lang, forum_list_langs()))
+		{
+			forum_setcookie($cookie_name.'_lang', $change_lang, 0);
+			$pun_config['o_default_lang'] = $pun_user['language'] = $change_lang;
+			$db->query('UPDATE '.$db->prefix.'users SET language = "'.$change_lang.'" WHERE id='.$pun_user['id']);
+		}
+	}
+}
 
 // Attempt to load the common language file
 if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/common.php'))
