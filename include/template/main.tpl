@@ -8,6 +8,10 @@
 
 <body>
 
+<div id="headerlang"><div>
+	<pun_changelang>
+</div></div>
+
 <div id="pun<pun_page>" class="pun">
 
 <div id="header" class="block">

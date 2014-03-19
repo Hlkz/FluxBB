@@ -153,6 +153,27 @@ $forum_date_formats = array($pun_config['o_date_format'], 'Y-m-d', 'Y-d-m', 'd-m
 $pun_user = array();
 check_cookie($pun_user);
 
+if ($pun_user['is_guest'])
+{	
+	if (isset($_GET['lang']))
+	{
+		$change_lang = $_GET['lang'];
+		if (in_array($change_lang, forum_list_langs()))
+		{
+			forum_setcookie($cookie_name.'_lang', $change_lang, 0);
+			$pun_config['o_default_lang'] = $pun_user['language'] = $change_lang;
+		}
+	}
+	elseif (isset($_COOKIE[$cookie_name.'_lang']))
+	{
+		$change_lang = $_COOKIE[$cookie_name.'_lang'];
+		if (in_array($change_lang, forum_list_langs()))
+			$pun_config['o_default_lang'] = $pun_user['language'] = $change_lang;
+	}
+	else
+		$change_lang = $pun_config['o_default_lang'];
+}
+
 // Attempt to load the common language file
 if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/common.php'))
 	include PUN_ROOT.'lang/'.$pun_user['language'].'/common.php';
