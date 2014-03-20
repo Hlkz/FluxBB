@@ -65,13 +65,13 @@ $errors = array();
 
 if (isset($_POST['form_sent']))
 {
-	// Check that someone from this IP didn't register a user within the last hour (DoS prevention)
-	$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE registration_ip=\''.$db->escape(get_remote_address()).'\' AND registered>'.(time() - 3600)) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	// Check that someone from this IP didn't register a user within the last 2 minutes (was last hour) (DoS prevention)
+	$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE registration_ip=\''.$db->escape(get_remote_address()).'\' AND registered>'.(time() - 120)) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 	if ($db->num_rows($result))
 		message($lang_register['Registration flood']);
 
-
+	$account = pun_trim($_POST['req_account']);
 	$username = pun_trim($_POST['req_user']);
 	$email1 = strtolower(pun_trim($_POST['req_email1']));
 
@@ -89,7 +89,8 @@ if (isset($_POST['form_sent']))
 	}
 
 	// Validate username and passwords
-	check_username($username);
+	check_username($account);
+	check_username($username, null, 1);
 
 	if (pun_strlen($password1) < 4)
 		$errors[] = $lang_prof_reg['Pass too short'];
@@ -118,6 +119,7 @@ if (isset($_POST['form_sent']))
 	// Check if someone else already has registered with that email address
 	$dupe_list = array();
 
+	/*
 	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE email=\''.$db->escape($email1).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if ($db->num_rows($result))
 	{
@@ -127,6 +129,7 @@ if (isset($_POST['form_sent']))
 		while ($cur_dupe = $db->fetch_assoc($result))
 			$dupe_list[] = $cur_dupe['username'];
 	}
+	*/
 
 	// Make sure we got a valid language string
 	if (isset($_POST['language']))
@@ -153,11 +156,13 @@ if (isset($_POST['form_sent']))
 		$now = time();
 
 		$intial_group_id = ($pun_config['o_regs_verify'] == '0') ? $pun_config['o_default_user_group'] : PUN_UNVERIFIED;
-		$password_hash = pun_hash($password1);
+		$password_hash = pun_hash(strtoupper($account).':'.strtoupper($password1));
+
+		$dbauth->query('INSERT INTO account(account, username, sha_pass_hash, email, joindate, last_ip, expansion) VALUES(\''.$dbauth->escape($account).'\', \''.$dbauth->escape($username).'\', \''.$password_hash.'\', \''.$dbauth->escape($email1).'\', '.$now.', \''.$dbauth->escape(get_remote_address()).'\', 2)') or error('Unable to create user', __FILE__, __LINE__, $dbauth->error());
+		$new_uid = $dbauth->insert_id();
 
 		// Add the user
-		$db->query('INSERT INTO '.$db->prefix.'users (username, group_id, password, email, email_setting, timezone, dst, language, style, registered, registration_ip, last_visit) VALUES(\''.$db->escape($username).'\', '.$intial_group_id.', \''.$password_hash.'\', \''.$db->escape($email1).'\', '.$email_setting.', '.$timezone.' , '.$dst.', \''.$db->escape($language).'\', \''.$pun_config['o_default_style'].'\', '.$now.', \''.$db->escape(get_remote_address()).'\', '.$now.')') or error('Unable to create user', __FILE__, __LINE__, $db->error());
-		$new_uid = $db->insert_id();
+		$db->query('INSERT INTO '.$db->prefix.'users (id, group_id, email, email_setting, timezone, dst, language, style, registered, registration_ip, last_visit) VALUES('.$new_uid.', '.$intial_group_id.', \''.$db->escape($email1).'\', '.$email_setting.', '.$timezone.' , '.$dst.', \''.$db->escape($language).'\', \''.$pun_config['o_default_style'].'\', '.$now.', \''.$db->escape(get_remote_address()).'\', '.$now.')') or error('Unable to create user', __FILE__, __LINE__, $db->error());
 
 		if ($pun_config['o_regs_verify'] == '0')
 		{
@@ -299,16 +304,17 @@ if (!empty($errors))
 	<div class="box">
 		<form id="register" method="post" action="register.php?action=register" onsubmit="this.register.disabled=true;if(process_form(this)){return true;}else{this.register.disabled=false;return false;}">
 			<div class="inform">
-				<div class="forminfo">
+				<!--<div class="forminfo">
 					<h3><?php echo $lang_common['Important information'] ?></h3>
 					<p><?php echo $lang_register['Desc 1'] ?></p>
 					<p><?php echo $lang_register['Desc 2'] ?></p>
-				</div>
+				</div>-->
 				<fieldset>
 					<legend><?php echo $lang_register['Username legend'] ?></legend>
 					<div class="infldset">
 						<input type="hidden" name="form_sent" value="1" />
-						<label class="required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_user" value="<?php if (isset($_POST['req_user'])) echo pun_htmlspecialchars($_POST['req_user']); ?>" size="25" maxlength="25" /><br /></label>
+						<label class="conl required"><strong><?php echo $lang_common['Account'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_account" value="<?php if (isset($_POST['req_account'])) echo pun_htmlspecialchars($_POST['req_account']); ?>" size="25" maxlength="25" /><br /></label>
+						<label class="conl required"><?php echo $lang_common['Username'] ?> <br /><input type="text" name="req_user" value="<?php if (isset($_POST['req_user'])) echo pun_htmlspecialchars($_POST['req_user']); ?>" size="25" maxlength="25" /><br /></label>
 					</div>
 				</fieldset>
 			</div>

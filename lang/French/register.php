@@ -8,7 +8,7 @@ $lang_register = array(
 'Reg cancel redirect'		=>	'Inscription annulée. Redirection&#160;…',
 'Forum rules'			=>	'Conditions d\'utilisation des forums',
 'Rules legend'			=>	'Vous devez accepter les conditions d\'utilisation suivantes pour vous inscrire sur ces forums.',
-'Registration flood'		=>	'Un nouvel utilisateur ayant la même adresse IP que vous a été inscrit dans la dernière heure. Pour éviter les inscriptions multiples, il n\'est pas possible de s\'inscrire à partir de la même IP dans un intervalle inférieur à 1 heure. Désolé pour la gêne occasionnée.',
+'Registration flood'		=>	'Un nouvel utilisateur ayant la même adresse IP que vous a été inscrit dans les deux dernières minutes. Pour éviter les inscriptions multiples, il n\'est pas possible de s\'inscrire à partir de la même IP dans un intervalle inférieur à 2 minutes. Désolé pour la gêne occasionnée.',
 'Agree'				=>	'J\'accepte',
 'Cancel'			=>	'Je refuse',
 'Register'			=>	'S\'inscrire',
@@ -28,7 +28,7 @@ $lang_register = array(
 // Register info
 'Desc 1'			=>	'L\'inscription vous permettra d\'accéder à un certain nombre de fonctionnalités autrement indisponibles. Cela inclut la possibilité de modifier et d\'effacer des messages, de créer vos propres signatures et bien davantage. Pour toute question, contactez l\'administrateur.',
 'Desc 2'			=>	'Ci-dessous le formulaire à remplir afin de vous inscrire. Après vous être inscrit(e), vous pourrez consulter votre profil et modifier vos préférences. Les champs ci-dessous ne sont qu\'une toute petite partie de tout ce que vous pouvez changer dans votre profil.',
-'Username legend'		=>	'Veuillez saisir un nom d\'utilisateur comportant entre 2 et 25 caractères.',
+'Username legend'		=>	'Veuillez saisir un identifiant comportant entre 2 et 25 caractères. Vous pouvez également saisir un nom d\'utilisateur différent de l\'identifiant.',
 'Pass legend'			=>	'Veuillez saisir et confirmer le mot de passe que vous avez choisi.',
 'Pass info'			=>	'Le mot de passe doit comporter au minimum 4 caractères (sensible à la casse).',
 'Email info'			=>	'Vous devez saisir une adresse électronique valide. Vous pouvez choisir de ne pas divulguer votre adresse aux autres utilisateurs (voir ci-dessous).',

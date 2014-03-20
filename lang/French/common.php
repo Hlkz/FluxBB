@@ -46,6 +46,7 @@ $lang_common = array(
 'by'				=>	'par',	// as in last post by someuser
 'New posts'			=>	'Nouveaux messages',
 'New posts info'		=>	'Atteindre le premier nouveau message de cette discussion.',	// the popup text for new posts links
+'Account'			=>	'Identifiant',
 'Username'			=>	'Nom d\'utilisateur',
 'Password'			=>	'Mot de passe',
 'Email'				=>	'E-mail',

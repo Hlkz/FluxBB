@@ -46,6 +46,7 @@ $lang_common = array(
 'by'								=>	'by', // As in last post by some user
 'New posts'							=>	'New posts', // The link that leads to the first new post
 'New posts info'					=>	'Go to the first new post in this topic.', // The popup text for new posts links
+'Account'							=>	'Account',
 'Username'							=>	'Username',
 'Password'							=>	'Password',
 'Email'								=>	'Email',

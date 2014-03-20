@@ -51,11 +51,11 @@ function check_cookie(&$pun_user)
 		}
 
 		// Check if there's a user with the user ID and password hash from the cookie
-		$result = $dbauth->query("SELECT id, sha_pass_hash FROM ".$dbauth->prefix."account WHERE id=".$cookie['user_id']) or error('Unable to fetch user information', __FILE__, __LINE__, $dbauth->error());
+		$result = $dbauth->query("SELECT id, username, sha_pass_hash FROM ".$dbauth->prefix."account WHERE id=".$cookie['user_id']) or error('Unable to fetch user information', __FILE__, __LINE__, $dbauth->error());
 		$valid_user = $dbauth->fetch_assoc($result);
 
 		// If user authorisation failed
-		if (!isset($valid_user['id']) || forum_hmac(pun_hash(strtoupper($valid_user['sha_pass_hash'])), $cookie_seed.'_password_hash') !== $cookie['password_hash'])
+		if (!isset($valid_user['id']) || forum_hmac(pun_hash($valid_user['sha_pass_hash']), $cookie_seed.'_password_hash') !== $cookie['password_hash'])
 		{
 			$expire = $now + 31536000; // The cookie expires after a year
 			pun_setcookie(1, pun_hash(uniqid(rand(), true)), $expire);
@@ -64,12 +64,13 @@ function check_cookie(&$pun_user)
 			return;
 		}
 
+		$pun_user['username'] = $valid_user['username'];
 		$result = $db->query('SELECT u.*, g.*, o.logged, o.idle FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id LEFT JOIN '.$db->prefix.'online AS o ON o.user_id=u.id WHERE u.id='.intval($cookie['user_id'])) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
 		$pun_user = $db->fetch_assoc($result);
 
 		// Send a new, updated cookie with a new expiration timestamp
 		$expire = ($cookie['expiration_time'] > $now + $pun_config['o_timeout_visit']) ? $now + 1209600 : $now + $pun_config['o_timeout_visit'];
-		pun_setcookie($pun_user['id'], pun_hash(strtoupper($valid_user['sha_pass_hash'])), $expire);
+		pun_setcookie($pun_user['id'], pun_hash($valid_user['sha_pass_hash']), $expire);
 
 		// Set a default language if the user selected language no longer exists
 		if (!file_exists(PUN_ROOT.'lang/'.$pun_user['language']))
@@ -452,9 +453,9 @@ function check_bans()
 //
 // Check username
 //
-function check_username($username, $exclude_id = null)
+function check_username($username, $exclude_id = null, $type = 0)
 {
-	global $db, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
+	global $dbauth, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
 
 	// Include UTF-8 function
 	require_once PUN_ROOT.'include/utf8/strcasecmp.php';
@@ -483,11 +484,16 @@ function check_username($username, $exclude_id = null)
 	// Check that the username (or a too similar username) is not already registered
 	$query = (!is_null($exclude_id)) ? ' AND id!='.$exclude_id : '';
 
-	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE (UPPER(username)=UPPER(\''.$db->escape($username).'\') OR UPPER(username)=UPPER(\''.$db->escape(ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	if ($type)
+		$type = 'username';
+	else
+		$type = 'account';
 
-	if ($db->num_rows($result))
+	$result = $dbauth->query('SELECT username FROM '.$dbauth->prefix.'account WHERE (UPPER('.$type.')=UPPER(\''.$dbauth->escape($username).'\') OR UPPER('.$type.')=UPPER(\''.$dbauth->escape(ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+
+	if ($dbauth->num_rows($result))
 	{
-		$busy = $db->result($result);
+		$busy = $dbauth->result($result);
 		$errors[] = $lang_register['Username dupe 1'].' '.pun_htmlspecialchars($busy).'. '.$lang_register['Username dupe 2'];
 	}
 

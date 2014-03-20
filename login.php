@@ -24,9 +24,9 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$form_password = pun_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
 
-	$form_password_hash = pun_hash(strtoupper(pun_hash(strtoupper($form_username).':'.strtoupper($form_password)))); // Will result in a SHA-1 hash
+	$form_password_hash = pun_hash(pun_hash(strtoupper($form_username).':'.strtoupper($form_password))); // Will result in a SHA-1 hash
 
-	$username_sql = ($dbauth_type == 'mysql' || $dbauth_type == 'mysqli' || $dbauth_type == 'mysql_innodb' || $dbauth_type == 'mysqli_innodb') ? 'username=\''.$db->escape($form_username).'\'' : 'LOWER(username)=LOWER(\''.$db->escape($form_username).'\')';
+	$username_sql = ($dbauth_type == 'mysql' || $dbauth_type == 'mysqli' || $dbauth_type == 'mysql_innodb' || $dbauth_type == 'mysqli_innodb') ? 'account=\''.$db->escape($form_username).'\'' : 'LOWER(account)=LOWER(\''.$db->escape($form_username).'\')';
 	$result = $dbauth->query('SELECT id FROM '.$dbauth->prefix.'account WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
 	$user_id = $dbauth->fetch_assoc($result);
 	$user_id = $user_id['id'];
