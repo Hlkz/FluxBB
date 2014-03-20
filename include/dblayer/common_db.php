@@ -45,4 +45,5 @@ switch ($db_type)
 
 
 // Create the database adapter object (and open/connect to/select db)
-$db = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
+$db     = new DBLayer($db_host, $db_username, $db_password, $db_name, $db_prefix, $p_connect);
+$dbauth = new DBLayer($dbauth_host, $dbauth_username, $dbauth_password, $dbauth_name, $dbauth_prefix, $p_connect);

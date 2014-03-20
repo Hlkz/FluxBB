@@ -2,10 +2,18 @@
 
 $db_type = 'mysqli';
 $db_host = 'HOST';
-$db_name = 'fluxbb';
 $db_username = 'USER';
 $db_password = 'PASS';
-$db_prefix = 'fluxbb_';
+$db_name = 'DBNAME';
+$db_prefix = 'DBPREFIX_';
+
+$dbauth_type = 'mysqli';
+$dbauth_host = 'HOST';
+$dbauth_username = 'USER';
+$dbauth_password = 'PASS';
+$dbauth_name = 'DBNAME';
+$dbauth_prefix = 'DBPREFIX_';
+
 $p_connect = false;
 
 $cookie_name = 'pun_cookie_RANDOM';

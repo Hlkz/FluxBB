@@ -24,40 +24,24 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$form_password = pun_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
 
-	$username_sql = ($db_type == 'mysql' || $db_type == 'mysqli' || $db_type == 'mysql_innodb' || $db_type == 'mysqli_innodb') ? 'username=\''.$db->escape($form_username).'\'' : 'LOWER(username)=LOWER(\''.$db->escape($form_username).'\')';
+	$form_password_hash = pun_hash(strtoupper(pun_hash(strtoupper($form_username).':'.strtoupper($form_password)))); // Will result in a SHA-1 hash
 
-	$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
-	$cur_user = $db->fetch_assoc($result);
+	$username_sql = ($dbauth_type == 'mysql' || $dbauth_type == 'mysqli' || $dbauth_type == 'mysql_innodb' || $dbauth_type == 'mysqli_innodb') ? 'username=\''.$db->escape($form_username).'\'' : 'LOWER(username)=LOWER(\''.$db->escape($form_username).'\')';
+	$result = $dbauth->query('SELECT id FROM '.$dbauth->prefix.'account WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+	$user_id = $dbauth->fetch_assoc($result);
+	$user_id = $user_id['id'];
 
 	$authorized = false;
 
-	if (!empty($cur_user['password']))
+	$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$user_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+	$cur_user = $db->fetch_assoc($result);
+
+	if ($user_id)
 	{
-		$form_password_hash = pun_hash($form_password); // Will result in a SHA-1 hash
-
-		// If there is a salt in the database we have upgraded from 1.3-legacy though haven't yet logged in
-		if (!empty($cur_user['salt']))
-		{
-			if (sha1($cur_user['salt'].sha1($form_password)) == $cur_user['password']) // 1.3 used sha1(salt.sha1(pass))
-			{
-				$authorized = true;
-
-				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\', salt=NULL WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
-			}
-		}
-		// If the length isn't 40 then the password isn't using sha1, so it must be md5 from 1.2
-		else if (strlen($cur_user['password']) != 40)
-		{
-			if (md5($form_password) == $cur_user['password'])
-			{
-				$authorized = true;
-
-				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
-			}
-		}
-		// Otherwise we should have a normal sha1 password
-		else
-			$authorized = ($cur_user['password'] == $form_password_hash);
+		$result = $dbauth->query("SELECT COUNT(*) AS sha_count FROM ".$dbauth->prefix."account WHERE id=".$user_id." AND sha_pass_hash=SHA1(CONCAT(UPPER('$form_username'),':',UPPER('$form_password')))") or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+		$sha = $dbauth->fetch_assoc($result);
+		if ($sha['sha_count'])
+			$authorized = true;
 	}
 
 	if (!$authorized)
@@ -79,6 +63,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape(get_remote_address()).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
 
 	$expire = ($save_pass == '1') ? time() + 1209600 : time() + $pun_config['o_timeout_visit'];
+
 	pun_setcookie($cur_user['id'], $form_password_hash, $expire);
 
 	// Reset tracked topics
