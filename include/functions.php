@@ -477,6 +477,16 @@ function check_username($username, $exclude_id = null, $type = 0)
 	else if (preg_match('%(?:\[/?(?:b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list|\*|topic|post|forum|user)\]|\[(?:img|url|quote|list)=)%i', $username))
 		$errors[] = $lang_prof_reg['Username BBCode'];
 
+	/* FluxToolBar */
+	if (file_exists(FORUM_CACHE_DIR.'cache_fluxtoolbar_tag_check.php'))
+		include FORUM_CACHE_DIR.'cache_fluxtoolbar_tag_check.php';
+	else
+	{
+		require_once PUN_ROOT.'include/cache_fluxtoolbar.php';
+		generate_ftb_cache('tags');
+		require FORUM_CACHE_DIR.'cache_fluxtoolbar_tag_check.php';
+	}
+
 	// Check username for any censored words
 	if ($pun_config['o_censoring'] == '1' && censor_words($username) != $username)
 		$errors[] = $lang_register['Username censor'];

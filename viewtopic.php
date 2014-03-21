@@ -440,7 +440,17 @@ else
 	echo "\t\t\t\t\t\t".'<label>';
 
 ?>
-<textarea name="req_message" rows="7" cols="75" tabindex="<?php echo $cur_index++ ?>"></textarea></label>
+<textarea id="req_message" name="req_message" rows="7" cols="75" tabindex="<?php echo $cur_index++ ?>"></textarea></label>
+<?php /* FluxToolBar */
+if (file_exists(FORUM_CACHE_DIR.'cache_fluxtoolbar_quickform.php'))
+	include FORUM_CACHE_DIR.'cache_fluxtoolbar_quickform.php';
+else
+{
+	require_once PUN_ROOT.'include/cache_fluxtoolbar.php';
+	generate_ftb_cache('quickform');
+	require FORUM_CACHE_DIR.'cache_fluxtoolbar_quickform.php';
+}
+?>
 						<ul class="bblinks">
 							<li><span><a href="help.php#bbcode" onclick="window.open(this.href); return false;"><?php echo $lang_common['BBCode'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
 							<li><span><a href="help.php#url" onclick="window.open(this.href); return false;"><?php echo $lang_common['url tag'] ?></a> <?php echo ($pun_config['p_message_bbcode'] == '1' && $pun_user['g_post_links'] == '1') ? $lang_common['on'] : $lang_common['off']; ?></span></li>
