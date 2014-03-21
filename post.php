@@ -174,7 +174,7 @@ if (isset($_POST['form_sent']))
 				$new_tid = $tid;
 
 				// Insert the new post
-				$db->query('INSERT INTO '.$db->prefix.'posts (poster, poster_id, poster_ip, message, hide_smilies, posted, topic_id) VALUES(\''.$db->escape($username).'\', '.$pun_user['id'].', \''.$db->escape(get_remote_address()).'\', \''.$db->escape($message).'\', '.$hide_smilies.', '.$now.', '.$tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
+				$db->query('INSERT INTO '.$db->prefix.'posts (poster_id, poster_ip, message, hide_smilies, posted, topic_id) VALUES('.$pun_user['id'].', \''.$db->escape(get_remote_address()).'\', \''.$db->escape($message).'\', '.$hide_smilies.', '.$now.', '.$tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
 				$new_pid = $db->insert_id();
 
 				// To subscribe or not to subscribe, that ...
@@ -190,17 +190,18 @@ if (isset($_POST['form_sent']))
 			{
 				// It's a guest. Insert the new post
 				$email_sql = ($pun_config['p_force_guest_email'] == '1' || $email != '') ? '\''.$db->escape($email).'\'' : 'NULL';
-				$db->query('INSERT INTO '.$db->prefix.'posts (poster, poster_ip, poster_email, message, hide_smilies, posted, topic_id) VALUES(\''.$db->escape($username).'\', \''.$db->escape(get_remote_address()).'\', '.$email_sql.', \''.$db->escape($message).'\', '.$hide_smilies.', '.$now.', '.$tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
+				$db->query('INSERT INTO '.$db->prefix.'posts (poster_id, poster_ip, poster_email, message, hide_smilies, posted, topic_id) VALUES('.$pun_user['id'].', \''.$db->escape(get_remote_address()).'\', '.$email_sql.', \''.$db->escape($message).'\', '.$hide_smilies.', '.$now.', '.$tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
 				$new_pid = $db->insert_id();
 			}
 
 			// Update topic
-			$db->query('UPDATE '.$db->prefix.'topics SET num_replies=num_replies+1, last_post='.$now.', last_post_id='.$new_pid.', last_poster=\''.$db->escape($username).'\' WHERE id='.$tid) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+			$db->query('UPDATE '.$db->prefix.'topics SET num_replies=num_replies+1, last_post='.$now.', last_post_id='.$new_pid.', last_poster_id='.$pun_user['id'].' WHERE id='.$tid) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
 
 			update_search_index('post', $new_pid, $message);
 
 			update_forum($cur_posting['id']);
 
+			/*
 			// Should we send out notifications?
 			if ($pun_config['o_topic_subscriptions'] == '1')
 			{
@@ -281,12 +282,13 @@ if (isset($_POST['form_sent']))
 					unset($cleaned_message);
 				}
 			}
+			*/
 		}
 		// If it's a new topic
 		else if ($fid)
 		{
 			// Create the topic
-			$db->query('INSERT INTO '.$db->prefix.'topics (poster, subject, posted, last_post, last_poster, sticky, forum_id) VALUES(\''.$db->escape($username).'\', \''.$db->escape($subject).'\', '.$now.', '.$now.', \''.$db->escape($username).'\', '.$stick_topic.', '.$fid.')') or error('Unable to create topic', __FILE__, __LINE__, $db->error());
+			$db->query('INSERT INTO '.$db->prefix.'topics (poster_id, subject, posted, last_post, last_poster_id, sticky, forum_id) VALUES('.$pun_user['id'].', \''.$db->escape($subject).'\', '.$now.', '.$now.', '.$pun_user['id'].', '.$stick_topic.', '.$fid.')') or error('Unable to create topic', __FILE__, __LINE__, $db->error());
 			$new_tid = $db->insert_id();
 
 			if (!$pun_user['is_guest'])
@@ -296,13 +298,13 @@ if (isset($_POST['form_sent']))
 					$db->query('INSERT INTO '.$db->prefix.'topic_subscriptions (user_id, topic_id) VALUES('.$pun_user['id'].' ,'.$new_tid.')') or error('Unable to add subscription', __FILE__, __LINE__, $db->error());
 
 				// Create the post ("topic post")
-				$db->query('INSERT INTO '.$db->prefix.'posts (poster, poster_id, poster_ip, message, hide_smilies, posted, topic_id) VALUES(\''.$db->escape($username).'\', '.$pun_user['id'].', \''.$db->escape(get_remote_address()).'\', \''.$db->escape($message).'\', '.$hide_smilies.', '.$now.', '.$new_tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
+				$db->query('INSERT INTO '.$db->prefix.'posts (poster_id, poster_ip, message, hide_smilies, posted, topic_id) VALUES('.$pun_user['id'].', \''.$db->escape(get_remote_address()).'\', \''.$db->escape($message).'\', '.$hide_smilies.', '.$now.', '.$new_tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
 			}
 			else
 			{
 				// Create the post ("topic post")
 				$email_sql = ($pun_config['p_force_guest_email'] == '1' || $email != '') ? '\''.$db->escape($email).'\'' : 'NULL';
-				$db->query('INSERT INTO '.$db->prefix.'posts (poster, poster_ip, poster_email, message, hide_smilies, posted, topic_id) VALUES(\''.$db->escape($username).'\', \''.$db->escape(get_remote_address()).'\', '.$email_sql.', \''.$db->escape($message).'\', '.$hide_smilies.', '.$now.', '.$new_tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
+				$db->query('INSERT INTO '.$db->prefix.'posts (poster_id, poster_ip, poster_email, message, hide_smilies, posted, topic_id) VALUES('.$pun_user['id'].', \''.$db->escape(get_remote_address()).'\', '.$email_sql.', \''.$db->escape($message).'\', '.$hide_smilies.', '.$now.', '.$new_tid.')') or error('Unable to create post', __FILE__, __LINE__, $db->error());
 			}
 			$new_pid = $db->insert_id();
 
@@ -452,11 +454,14 @@ if ($tid)
 		if ($qid < 1)
 			message($lang_common['Bad request'], false, '404 Not Found');
 
-		$result = $db->query('SELECT poster, message FROM '.$db->prefix.'posts WHERE id='.$qid.' AND topic_id='.$tid) or error('Unable to fetch quote info', __FILE__, __LINE__, $db->error());
+		$result = $db->query('SELECT poster_id, message FROM '.$db->prefix.'posts WHERE id='.$qid.' AND topic_id='.$tid) or error('Unable to fetch quote info', __FILE__, __LINE__, $db->error());
 		if (!$db->num_rows($result))
 			message($lang_common['Bad request'], false, '404 Not Found');
 
-		list($q_poster, $q_message) = $db->fetch_row($result);
+		list($q_poster_id, $q_message) = $db->fetch_row($result);
+
+		$result = $dbauth->query('SELECT username FROM '.$dbauth->prefix.'account WHERE id='.$q_poster_id) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+		$q_poster = $dbauth->result($result);
 
 		// If the message contains a code tag we have to split it up (text within [code][/code] shouldn't be touched)
 		if (strpos($q_message, '[code]') !== false && strpos($q_message, '[/code]') !== false)
@@ -712,7 +717,7 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 {
 	require_once PUN_ROOT.'include/parser.php';
 
-	$result = $db->query('SELECT poster, message, hide_smilies, posted FROM '.$db->prefix.'posts WHERE topic_id='.$tid.' ORDER BY id DESC LIMIT '.$pun_config['o_topic_review']) or error('Unable to fetch topic review', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT poster_id, message, hide_smilies, posted FROM '.$db->prefix.'posts WHERE topic_id='.$tid.' ORDER BY id DESC LIMIT '.$pun_config['o_topic_review']) or error('Unable to fetch topic review', __FILE__, __LINE__, $db->error());
 
 ?>
 
@@ -728,6 +733,9 @@ if ($tid && $pun_config['o_topic_review'] != '0')
 		$post_count++;
 
 		$cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smilies']);
+
+		$result_username = $dbauth->query('SELECT username FROM '.$dbauth->prefix.'account WHERE id='.$cur_post['poster_id']) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+		$cur_post['poster'] = $dbauth->result($result_username);
 
 ?>
 	<div class="blockpost">

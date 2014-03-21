@@ -1274,7 +1274,7 @@ else
 
 ?>
 	<div class="blockform">
-		<h2><span><?php echo pun_htmlspecialchars($user['account']).' - '.pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section essentials'] ?></span></h2>
+		<h2><span><?php if ($user['account'] != $user['username']) echo pun_htmlspecialchars($user['account']).' - '; echo pun_htmlspecialchars($user['username']).' - '.$lang_profile['Section essentials'] ?></span></h2>
 		<div class="box">
 			<form id="profile1" method="post" action="profile.php?section=essentials&amp;id=<?php echo $id ?>" onsubmit="return process_form(this)">
 				<div class="inform">

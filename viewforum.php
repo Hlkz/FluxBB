@@ -148,12 +148,12 @@ if ($db->num_rows($result))
 	if ($pun_user['is_guest'] || $pun_config['o_show_dot'] == '0')
 	{
 		// Without "the dot"
-		$sql = 'SELECT id, poster, subject, posted, last_post, last_post_id, last_poster, num_views, num_replies, closed, sticky, moved_to FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topic_ids).') ORDER BY sticky DESC, '.$sort_by.', id DESC';
+		$sql = 'SELECT id, subject, poster_id, posted, last_post, last_post_id, last_poster_id, num_views, num_replies, closed, sticky, moved_to FROM '.$db->prefix.'topics WHERE id IN('.implode(',', $topic_ids).') ORDER BY sticky DESC, '.$sort_by.', id DESC';
 	}
 	else
 	{
 		// With "the dot"
-		$sql = 'SELECT p.poster_id AS has_posted, t.id, t.subject, t.poster, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_views, t.num_replies, t.closed, t.sticky, t.moved_to FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'posts AS p ON t.id=p.topic_id AND p.poster_id='.$pun_user['id'].' WHERE t.id IN('.implode(',', $topic_ids).') GROUP BY t.id'.($db_type == 'pgsql' ? ', t.subject, t.poster, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_views, t.num_replies, t.closed, t.sticky, t.moved_to, p.poster_id' : '').' ORDER BY t.sticky DESC, t.'.$sort_by.', t.id DESC';
+		$sql = 'SELECT p.poster_id AS has_posted, t.id, t.subject, t.poster_id, t.posted, t.last_post, t.last_post_id, t.last_poster_id, t.num_views, t.num_replies, t.closed, t.sticky, t.moved_to FROM '.$db->prefix.'topics AS t LEFT JOIN '.$db->prefix.'posts AS p ON t.id=p.topic_id AND p.poster_id='.$pun_user['id'].' WHERE t.id IN('.implode(',', $topic_ids).') GROUP BY t.id'.($db_type == 'pgsql' ? ', t.subject, t.poster, t.posted, t.last_post, t.last_post_id, t.last_poster, t.num_views, t.num_replies, t.closed, t.sticky, t.moved_to, p.poster_id' : '').' ORDER BY t.sticky DESC, t.'.$sort_by.', t.id DESC';
 	}
 
 	$result = $db->query($sql) or error('Unable to fetch topic list', __FILE__, __LINE__, $db->error());
@@ -166,8 +166,16 @@ if ($db->num_rows($result))
 		$item_status = ($topic_count % 2 == 0) ? 'roweven' : 'rowodd';
 		$icon_type = 'icon';
 
+		$result_username = $dbauth->query('SELECT username FROM '.$dbauth->prefix.'account WHERE id='.$cur_topic['last_poster_id']) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+		$cur_topic['last_poster'] = $dbauth->result($result_username);
+
+		if ($pun_user['g_view_users'] == '1')
+			$lastpostername = '<a href="profile.php?id='.$cur_topic['last_poster_id'].'">'.pun_htmlspecialchars($cur_topic['last_poster']).'</a>';
+		else
+			$lastpostername = pun_htmlspecialchars($cur_topic['last_poster']);
+
 		if (is_null($cur_topic['moved_to']))
-			$last_post = '<a href="viewtopic.php?pid='.$cur_topic['last_post_id'].'#p'.$cur_topic['last_post_id'].'">'.format_time($cur_topic['last_post']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['last_poster']).'</span>';
+			$last_post = '<a href="viewtopic.php?pid='.$cur_topic['last_post_id'].'#p'.$cur_topic['last_post_id'].'">'.format_time($cur_topic['last_post']).'</a> <div class="byuser">'.$lang_common['by'].' '.$lastpostername.'</div>';
 		else
 			$last_post = '- - -';
 
@@ -180,17 +188,25 @@ if ($db->num_rows($result))
 			$status_text[] = '<span class="stickytext">'.$lang_forum['Sticky'].'</span>';
 		}
 
+		$result_username = $dbauth->query('SELECT username FROM '.$dbauth->prefix.'account WHERE id='.$cur_topic['poster_id']) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+		$cur_topic['poster'] = $dbauth->result($result_username);
+
+		if ($pun_user['g_view_users'] == '1')
+			$postername = '<a href="profile.php?id='.$cur_topic['poster_id'].'">'.pun_htmlspecialchars($cur_topic['poster']).'</a>';
+		else
+			$postername = pun_htmlspecialchars($cur_topic['poster']);
+
 		if ($cur_topic['moved_to'] != 0)
 		{
-			$subject = '<a href="viewtopic.php?id='.$cur_topic['moved_to'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$subject = '<a href="viewtopic.php?id='.$cur_topic['moved_to'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <div class="byuser">'.$lang_common['by'].' '.$postername.'</div>';
 			$status_text[] = '<span class="movedtext">'.$lang_forum['Moved'].'</span>';
 			$item_status .= ' imoved';
 		}
 		else if ($cur_topic['closed'] == '0')
-			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <div class="byuser">'.$lang_common['by'].' '.$postername.'</div>';
 		else
 		{
-			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <span class="byuser">'.$lang_common['by'].' '.pun_htmlspecialchars($cur_topic['poster']).'</span>';
+			$subject = '<a href="viewtopic.php?id='.$cur_topic['id'].'">'.pun_htmlspecialchars($cur_topic['subject']).'</a> <div class="byuser">'.$lang_common['by'].' '.$postername.'</div>';
 			$status_text[] = '<span class="closedtext">'.$lang_forum['Closed'].'</span>';
 			$item_status .= ' iclosed';
 		}
