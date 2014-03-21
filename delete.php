@@ -19,11 +19,19 @@ if ($id < 1)
 	message($lang_common['Bad request'], false, '404 Not Found');
 
 // Fetch some info about the post, the topic and the forum
-$result = $db->query('SELECT f.id AS fid, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.id AS tid, t.subject, t.first_post_id, t.closed, p.posted, p.poster, p.poster_id, p.message, p.hide_smilies FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT f.id AS fid, f.forum_name, f.moderators, f.redirect_url, fp.post_replies, fp.post_topics, t.id AS tid, t.subject, t.first_post_id, t.closed, p.posted, p.poster_id, p.message, p.hide_smilies FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=f.id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.id='.$id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 if (!$db->num_rows($result))
 	message($lang_common['Bad request'], false, '404 Not Found');
 
 $cur_post = $db->fetch_assoc($result);
+
+$result = $dbauth->query('SELECT username FROM '.$dbauth->prefix.'account WHERE id='.$cur_post['poster_id']) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+$cur_post['poster'] = $dbauth->result($result);
+
+if ($pun_user['g_view_users'] == '1')
+	$postername = '<a href="profile.php?id='.$cur_post['poster_id'].'">'.pun_htmlspecialchars($cur_post['poster']).'</a>';
+else
+	$postername = pun_htmlspecialchars($cur_post['poster']);
 
 if ($pun_config['o_censoring'] == '1')
 	$cur_post['subject'] = censor_words($cur_post['subject']);
@@ -104,7 +112,7 @@ $cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smili
 		<form method="post" action="delete.php?id=<?php echo $id ?>">
 			<div class="inform">
 				<div class="forminfo">
-					<h3><span><?php printf($is_topic_post ? $lang_delete['Topic by'] : $lang_delete['Reply by'], '<strong>'.pun_htmlspecialchars($cur_post['poster']).'</strong>', format_time($cur_post['posted'])) ?></span></h3>
+					<h3><span><?php printf($is_topic_post ? $lang_delete['Topic by'] : $lang_delete['Reply by'], '<strong>'.$postername.'</strong>', format_time($cur_post['posted'])) ?></span></h3>
 					<p><?php echo ($is_topic_post) ? '<strong>'.$lang_delete['Topic warning'].'</strong>' : '<strong>'.$lang_delete['Warning'].'</strong>' ?><br /><?php echo $lang_delete['Delete info'] ?></p>
 				</div>
 			</div>
@@ -120,7 +128,7 @@ $cur_post['message'] = parse_message($cur_post['message'], $cur_post['hide_smili
 				<div class="postbody">
 					<div class="postleft">
 						<dl>
-							<dt><strong><?php echo pun_htmlspecialchars($cur_post['poster']) ?></strong></dt>
+							<dt><strong><?php echo $postername ?></strong></dt>
 							<dd><span><?php echo format_time($cur_post['posted']) ?></span></dd>
 						</dl>
 					</div>

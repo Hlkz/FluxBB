@@ -107,7 +107,7 @@ require PUN_ROOT.'header.php';
 <div class="linkst">
 	<div class="inbox crumbsplus">
 		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><a href="forum.php"><?php echo $lang_common['Forum'] ?></a></li>
 			<li><span>»&#160;</span><strong><a href="viewforum.php?id=<?php echo $id ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></strong></li>
 		</ul>
 		<div class="pagepost">
@@ -175,7 +175,7 @@ if ($db->num_rows($result))
 			$lastpostername = pun_htmlspecialchars($cur_topic['last_poster']);
 
 		if (is_null($cur_topic['moved_to']))
-			$last_post = '<a href="viewtopic.php?pid='.$cur_topic['last_post_id'].'#p'.$cur_topic['last_post_id'].'">'.format_time($cur_topic['last_post']).'</a> <div class="byuser">'.$lang_common['by'].' '.$lastpostername.'</div>';
+			$last_post = '<div class="byuser">'.$lang_common['by'].' '.$lastpostername.'</div> <a href="viewtopic.php?pid='.$cur_topic['last_post_id'].'#p'.$cur_topic['last_post_id'].'">'.format_time($cur_topic['last_post']).'</a>';
 		else
 			$last_post = '- - -';
 
@@ -299,7 +299,7 @@ else
 <?php echo $post_link ?>
 		</div>
 		<ul class="crumbs">
-			<li><a href="index.php"><?php echo $lang_common['Index'] ?></a></li>
+			<li><a href="forum.php"><?php echo $lang_common['Forum'] ?></a></li>
 			<li><span>»&#160;</span><strong><a href="viewforum.php?id=<?php echo $id ?>"><?php echo pun_htmlspecialchars($cur_forum['forum_name']) ?></a></strong></li>
 		</ul>
 <?php echo (!empty($forum_actions) ? "\t\t".'<p class="subscribelink clearb">'.implode(' - ', $forum_actions).'</p>'."\n" : '') ?>
