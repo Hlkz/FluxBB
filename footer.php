@@ -170,7 +170,7 @@ if (count($languages) > 1)
 		if ($pun_user['language'] != $temp)
 		{
 			$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-			if (substr($actual_link, -4) == ".php")
+			if ((substr($actual_link, -4) == ".php") || (substr($actual_link, -1) == "/"))
 				$tpl_temp .= '<a href="'.$actual_link.'?lang='.$temp.'" style="background:url(lang/'.$temp.'/flag.png); background-size: 100% 100%"></a>';
 			else
 				$tpl_temp .= '<a href="'.$actual_link.'&lang='.$temp.'" style="background:url(lang/'.$temp.'/flag.png); background-size: 100% 100%"></a>';
