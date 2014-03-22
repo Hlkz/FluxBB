@@ -169,8 +169,11 @@ if (count($languages) > 1)
 	foreach ($languages as $temp)
 	{
 		if ($pun_user['language'] != $temp)
-			$tpl_temp .= '<a href="?lang='.$temp.'" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></a><div style="width:12px; height:1px; float:right; display:inline-block"></div>';
+			$tpl_temp .= '<a href="?lang='.$temp.'" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></a>';
+		else
+			$tpl_temp .= '<div id="footerlang" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></div>';
 		// tofix, when .php?...
+		$tpl_temp .= '<div style="width:12px; height:1px; float:right; display:inline-block"></div>';
 	}
 }
 $tpl_main = str_replace('<pun_changelang>', $tpl_temp, $tpl_main);
