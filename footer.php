@@ -171,12 +171,12 @@ if (count($languages) > 1)
 		{
 			$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 			if (substr($actual_link, -4) == ".php")
-				$tpl_temp .= '<a href="'.$actual_link.'?lang='.$temp.'" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></a>';
+				$tpl_temp .= '<a href="'.$actual_link.'?lang='.$temp.'" style="background:url(lang/'.$temp.'/flag.png); background-size: 100% 100%"></a>';
 			else
-				$tpl_temp .= '<a href="'.$actual_link.'&lang='.$temp.'" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></a>';
+				$tpl_temp .= '<a href="'.$actual_link.'&lang='.$temp.'" style="background:url(lang/'.$temp.'/flag.png); background-size: 100% 100%"></a>';
 		}
 		else
-			$tpl_temp .= '<div id="footerlang" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></div>';
+			$tpl_temp .= '<div id="footerlang" style="background:url(lang/'.$temp.'/flag.png); background-size: 100% 100%"></div>';
 		$tpl_temp .= '<div style="width:24px; height:1px; float:right; display:inline-block"></div>';
 	}
 }
