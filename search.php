@@ -259,18 +259,18 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				switch ($db_type)
 				{
 					case 'pgsql':
-						$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE username ILIKE \''.$db->escape($author).'\'') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
+						$result = $dbauth->query('SELECT id FROM '.$dbauth->prefix.'account WHERE username ILIKE \''.$dbauth->escape($author).'\'') or error('Unable to fetch users', __FILE__, __LINE__, $dbauth->error());
 						break;
 
 					default:
-						$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE username LIKE \''.$db->escape($author).'\'') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
+						$result = $dbauth->query('SELECT id FROM '.$dbauth->prefix.'account WHERE username LIKE \''.$dbauth->escape($author).'\'') or error('Unable to fetch users', __FILE__, __LINE__, $dbauth->error());
 						break;
 				}
 
-				if ($db->num_rows($result))
+				if ($dbauth->num_rows($result))
 				{
 					$user_ids = array();
-					while ($row = $db->fetch_row($result))
+					while ($row = $dbauth->fetch_row($result))
 						$user_ids[] = $row[0];
 
 					$result = $db->query('SELECT p.id AS post_id, p.topic_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id IN('.implode(',', $user_ids).')'.$forum_sql.' ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch matched posts list', __FILE__, __LINE__, $db->error());
@@ -491,13 +491,35 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		// Run the query and fetch the results
 		if ($show_as == 'posts')
-			$result = $db->query('SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.first_post_id, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
+			$result = $db->query('SELECT p.id AS pid, p.poster_id AS pposter_id, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster_id, t.subject, t.first_post_id, t.last_post, t.last_post_id, t.last_poster_id, t.num_replies, t.forum_id, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
 		else
-			$result = $db->query('SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
+			$result = $db->query('SELECT t.id AS tid, t.poster_id, t.subject, t.last_post, t.last_post_id, t.last_poster_id, t.num_replies, t.closed, t.sticky, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
 
 		$search_set = array();
+		$i = 0;
 		while ($row = $db->fetch_assoc($result))
+		{
 			$search_set[] = $row;
+			
+			if ($search_set[$i]['poster_id'])
+			{
+				$result2 = $dbauth->query('SELECT username FROM '.$dbauth->prefix.'account WHERE id='.$search_set[$i]['poster_id']) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+				$search_set[$i]['poster'] = $dbauth->result($result2);
+			}
+			
+			if ($search_set[$i]['pposter_id'])
+			{
+				$result2 = $dbauth->query('SELECT username FROM '.$dbauth->prefix.'account WHERE id='.$search_set[$i]['pposter_id']) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+				$search_set[]['pposter'] = $dbauth->result($result2);
+			}
+			
+			if ($search_set[$i]['last_poster_id'])
+			{
+				$result2 = $dbauth->query('SELECT username FROM '.$dbauth->prefix.'account WHERE id='.$search_set[$i]['last_poster_id']) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+				$search_set[$i]['last_poster'] = $dbauth->result($result2);
+			}
+			$i++;
+		}
 
 		$crumbs_text = array();
 		$crumbs_text['show_as'] = $lang_search['Search'];
@@ -512,10 +534,10 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			{
 				// Fetch username of subscriber
 				$subscriber_id = $search_type[2];
-				$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE id='.$subscriber_id) or error('Unable to fetch username of subscriber', __FILE__, __LINE__, $db->error());
+				$result = $dbauth->query('SELECT username FROM '.$dbauth->prefix.'account WHERE id='.$subscriber_id) or error('Unable to fetch username of subscriber', __FILE__, __LINE__, $dbauth->error());
 
-				if ($db->num_rows($result))
-					$subscriber_name = $db->result($result);
+				if ($dbauth->num_rows($result))
+					$subscriber_name = $dbauth->result($result);
 				else
 					message($lang_common['Bad request'], false, '404 Not Found');
 
