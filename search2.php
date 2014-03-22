@@ -50,19 +50,12 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 	else if ($action == 'search')
 	{
 		$keywords = (isset($_GET['keywords'])) ? utf8_strtolower(pun_trim($_GET['keywords'])) : null;
-		$author = (isset($_GET['author'])) ? utf8_strtolower(pun_trim($_GET['author'])) : null;
 
 		if (preg_match('%^[\*\%]+$%', $keywords) || (pun_strlen(str_replace(array('*', '%'), '', $keywords)) < PUN_SEARCH_MIN_WORD && !is_cjk($keywords)))
 			$keywords = '';
 
-		if (preg_match('%^[\*\%]+$%', $author) || pun_strlen(str_replace(array('*', '%'), '', $author)) < 2)
-			$author = '';
-
-		if (!$keywords && !$author)
+		if (!$keywords)
 			message($lang_search['No terms']);
-
-		if ($author)
-			$author = str_replace('*', '%', $author);
 
 		$show_as = (isset($_GET['show_as']) && $_GET['show_as'] == 'topics') ? 'topics' : 'posts';
 		$sort_by = (isset($_GET['sort_by'])) ? intval($_GET['sort_by']) : 0;
@@ -119,7 +112,7 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 		// Search a specific forum?
 		$forum_sql = (!empty($forums) || (empty($forums) && $pun_config['o_search_all_forums'] == '0' && !$pun_user['is_admmod'])) ? ' AND t.forum_id IN ('.implode(',', $forums).')' : '';
 
-		if (!empty($author) || !empty($keywords))
+		if (!empty($keywords))
 		{
 			// Flood protection
 			if ($pun_user['last_search'] && (time() - $pun_user['last_search']) < $pun_user['g_search_flood'] && (time() - $pun_user['last_search']) >= 0)
@@ -254,23 +247,23 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 			}
 
 			// If it's a search for author name (and that author name isn't Guest)
-			if ($author && $author != 'guest' && $author != utf8_strtolower($lang_common['Guest']))
+			if ($keyword != 'guest' && $keyword != utf8_strtolower($lang_common['Guest']))
 			{
-				switch ($db_type)
+				switch ($dbauth_type)
 				{
 					case 'pgsql':
-						$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE username ILIKE \''.$db->escape($author).'\'') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
+						$result = $dbauth->query('SELECT id FROM '.$dbauth->prefix.'account WHERE username ILIKE \''.$dbauth->escape($keyword).'\'') or error('Unable to fetch users', __FILE__, __LINE__, $dbauth->error());
 						break;
 
 					default:
-						$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE username LIKE \''.$db->escape($author).'\'') or error('Unable to fetch users', __FILE__, __LINE__, $db->error());
+						$result = $dbauth->query('SELECT id FROM '.$dbauth->prefix.'account WHERE username LIKE \''.$dbauth->escape($keyword).'\'') or error('Unable to fetch users', __FILE__, __LINE__, $dbauth->error());
 						break;
 				}
 
-				if ($db->num_rows($result))
+				if ($dbauth->num_rows($result))
 				{
 					$user_ids = array();
-					while ($row = $db->fetch_row($result))
+					while ($row = $dbauth->fetch_row($result))
 						$user_ids[] = $row[0];
 
 					$result = $db->query('SELECT p.id AS post_id, p.topic_id FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id LEFT JOIN '.$db->prefix.'forum_perms AS fp ON (fp.forum_id=t.forum_id AND fp.group_id='.$pun_user['g_id'].') WHERE (fp.read_forum IS NULL OR fp.read_forum=1) AND p.poster_id IN('.implode(',', $user_ids).')'.$forum_sql.' ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch matched posts list', __FILE__, __LINE__, $db->error());
@@ -281,22 +274,10 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 				}
 			}
 
-			// If we searched for both keywords and author name we want the intersection between the results
-			if ($author && $keywords)
-			{
-				$search_ids = array_intersect_assoc($keyword_results, $author_results);
-				$search_type = array('both', array($keywords, pun_trim($_GET['author'])), implode(',', $forums), $search_in);
-			}
-			else if ($keywords)
-			{
-				$search_ids = $keyword_results;
-				$search_type = array('keywords', $keywords, implode(',', $forums), $search_in);
-			}
-			else
-			{
-				$search_ids = $author_results;
-				$search_type = array('author', pun_trim($_GET['author']), implode(',', $forums), $search_in);
-			}
+			$search_ids = $keyword_results;
+			$search_type = array('keywords', $keywords, implode(',', $forums), $search_in);
+			//$search_ids = $author_results;
+			//$search_type = array('keywords', pun_trim($_GET['keywords']), implode(',', $forums), $search_in);
 
 			unset($keyword_results, $author_results);
 
@@ -491,9 +472,9 @@ if (isset($_GET['action']) || isset($_GET['search_id']))
 
 		// Run the query and fetch the results
 		if ($show_as == 'posts')
-			$result = $db->query('SELECT p.id AS pid, p.poster AS pposter, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster, t.subject, t.first_post_id, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.forum_id, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
+			$result = $db->query('SELECT p.id AS pid, p.poster_id AS pposter_id, p.posted AS pposted, p.poster_id, p.message, p.hide_smilies, t.id AS tid, t.poster_id, t.subject, t.first_post_id, t.last_post, t.last_post_id, t.last_poster_id, t.num_replies, t.forum_id, f.forum_name FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE p.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
 		else
-			$result = $db->query('SELECT t.id AS tid, t.poster, t.subject, t.last_post, t.last_post_id, t.last_poster, t.num_replies, t.closed, t.sticky, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
+			$result = $db->query('SELECT t.id AS tid, t.poster_id, t.subject, t.last_post, t.last_post_id, t.last_poster_id, t.num_replies, t.closed, t.sticky, t.forum_id, f.forum_name FROM '.$db->prefix.'topics AS t INNER JOIN '.$db->prefix.'forums AS f ON f.id=t.forum_id WHERE t.id IN('.implode(',', $search_ids).') ORDER BY '.$sort_by_sql.' '.$sort_dir) or error('Unable to fetch search results', __FILE__, __LINE__, $db->error());
 
 		$search_set = array();
 		while ($row = $db->fetch_assoc($result))
@@ -789,7 +770,7 @@ require PUN_ROOT.'header.php';
 					<div class="infldset">
 						<input type="hidden" name="action" value="search" />
 						<label class="conl"><?php echo $lang_search['Keyword search'] ?><br /><input type="text" name="keywords" size="40" maxlength="100" /><br /></label>
-						<label class="conl"><?php echo $lang_search['Author search'] ?><br /><input id="author" type="text" name="author" size="25" maxlength="25" /><br /></label>
+						<?php /* <label class="conl"><?php echo $lang_search['Author search'] ?><br /><input id="author" type="text" name="author" size="25" maxlength="25" /><br /></label> */ ?>
 						<p class="clearb"><?php echo $lang_search['Search info'] ?></p>
 					</div>
 				</fieldset>
