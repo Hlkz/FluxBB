@@ -246,11 +246,12 @@ if (!empty($_SERVER['HTTP_REFERER']))
 		$valid['path'] = '';
 
 	if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
-		$redirect_url = $_SERVER['HTTP_REFERER'];
+		//$redirect_url = $_SERVER['HTTP_REFERER'];
+		$redirect_url = 'forum.php';
 }
 
 if (!isset($redirect_url))
-	$redirect_url = 'index.php';
+	$redirect_url = 'forum.php';
 else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
 	$redirect_url .= '#p'.$matches[1];
 
