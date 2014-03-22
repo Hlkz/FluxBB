@@ -227,25 +227,6 @@ $tpl_temp = '<div id="headermenu" class="inbox">'."\n\t\t\t".'<ul>'."\n\t\t\t\t"
 $tpl_main = str_replace('<pun_navlinks>', $tpl_temp, $tpl_main);
 // END SUBST - <pun_navlinks>
 
-// START SUBST - <pun_changelang>
-$tpl_temp = '';
-$languages = forum_list_langs();
-if (count($languages) > 1)
-{
-	$tpl_temp = '<form method="get" action="index.php">';
-	$tpl_temp .= '<select onchange="this.form.submit();" name="lang">';
-	foreach ($languages as $temp)
-	{
-		if ($pun_user['language'] == $temp)
-			$tpl_temp .= "\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.$temp.'</option>'."\n";
-		else
-			$tpl_temp .= "\t\t\t\t\t".'<option value="'.$temp.'">'.$temp.'</option>'."\n";
-	}
-	$tpl_temp .= '</select>';
-	$tpl_temp .= '</form>';
-}
-$tpl_main = str_replace('<pun_changelang>', $tpl_temp, $tpl_main);
-// END SUBST - <pun_changelang>
 
 // START SUBST - <pun_status>
 

@@ -160,6 +160,23 @@ ob_end_clean();
 // END SUBST - <pun_footer>
 
 
+// START SUBST - <pun_changelang>
+$tpl_temp = '';
+$languages = forum_list_langs();
+if (count($languages) > 1)
+{
+	$tpl_temp = '';
+	foreach ($languages as $temp)
+	{
+		if ($pun_user['language'] != $temp)
+			$tpl_temp .= '<a href="?lang='.$temp.'" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></a><div style="width:12px; height:1px; float:right; display:inline-block"></div>';
+		// tofix, when .php?...
+	}
+}
+$tpl_main = str_replace('<pun_changelang>', $tpl_temp, $tpl_main);
+// END SUBST - <pun_changelang>
+
+
 // Close the db connection (and free up any result data)
 $db->close();
 

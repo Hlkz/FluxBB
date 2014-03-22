@@ -8,10 +8,6 @@
 
 <body>
 
-<div id="headerlang"><div>
-	<pun_changelang>
-</div></div>
-
 <div id="pun<pun_page>" class="pun">
 
 <div id="header" class="block">
@@ -50,6 +46,10 @@
 <div class="mainbox-bot">
 </div><div class="mainbox-botleft"></div>
 <div class="mainbox-botright"></div>
+
+<div id="footer">
+	<pun_changelang>
+</div>
 
 </div>
 

@@ -346,14 +346,19 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	background: url(Fire/img/header-hover.png) no-repeat 50% 0;
 }
 
-#headerlang {
-	margin-top:6px;
-	width:80px;
-    float:right;
+#footer {
+	float:right;
+	height: 80px;
+	width: 100%;
+	margin-top: 12px;
+	margin-right: 48px;
 }
 
-#headerlang div {
-    position:fixed;
+#footer a  {
+	float:right;
+	display: inline-block;
+	width: 70px;
+	height: 50px;
 }
 
 /* Welcome Box
