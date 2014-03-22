@@ -173,7 +173,7 @@ if (count($languages) > 1)
 		else
 			$tpl_temp .= '<div id="footerlang" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></div>';
 		// tofix, when .php?...
-		$tpl_temp .= '<div style="width:12px; height:1px; float:right; display:inline-block"></div>';
+		$tpl_temp .= '<div style="width:24px; height:1px; float:right; display:inline-block"></div>';
 	}
 }
 $tpl_main = str_replace('<pun_changelang>', $tpl_temp, $tpl_main);
