@@ -165,14 +165,18 @@ $tpl_temp = '';
 $languages = forum_list_langs();
 if (count($languages) > 1)
 {
-	$tpl_temp = '';
 	foreach ($languages as $temp)
 	{
 		if ($pun_user['language'] != $temp)
-			$tpl_temp .= '<a href="?lang='.$temp.'" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></a>';
+		{
+			$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			if (substr($actual_link, -4) == ".php")
+				$tpl_temp .= '<a href="'.$actual_link.'?lang='.$temp.'" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></a>';
+			else
+				$tpl_temp .= '<a href="'.$actual_link.'&lang='.$temp.'" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></a>';
+		}
 		else
 			$tpl_temp .= '<div id="footerlang" style="background:url(lang/'.$temp.'/'.$temp.'.png); background-size: 100% 100%"></div>';
-		// tofix, when .php?...
 		$tpl_temp .= '<div style="width:24px; height:1px; float:right; display:inline-block"></div>';
 	}
 }
