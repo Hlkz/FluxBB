@@ -29,7 +29,10 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$username_sql = ($dbauth_type == 'mysql' || $dbauth_type == 'mysqli' || $dbauth_type == 'mysql_innodb' || $dbauth_type == 'mysqli_innodb') ? 'account=\''.$db->escape($form_username).'\'' : 'LOWER(account)=LOWER(\''.$db->escape($form_username).'\')';
 	$result = $dbauth->query('SELECT id FROM '.$dbauth->prefix.'account WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
 	$user_id = $dbauth->fetch_assoc($result);
-	$user_id = $user_id['id'];
+	if ($user_id['id'])
+		$user_id = $user_id['id'];
+	else
+		$user_id =  0;
 
 	$authorized = false;
 
