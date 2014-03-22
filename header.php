@@ -289,6 +289,7 @@ else
 if (!empty($page_topicsearches))
 {
 	$tpl_temp .= "\n\t\t\t".'<ul class="conr">';
+	$tpl_temp .= "\n\t\t\t\t".'<a href="search.php">'.$lang_common['Search'].'</a>';
 	$tpl_temp .= "\n\t\t\t\t".'<li><span>'.$lang_common['Topic searches'].' '.implode(' | ', $page_topicsearches).'</span></li>';
 	$tpl_temp .= "\n\t\t\t".'</ul>';
 }
