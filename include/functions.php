@@ -451,70 +451,53 @@ function check_bans()
 
 
 //
-// Check username
+// Check account
 //
-function check_username($username, $exclude_id = null, $type = 0)
+function check_account($account)
 {
 	global $dbauth, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
 
 	// Include UTF-8 function
 	require_once PUN_ROOT.'include/utf8/strcasecmp.php';
 
-	// Convert multiple whitespace characters into one (to prevent people from registering with indistinguishable usernames)
-	$username = preg_replace('%\s+%s', ' ', $username);
+	// Validate account
+	if ((pun_strlen($account) < 2) || (pun_strlen($account) > 12))
+		$errors[] = $lang_prof_reg['Account bad length'];
+	else if (!preg_match('/^[a-zA-ZàÀäßçÇÄéÉèÈëËöÖùÙüÜñÑ].*$/', $account))
+		$errors[] = $lang_prof_reg['Account bad start'];
+	else if (!preg_match('/^[a-zA-Z][a-zA-Z0-9àÀäßçÇÄéÉèÈëËöÖùÙüÜñÑ]*$/', $account))
+		$errors[] = $lang_prof_reg['Account bad chars'];
+	else
+	{
+		$result = $dbauth->query('SELECT `id` FROM '.$dbauth->prefix.'`account` WHERE `account`="'.$account.'"') or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+		if ($dbauth->result($result))
+			$errors[] = $lang_prof_reg['Account taken'];
+	}
+}
+
+
+//
+// Check username
+//
+function check_username($username)
+{
+	global $dbauth, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
+
+	// Include UTF-8 function
+	require_once PUN_ROOT.'include/utf8/strcasecmp.php';
 
 	// Validate username
-	if (pun_strlen($username) < 2)
-		$errors[] = $lang_prof_reg['Username too short'];
-	else if (pun_strlen($username) > 25) // This usually doesn't happen since the form element only accepts 25 characters
-		$errors[] = $lang_prof_reg['Username too long'];
-	else if (!strcasecmp($username, 'Guest') || !utf8_strcasecmp($username, $lang_common['Guest']))
-		$errors[] = $lang_prof_reg['Username guest'];
-	else if (preg_match('%[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}%', $username) || preg_match('%((([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}:[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){5}:([0-9A-Fa-f]{1,4}:)?[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){4}:([0-9A-Fa-f]{1,4}:){0,2}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){3}:([0-9A-Fa-f]{1,4}:){0,3}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){2}:([0-9A-Fa-f]{1,4}:){0,4}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){6}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(([0-9A-Fa-f]{1,4}:){0,5}:((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|(::([0-9A-Fa-f]{1,4}:){0,5}((\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b)\.){3}(\b((25[0-5])|(1\d{2})|(2[0-4]\d)|(\d{1,2}))\b))|([0-9A-Fa-f]{1,4}::([0-9A-Fa-f]{1,4}:){0,5}[0-9A-Fa-f]{1,4})|(::([0-9A-Fa-f]{1,4}:){0,6}[0-9A-Fa-f]{1,4})|(([0-9A-Fa-f]{1,4}:){1,7}:))%', $username))
-		$errors[] = $lang_prof_reg['Username IP'];
-	else if ((strpos($username, '[') !== false || strpos($username, ']') !== false) && strpos($username, '\'') !== false && strpos($username, '"') !== false)
-		$errors[] = $lang_prof_reg['Username reserved chars'];
-	else if (preg_match('%(?:\[/?(?:b|u|s|ins|del|em|i|h|colou?r|quote|code|img|url|email|list|\*|topic|post|forum|user)\]|\[(?:img|url|quote|list)=)%i', $username))
-		$errors[] = $lang_prof_reg['Username BBCode'];
-
-	/* FluxToolBar */
-	if (file_exists(FORUM_CACHE_DIR.'cache_fluxtoolbar_tag_check.php'))
-		include FORUM_CACHE_DIR.'cache_fluxtoolbar_tag_check.php';
+	if ((pun_strlen($username) < 2) || (pun_strlen($username) > 12))
+		$errors[] = $lang_prof_reg['Username bad length'];
+	else if (!preg_match('/^[a-zA-ZàÀäßçÇÄéÉèÈëËöÖùÙüÜñÑ].*$/', $username))
+		$errors[] = $lang_prof_reg['Username bad start'];
+	else if (!preg_match('/^[a-zA-Z][a-zA-Z0-9àÀäßçÇÄéÉèÈëËöÖùÙüÜñÑ]*$/', $username))
+		$errors[] = $lang_prof_reg['Username bad chars'];
 	else
 	{
-		require_once PUN_ROOT.'include/cache_fluxtoolbar.php';
-		generate_ftb_cache('tags');
-		require FORUM_CACHE_DIR.'cache_fluxtoolbar_tag_check.php';
-	}
-
-	// Check username for any censored words
-	if ($pun_config['o_censoring'] == '1' && censor_words($username) != $username)
-		$errors[] = $lang_register['Username censor'];
-
-	// Check that the username (or a too similar username) is not already registered
-	$query = (!is_null($exclude_id)) ? ' AND id!='.$exclude_id : '';
-
-	if ($type)
-		$type = 'username';
-	else
-		$type = 'account';
-
-	$result = $dbauth->query('SELECT username FROM '.$dbauth->prefix.'account WHERE (UPPER('.$type.')=UPPER(\''.$dbauth->escape($username).'\') OR UPPER('.$type.')=UPPER(\''.$dbauth->escape(ucp_preg_replace('%[^\p{L}\p{N}]%u', '', $username)).'\')) AND id>1'.$query) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
-
-	if ($dbauth->num_rows($result))
-	{
-		$busy = $dbauth->result($result);
-		$errors[] = $lang_register['Username dupe 1'].' '.pun_htmlspecialchars($busy).'. '.$lang_register['Username dupe 2'];
-	}
-
-	// Check username for any banned usernames
-	foreach ($pun_bans as $cur_ban)
-	{
-		if ($cur_ban['username'] != '' && utf8_strtolower($username) == utf8_strtolower($cur_ban['username']))
-		{
-			$errors[] = $lang_prof_reg['Banned username'];
-			break;
-		}
+		$result = $dbauth->query('SELECT `id` FROM '.$dbauth->prefix.'`account` WHERE `username`="'.$username.'"') or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
+		if ($dbauth->result($result))
+			$errors[] = $lang_prof_reg['Username taken'];
 	}
 }
 

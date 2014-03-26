@@ -2,9 +2,7 @@
 
 // Language definitions used in both profile.php and register.php
 $lang_prof_reg = array(
- 
-'Email legend'			=>	'Indiquez une adresse électronique valide',
-'Email legend 2'		=>	'Saisissez et confirmez une adresse électronique valide',
+
 'Localisation legend'		=>	'Définissez vos options géographiques',
 'Time zone'			=>	'Fuseau horaire&#160;',
 'Time zone info'		=>	'Afin que le forum affiche correctement l\'heure, vous devez sélectionner votre fuseau horaire.',
@@ -18,17 +16,25 @@ $lang_prof_reg = array(
 'Email setting 2'		=>	'Masquer votre adresse électronique mais autoriser l\'envoi via le formulaire d\'envoi d\'e-mail.',
 'Email setting 3'		=>	'Masquer votre adresse électronique et interdire l\'utilisation du formulaire d\'envoi d\'e-mail.',
 'Privacy options legend'	=>	'Définissez vos options de vie privée',
-'Confirm pass'			=>	'Confirmez votre mot de passe',
- 
-'Username too short'		=>	'Les noms d\'utilisateur doivent comporter au moins 2 caractères. Veuillez choisir un autre nom d\'utilisateur.',
-'Username too long'		=>	'Les noms d\'utilisateur ne doivent pas comporter plus de 25 caractères. Veuillez choisir un autre nom d\'utilisateur.',
-'Username guest'		=>	'Le nom d\'utilisateur «&#160;invité&#160;» est réservé. Veuillez choisir un autre nom d\'utilisateur.',
-'Username IP'			=>	'Les noms d\'utilisateur ne peuvent pas être au format d\'une adresse IP. Veuillez choisir un autre nom d\'utilisateur.',
-'Username reserved chars'	=>	'Les noms d\'utilisateurs ne peuvent pas contenir les caractères \', " et [ ou ]. Veuillez choisir un autre nom d\'utilisateur.',
-'Username BBCode'		=>	'Les noms d\'utilisateur ne peuvent pas contenir de balises (BBCode). Veuillez choisir un autre nom d\'utilisateur.',
-'Banned username'		=>	'Le nom d\'utilisateur que vous avez indiqué est banni. Veuillez choisir un autre nom d\'utilisateur.',
-'Pass too short'		=>	'Les mots de passe doivent comporter au moins 4 caractères. Veuillez choisir un autre mot de passe.',
-'Pass not match'		=>	'Les mots de passe ne coïncident pas. Veuillez recommencer.',
+'Confirm pass'			=>	'Confirmation',
+
+'Account bad length'		=>	'Votre identifiant doit comporter de 2 à 12 caractères.',
+'Account bad chars'			=>	'Votre identifiant ne peut pas comporter de caractères spéciaux.',
+'Account bad start'			=>	'Votre identifiant doit commencer par une lettre.',
+'Account taken'				=>	'Identifiant déjà utilisé.',
+'Account available'			=>	'Identifiant disponible.',
+'Username bad length'		=>	'Votre nom d\'utilisateur doit comporter de 2 à 12 caractères.',
+'Username bad chars'		=>	'Votre nom d\'utilisateur ne peut pas comporter de caractères spéciaux.',
+'Username bad start'		=>	'Votre nom d\'utilisateur doit commencer par une lettre.',
+'Username taken'			=>	'Nom d\'utilisateur déjà utilisé.',
+'Username available'		=>	'Nom d\'utilisateur disponible.',
+'Pass too short'			=>	'Les mots de passe doivent comporter au moins 4 caractères.',
+'Pass not match'			=>	'Les mots de passe ne coïncident pas.',
+'Pass valid'				=>	'Mot de passe valide.',
+'Pass match'				=>	'Les mots de passe correspondent.',
+'Email wrong'				=>	'Entrez une adresse mail valide.',
+'Email valid'				=>	'Adresse mail valide.',
+
 'Banned email'			=>	'L\'adresse électronique saisie est bannie de ces forums. Veuillez en choisir une autre.',
 'Dupe email'			=>	'Cette adresse électronique est déjà utilisée. Veuillez en choisir une autre.',
 'Sig too long'			=>	'Les signatures ne peuvent pas contenir plus de %1$s caractères. Veuillez raccourcir votre signature de %2$s caractères.',
