@@ -94,18 +94,10 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	font-style: italic;
 }
 
-.pun a, .pun a:link, .pun a:visited {
-	text-decoration: none;
-}
-
-.pun a:hover, .pun a:active, .pun a:focus {
-	text-decoration: underline;
-}
-
 .pun .actions span {
 	padding-left: 16px;
 	padding-right: 8px;
-	background: url(Fire/img/bull.png) center left no-repeat;
+	background: url(Head/img/bull.png) center left no-repeat;
 	display: inline-block;
 	line-height: normal;
 }
@@ -186,18 +178,18 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 .pun .mainbox-left {
-	background-image: url('Fire/img/cadre_mid-left.png');
+	background-image: url(Head/img/cadre_mid-left.png);
 	background-repeat: repeat-y;
 }
 .pun .mainbox-right {
-	background-image: url('Fire/img/cadre_mid-right.png');
+	background-image: url(Head/img/cadre_mid-right.png);
 	background-repeat: repeat-y;
 	background-position: right;
 }
 
 .pun .mainbox-top {
 	height: 16px;
-	background: url(Fire/img/cadre_top.png);
+	background: url(Head/img/cadre_top.png);
 }
 .pun .mainbox-topleft {
 	margin-left: -8px;
@@ -205,7 +197,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	position: absolute;
 	height: 47px;
 	width: 81px;
-	background: url(Fire/img/cadre_top-left.png);
+	background: url(Head/img/cadre_top-left.png);
 }
 .pun .mainbox-topright {
 	float: right;
@@ -213,12 +205,12 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	margin-top: -21px;
 	height: 47px;
 	width: 81px;
-	background: url(Fire/img/cadre_top-right.png);
+	background: url(Head/img/cadre_top-right.png);
 }
 
 .pun .mainbox-bot {
 	height: 16px;
-	background: url(Fire/img/cadre_bot.png);
+	background: url(Head/img/cadre_bot.png);
 }
 .pun .mainbox-botleft {
 	margin-left: -8px;
@@ -226,7 +218,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	position: absolute;
 	height: 47px;
 	width: 81px;
-	background: url(Fire/img/cadre_bot-left.png);
+	background: url(Head/img/cadre_bot-left.png);
 }
 .pun .mainbox-botright {
 	float: right;
@@ -234,7 +226,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	margin-top: -42px;
 	height: 47px;
 	width: 81px;
-	background: url(Fire/img/cadre_bot-right.png);
+	background: url(Head/img/cadre_bot-right.png);
 }
 
 #punredirect h2, #punmaint h2 {
@@ -287,114 +279,6 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 3. COMMON BOARD ELEMENTS
 *****************************************************************/
 
-/* Logo, Description and Main Menu
-----------------------------------------------------------------*/
-
-#header {
-	min-width: 1146px;
-}
-
-#headerlogo a  {
-	left:50%;
-	top:0;
-	margin-left:-400px;
-	height:150px;
-	width:800px;
-	position: absolute;
-}
-
-#headermenu {
-	padding:0;
-	background: transparent url(Fire/img/header.png) no-repeat 50% 0;
-	height: 222px;
-	margin: 0 auto;
-	padding-top: 50px;
-}
-
-#headermenu ul {
-   clear:left;
-   float:left;
-   list-style:none;
-   margin:0;
-   padding:0;
-   padding-top: 69px;
-   position:relative;
-   left:50%;
-   text-align:center;
-}
-
-#headermenu li {
-   display:block;
-   float:left;
-   position:relative;
-   right:50%;
-}
-
-#headermenu a:link, #headermenu a:visited {
-	font-family: "Adobe Garamond Pro",Garamond,Baskerville,"Baskerville Old Face","Hoefler Text","Times New Roman",serif;
-	color: #d1d3d5;
-	text-align: center;
-	text-decoration: none;
-	text-transform: uppercase;
-	padding: 23px 0 11px 0;
-	margin: 2px;
-	display: inline-block;
-	min-width: 130px;
-}
-
-#headermenu a:hover, #headermenu a:active, #headermenu a:focus {
-	background: url(Fire/img/header-hover.png) no-repeat 50% 0;
-}
-
-#footer {
-	float:right;
-	height: 80px;
-	width: 100%;
-	margin-top: 12px;
-	margin-right: 48px;
-}
-
-#footer a, #footer #footerlang  {
-	float:right;
-	display: inline-block;
-	width: 70px;
-	height: 50px;
-}
-
-/* Welcome Box
-----------------------------------------------------------------*/
-
-#brdwelcome {
-	padding: 10px 0;
-}
-
-#brdwelcome .conl, #brdwelcome .conr, #brdwelcome p, #brdwelcome li {
-	display: inline;
-	padding: 0;
-}
-
-#brdwelcome .conl {
-  float: left;
-}
-
-#brdwelcome .conr {
-  float: right;
-}
-
-#brdwelcome li span {
-	background: url(Fire/img/bull.png) center left no-repeat;
-	padding-left: 18px;
-	margin-right: 3px;
-	display: inline-block;
-	line-height: normal;
-	white-space: nowrap;
-}
-
-#brdwelcome .conl li:first-child span {
-	padding-left: 0;
-	background: none;
-}
-
 /* Stats
 ----------------------------------------------------------------*/
 
@@ -433,7 +317,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 .pun #brdfooter #modcontrols dd span {
-	background: url(Fire/img/bull.png) center left no-repeat;
+	background: url(Head/img/bull.png) center left no-repeat;
 	display: inline-block;
 	line-height: normal;
 	padding-left: 18px;
@@ -449,11 +333,6 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	float: right;
 }
 
-.pun #brdfooter #poweredby a {
-	font-size: 1.077em;
-	font-weight: bold;
-}
-
 .pun #brdfooter #qjump {
 	padding-top: 5px;
 }
@@ -463,7 +342,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 .pun #brdfooter #searchlinks dd span {
-	background: url(Fire/img/bull.png) center left no-repeat;
+	background: url(Head/img/bull.png) center left no-repeat;
 	display: inline-block;
 	line-height: normal;
 	padding-left: 18px;
@@ -475,7 +354,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 .pun #brdfooter #feedlinks span {
-	background: url(Fire/img/feed.png) center left no-repeat;
+	background: url(Head/img/feed.png) center left no-repeat;
 	display: inline-block;
 	padding-left: 18px;
 	white-space: nowrap;
@@ -730,14 +609,6 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	font-size: 0.923em;
 }
 
-.pun #vf td.tcl a {
-	font-weight: bold;
-}
-
-.pun #vf td.tcl span a {
-	font-weight: normal;
-}
-
 .pun .blocktable .tclcon {
 	min-height: 1px;
 	overflow: hidden;
@@ -909,7 +780,7 @@ MAIN POSTS
 	padding-left: 16px;
 	margin-left: 8px;
 	line-height: normal;
-	background: url(Fire/img/bull.png) center left no-repeat;
+	background: url(Head/img/bull.png) center left no-repeat;
 }
 
 .pun .blockpost .usercontacts {
@@ -917,7 +788,7 @@ MAIN POSTS
 }
 
 .pun .blockpost .usercontacts .email {
-	background: url(Fire/img/email.png) left 65% no-repeat;
+	background: url(Head/img/email.png) left 65% no-repeat;
 	margin-right: 5px;
 	padding-left: 21px;
 	display: inline-block;
@@ -925,7 +796,7 @@ MAIN POSTS
 }
 
 .pun .blockpost .usercontacts .website {
-	background: url(Fire/img/ext.png) left 65% no-repeat;
+	background: url(Head/img/ext.png) left 65% no-repeat;
 	padding-left: 18px;
 	display: inline-block;
 	line-height: normal;
@@ -1144,7 +1015,7 @@ MAIN FORMS
 
 .pun .error-list li {
 	padding-left: 24px;
-	background: url(Fire/img/exclaim.png) center left no-repeat;
+	background: url(Head/img/exclaim.png) center left no-repeat;
 }
 
 .pun .inform {
@@ -1194,7 +1065,7 @@ MAIN FORMS
 }
 
 .pun .required strong {
-	background: url(Fire/img/asterisk.png) center right no-repeat;
+	background: url(Head/img/asterisk.png) center right no-repeat;
 	font-weight: normal;
 	padding-right: 14px;
 	white-space: pre;
@@ -1271,7 +1142,7 @@ MAIN FORMS
 }
 
 .pun .blockform .bblinks li span {
-	background: url(Fire/img/help.png) center left no-repeat;
+	background: url(Head/img/help.png) center left no-repeat;
 	margin-right: 8px;
 	padding-left: 20px;
 	display: inline-block;
@@ -1322,7 +1193,7 @@ MAIN FORMS
 }
 
 .pun span.email {
-	background: url(Fire/img/email.png) left 65% no-repeat;
+	background: url(Head/img/email.png) left 65% no-repeat;
 	margin-right: 5px;
 	padding-left: 21px;
 	display: inline-block;
@@ -1330,7 +1201,7 @@ MAIN FORMS
 }
 
 .pun span.website {
-	background: url(Fire/img/ext.png) left 65% no-repeat;
+	background: url(Head/img/ext.png) left 65% no-repeat;
 	padding-left: 18px;
 	display: inline-block;
 	line-height: normal;
@@ -1455,7 +1326,7 @@ PROFILES (+ ADMIN MENU)
 	padding-left: 16px;
 	margin-left: 8px;
 	line-height: normal;
-	background: url(Fire/img/bull.png) center left no-repeat;
+	background: url(Head/img/bull.png) center left no-repeat;
 }
 
 #adstats .inbox, #adintro .inbox {
@@ -1487,7 +1358,7 @@ COLOUR SCHEME
 html {
 	margin:0;
 	padding:0;
-	background: url(Fire/img/background.jpg) no-repeat center fixed; 
+	background: url(Head/img/background.jpg) no-repeat center fixed; 
 	-webkit-background-size: cover; /* pour Chrome et Safari */
 	-moz-background-size: cover; /* pour Firefox */
 	-o-background-size: cover; /* pour Opera */
@@ -1498,22 +1369,14 @@ html, body, .pun {
 }
 
 .pun .punwrap {
-	background: #fff;
+	background: #242424;
 	border-color: #e1d9ca;
-	color: #665858;
+	color: #aaa;
 }
 
 #brdtitle #brddesc, .pun .pagepost, #brdstats #onlinelist, #brdfooter #searchlinks, #brdfooter #modcontrols,
 #punmaint h2, #punredirect h2, #adminconsole .submittop, .pun #debugtime, .pun .pagelink * {
 	border-color: #cec7b9;
-}
-
-.pun a, .pun a:link, .pun a:visited {
-	color: #990000;
-}
-
-.pun a:hover, .pun a:active, .pun a:focus {
-	color: #f60;
 }
 
 .pun .postmsg .postimg a:link img, .pun .postmsg .postimg a:visited img {
@@ -1721,3 +1584,291 @@ html, body, .pun {
 .pun .inew .icon {
 	border-color: #ca0000 #ab0000 #bb0000 #d30000;
 }
+
+
+/* System
+----------------------------------------------------------------*/
+
+#punheader {
+	padding: 18px 32px 18px 24px;
+}
+#punmain {
+	padding: 18px 32px 18px 24px;
+}
+#punfooter {
+	padding: 18px 32px 18px 24px;
+}
+
+.pun a, .pun a:link, .pun a:visited {
+	color: #d50;
+	text-decoration: none;
+}
+
+.pun a:hover, .pun a:active, .pun a:focus {
+	color: #f60;
+	text-decoration: none;
+}
+
+/* Header Footer
+----------------------------------------------------------------*/
+
+#header {
+	min-width: 1146px;
+}
+
+#headerlogo a  {
+	left:50%;
+	top:0;
+	margin-left:-400px;
+	height:150px;
+	width:800px;
+	position: absolute;
+}
+
+#headermenu {
+	padding:0;
+	background: transparent url(Head/img/header.png) no-repeat 50% 0;
+	height: 160px;
+	margin: 0 auto;
+	padding-top: 50px;
+}
+
+#headermenu ul {
+   clear:left;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   padding-top: 69px;
+   position:relative;
+   left:50%;
+   text-align:center;
+}
+
+#headermenu li {
+   display:block;
+   float:left;
+   position:relative;
+   right:50%;
+}
+
+#headermenu a:link, #headermenu a:visited {
+	font-family: "Adobe Garamond Pro",Garamond,Baskerville,"Baskerville Old Face","Hoefler Text","Times New Roman",serif;
+	color: #d1d3d5;
+	text-align: center;
+	text-decoration: none;
+	text-transform: uppercase;
+	padding: 23px 0 11px 0;
+	margin: 2px;
+	display: inline-block;
+	min-width: 130px;
+}
+
+#headermenu a:hover, #headermenu a:active, #headermenu a:focus {
+	background: url(Head/img/header-hover.png) no-repeat 50% 0;
+}
+
+#footer {
+	float:right;
+	height: 80px;
+	width: 100%;
+	margin-top: 12px;
+	margin-right: 48px;
+}
+
+#footer a, #footer #footerlang  {
+	float:right;
+	display: inline-block;
+	width: 70px;
+	height: 50px;
+}
+
+/* Board
+----------------------------------------------------------------*/
+
+.pun #forums {
+}
+.pun #forums h2 {
+	padding: 0px 0px 0px 8px;
+}
+
+/* Forum
+----------------------------------------------------------------*/
+
+.pun .topic {
+	background: #a00000;
+	margin-top: 24px;
+	padding: 16px;
+}
+.pun .topic:hover {
+	background: #C1400D;
+}
+.pun .topic:hover .topiclink {
+	color: #0f6;
+}
+
+.pun .lastpost {
+	background: #c00000;
+	margin: 12px 0 0 16px;
+	padding: 8px;
+}
+
+
+/* Topic
+----------------------------------------------------------------*/
+
+.posts {
+	width: 100%;
+}
+.pun .post {
+	background: #b00000;
+	width: 100%;
+}
+.pun .post:hover {
+	background: #C1400D;
+}
+.pun .post .postleft {
+	padding: 14px 16px 14px 16px;
+	width: 30%;
+	background: #a00000;
+	text-align: right;
+}
+.pun .post .postright {
+	padding: 14px 16px 14px 16px;
+	width: 70%;
+}
+.pun .postinter {
+	height: 12px;
+}
+
+/* Db
+----------------------------------------------------------------*/
+
+.pun #db {
+	float:left;
+	width: 100%;
+}
+
+.pun #db .field {
+	color: #fff;
+	float: left;
+	margin: 6px 12px 6px 12px;
+	background: #161616;
+}
+
+.pun #db .field .fieldname {
+	padding: 8px;
+}
+#db .field .fieldcontent {
+	background: #333;
+	padding: 8px;
+}
+	
+#db .interligne {
+	float:left;
+	width: 100%;
+}
+
+#db input[type=text], #db textarea {
+	border: 0;
+	padding: 2px;
+	margin: 0;
+	background: #333;
+	color: #fff;
+}
+
+#db input[type=text]:focus, #db textarea:focus {
+	border: 0;
+	padding: 2px;
+	margin: 0;
+	background: #333;
+	color: #fff;
+}
+
+#db .bbnote {
+	font-style: italic;
+	padding-left: 24px;
+}
+
+#db #searchresult td {
+	padding: 7px;
+}
+
+#db .tabbuttonul {
+	margin: 12px 0 12px 0;
+}
+#db .tabbuttonli {
+	border: 0;
+	color: #f60;
+	margin: 0 24px 0 0;
+	background: #1c1c1c;
+	margin: 12px;
+	padding: 12px 16px 12px 16px;
+}
+#db .tabbuttonli a:hover {
+	text-decoration: none; }
+#db .tabbuttonli a:focus {
+	text-decoration: none;
+	outline:0; }
+
+#db .ui-state-active{
+	background: #333;
+	color: #0f6;
+}
+
+
+/* Links
+----------------------------------------------------------------*/
+
+.pun input[type=text], .pun textarea {
+	border: 0;
+	padding: 4px;
+	background: #b00000;
+	color: #f60;
+	margin-left: 16px;
+	margin-right: 12px;
+}
+
+.pun input[type=text]:focus, .pun textarea:focus {
+	border: 0;
+	padding: 4px;
+	background: #C1400D;
+	color: #0f6;
+	margin-left: 16px;
+	margin-right: 12px;
+}
+
+.pun .bigbuttons {
+	margin: 12px 0px 12px 0;
+}
+
+.bigbutton,.bigbuttons a, .itembutton {
+	border: 0;
+	color: #f60;
+	margin: 0 24px 0 0;
+	background: #1c1c1c;
+	padding: 16px;
+}
+
+.itembutton {
+	margin: 6px 0 0 0;
+	padding: 10px;
+}
+
+.bigbutton:hover, .bigbuttons a:hover, .itembutton:hover {
+	background: #333;
+	color: #0f6;
+}
+
+.pun .bigbuttonsleft {
+	font-size: 1.08em;
+	padding: 24px 24px 24px 8px;
+}
+.pun .bigbuttonsright {
+	float: right;
+	font-size: 1.18em;
+	padding: 24px 24px 24px 8px;
+}
+
+#toplinks {}
+#botlinks {}
