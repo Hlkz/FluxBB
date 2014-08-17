@@ -73,7 +73,7 @@ function check_cookie(&$pun_user)
 		pun_setcookie($pun_user['id'], pun_hash($valid_user['sha_pass_hash']), $expire);
 
 		// Set a default language if the user selected language no longer exists
-		if (!file_exists(PUN_ROOT.'lang/'.$pun_user['language']))
+		if (!file_exists(PUN_ROOT.'include/lang/'.$pun_user['language']))
 			$pun_user['language'] = $pun_config['o_default_lang'];
 
 		// Set a default style if the user selected style no longer exists
@@ -1713,13 +1713,13 @@ function forum_list_langs()
 {
 	$languages = array();
 
-	$d = dir(PUN_ROOT.'lang');
+	$d = dir(PUN_ROOT.'include/lang')	;
 	while (($entry = $d->read()) !== false)
 	{
 		if ($entry{0} == '.')
 			continue;
 
-		if (is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/common.php'))
+		if (is_dir(PUN_ROOT.'include/lang/'.$entry) && file_exists(PUN_ROOT.'include/lang/'.$entry.'/common.php'))
 			$languages[] = $entry;
 	}
 	$d->close();
@@ -1735,7 +1735,7 @@ function forum_list_langs()
 //
 function generate_stopwords_cache_id()
 {
-	$files = glob(PUN_ROOT.'lang/*/stopwords.txt');
+	$files = glob(PUN_ROOT.'include/lang/*/stopwords.txt');
 	if ($files === false)
 		return 'cache_id_error';
 

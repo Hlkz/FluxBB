@@ -51,7 +51,6 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 	border-spacing: 0;
 	border: 0;
 	empty-cells: show;
-	width: 100%;
 }
 
 .pun h1 {
@@ -172,105 +171,39 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 }
 
 .pun .punwrap {
-	margin-left:21px;
-	margin-right:21px;
+	margin-left:2px;
+	margin-right:2px;
 	padding: 18px;
 }
 
-.pun .mainbox-left {
-	background-image: url(Head/img/cadre_mid-left.png);
+.pun .mainbox {
+margin-left: 0px;
+	background-image: url(http://pandashan.com/us/design3/img/article-middle.png);
 	background-repeat: repeat-y;
 }
 .pun .mainbox-right {
-	background-image: url(Head/img/cadre_mid-right.png);
+	background-image: url(http://pandashan.com/us/design3/img/article-middle.png);
 	background-repeat: repeat-y;
 	background-position: right;
 }
 
 .pun .mainbox-top {
-	height: 16px;
-	background: url(Head/img/cadre_top.png);
-}
-.pun .mainbox-topleft {
-	margin-left: -8px;
-	margin-top: -21px;
-	position: absolute;
-	height: 47px;
-	width: 81px;
-	background: url(Head/img/cadre_top-left.png);
-}
-.pun .mainbox-topright {
-	float: right;
-	margin-right: -8px;
-	margin-top: -21px;
-	height: 47px;
-	width: 81px;
-	background: url(Head/img/cadre_top-right.png);
+	margin-top: 24px;
+	height: 2px;
+	background-image: url(http://pandashan.com/us/design3/img/article-top.png);
+	background-size: 100% 2px;
 }
 
 .pun .mainbox-bot {
-	height: 16px;
-	background: url(Head/img/cadre_bot.png);
-}
-.pun .mainbox-botleft {
-	margin-left: -8px;
-	margin-top: -42px;
-	position: absolute;
-	height: 47px;
-	width: 81px;
-	background: url(Head/img/cadre_bot-left.png);
-}
-.pun .mainbox-botright {
-	float: right;
-	margin-right: -8px;
-	margin-top: -42px;
-	height: 47px;
-	width: 81px;
-	background: url(Head/img/cadre_bot-right.png);
+	height: 2px;
+	background-image: url(http://pandashan.com/us/design3/img/article-end.png);
+	background-size: 100% 2px;
 }
 
 #punredirect h2, #punmaint h2 {
 	border-bottom-style: dotted;
 	border-bottom-width: 1px;
 	margin-bottom: 3px;
-}
-
-/* Section Spacing and Borders
-----------------------------------------------------------------*/
-
-#brdmain {
-	margin-bottom: 12px;
-	padding: 12px 0;
-}
-
-#punforum #brdmain {
-	padding-top: 24px;
-}
-
-#punredirect #brdmain, #punmaint #brdmain {
-	border: 0;
-	margin: 0;
-	padding: 0;
-}
-
-#brdstats {
-	border-style: solid none none none;
-	border-width: 2px 0 0 0;
-	margin-top: 24px;
-	padding-top: 12px;
-}
-
-#quickpost {
-	border-style: solid none none none;
-	border-width: 2px 0 0 0;
-	margin-top: 12px;
-	padding-top: 12px;
-}
-
-#announce {
-	border-style: solid none none none;
-	border-width: 2px 0 0 0;
-	padding-top: 3px;
 }
 
 /*****************************************************************
@@ -1104,24 +1037,6 @@ MAIN FORMS
 	height: 1%;
 }
 
-.pun .rbox input {
-	margin: 3px 0.75em 3px -1.75em;
-	float: left;
-	position: relative;
-	vertical-align: middle;
-	padding: 0;
-	height: 1em;
-	width: 1em;
-}
-
-.pun input[type=text], .pun select, .pun textarea {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-}
-
-.pun .txtarea textarea, .pun input.longinput {
-	width: 98%;
-}
-
 .pun textarea {
 	resize: vertical;
 }
@@ -1382,7 +1297,7 @@ html, body, .pun {
 }
 
 .pun .postmsg .postimg a:hover img, .pun .postmsg .postimg a:active img, .pun .postmsg .postimg a:focus img {
-	border-color: #f60;
+	border-color: #0f6;
 }
 
 /* Main Tables
@@ -1404,20 +1319,6 @@ html, body, .pun {
 
 .pun #users1 h2 {
 	background: #fff;
-}
-
-.pun .blocktable td {
-	border-color: #ebe0dc;
-}
-
-.pun .blocktable th {
-	background: #efe8ec;
-	border-color: #e1d9ca;
-	color: #836359;
-}
-
-.pun .blocktable td.tcl span.stickytext {
-	color: #000;
 }
 
 /* Main Posts
@@ -1527,10 +1428,6 @@ html, body, .pun {
 	border-color: #ebe0dc;
 }
 
-#adminconsole fieldset td.nodefault {
-	background: #d59b9b;
-}
-
 .pun .multiselect {
 	color: #836359;
 }
@@ -1577,7 +1474,7 @@ html, body, .pun {
 }
 
 .pun a:hover, .pun a:active, .pun a:focus {
-	color: #f60;
+	color: #0f6;
 	text-decoration: none;
 }
 
@@ -1633,85 +1530,94 @@ html, body, .pun {
 	padding: 23px 0 11px 0;
 	margin: 2px;
 	display: inline-block;
-	min-width: 130px;
-}
+	min-width: 130px; }
 
 #headermenu a:hover, #headermenu a:active, #headermenu a:focus {
 	background: url(Head/img/header-hover.png) no-repeat 50% 0;
 }
 
-#footer {
-	width: 100%;
-	margin-top: 12px;
-	margin-right: 48px;
-}
+#main {
+	margin:0 auto;
+	margin-left:50%;
+	transform:translateX(-50%); }
 
-#footer a, #footer #footerlang  {
-	float:right;
-	display: inline-block;
-	width: 70px;
-	height: 50px;
-}
+#brdheader, #brdfooter {}
+#brdheader .topright, #brdfooter .topright {
+	float: right; }
+#brdheader .botleft, #brdfooter .botleft {
+	font-size: 1.08em;
+	padding: 24px 24px 24px 8px; }
+#brdheader .botright, #brdfooter .botright {
+	float: right;
+	font-size: 1.18em;
+	padding: 24px 24px 24px 8px; }
+#brdheader .nobot, #brdfooter .nobot {
+	height: 20px; }
 
 /* Board
 ----------------------------------------------------------------*/
 
-.pun #forums {
-}
-.pun #forums h2 {
-	padding: 0px 0px 0px 8px;
-}
+.pun #board { }
+.pun #board h2 {
+	padding: 0px 0px 0px 8px; }
+
+#board .forum {
+	background: #1c1c1c;
+	margin-top: 24px;
+	padding: 12px;
+	width: 120px; }
+#board .forum:hover {
+	background: #333;
+    cursor: pointer; }
+#board .forum:hover .forumlink {
+	color: #0f6; }
 
 /* Forum
 ----------------------------------------------------------------*/
 
-.pun .topic {
-	background: #a00000;
+.pun #forum { }
+
+#forum .topic {
+	background: #1c1c1c;
 	margin-top: 24px;
-	padding: 16px;
-}
-.pun .topic:hover {
-	background: #C1400D;
-}
-.pun .topic:hover .topiclink {
-	color: #0f6;
-}
+	padding: 12px;
+	width: 94%; }
+#forum .topic:hover {
+	background: #333;
+    cursor: pointer; }
+#forum .topic:hover .topiclink {
+	color: #0f6; }
 
 .pun .lastpost {
-	background: #c00000;
-	margin: 12px 0 0 16px;
-	padding: 8px;
-}
-
+	background: #1c1c1c;
+	margin: 12px 0 0 54px;
+	padding: 6px;
+	width: 76%; }
 
 /* Topic
 ----------------------------------------------------------------*/
 
-.posts {
-	width: 100%;
-}
-.pun .post {
-	background: #b00000;
-	width: 100%;
-}
-.pun .post:hover {
-	background: #C1400D;
-}
-.pun .post .postleft {
-	padding: 14px 16px 14px 16px;
-	width: 30%;
-	background: #a00000;
-	text-align: right;
-}
-.pun .post .postright {
-	padding: 14px 16px 14px 16px;
-	width: 70%;
-}
-.pun .postinter {
-	height: 12px;
-}
+.pun #topic {
+	width: 94%; }
 
-/* Db
+#topic .post {
+	background: #333; }
+#topic .post:hover {
+	background: #333; }
+#topic .post .postleft {
+	padding: 8px 10px 8px 10px;
+	width: 24%;
+	background: #1c1c1c;
+	text-align: right; }
+#topic .post .postright {
+	padding: 8px 10px 8px 10px;
+}
+#topic .postinter {
+	background: #1c1c1c;
+	height: 12px;
+	width: 94%; }
+
+/* Item
 ----------------------------------------------------------------*/
 
 .pun #item {
@@ -1793,20 +1699,19 @@ html, body, .pun {
 
 .pun input[type=text], .pun textarea {
 	border: 0;
-	padding: 4px;
-	background: #b00000;
-	color: #f60;
-	margin-left: 16px;
-	margin-right: 12px;
+	padding: 2px;
+	margin: 0;
+	background: #333;
+	color: #fff;
 }
 
 .pun input[type=text]:focus, .pun textarea:focus {
 	border: 0;
-	padding: 4px;
-	background: #C1400D;
-	color: #0f6;
-	margin-left: 16px;
-	margin-right: 12px;
+	padding: 2px;
+	margin: 0;
+	background: #333;
+	color: #fff;
+	outline:0;
 }
 
 .pun .bigbuttons {
@@ -1830,16 +1735,3 @@ html, body, .pun {
 	background: #333;
 	color: #0f6;
 }
-
-.pun .bigbuttonsleft {
-	font-size: 1.08em;
-	padding: 24px 24px 24px 8px;
-}
-.pun .bigbuttonsright {
-	float: right;
-	font-size: 1.18em;
-	padding: 24px 24px 24px 8px;
-}
-
-#toplinks {}
-#botlinks {}

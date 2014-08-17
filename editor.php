@@ -2,7 +2,7 @@
 define('PUN_ROOT', dirname(__FILE__).'/');
 define('PUN_URL', dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']).'/');
 require PUN_ROOT.'include/common.php';
-require PUN_ROOT.'lang/'.$pun_user['language'].'/item.php';
+require PUN_ROOT.'include/lang/'.$pun_user['language'].'/item.php';
 
 // $action 	= isset($_GET['action']) ? $_GET['action'] : null; UNUSED
 $table_name = isset($_GET['table'])	? $_GET['table'] 	: null;

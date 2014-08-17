@@ -88,8 +88,8 @@ function generate_ftb_cache($form = 'form')
 
 	// Include the fluxtoolbar language files
 	$output .= '<?php'."\n".
-		'if (file_exists(PUN_ROOT.\'lang/\'.$pun_user[\'language\'].\'/fluxtoolbar.php\'))'."\n".
-		"\t".'require_once PUN_ROOT.\'lang/\'.$pun_user[\'language\'].\'/fluxtoolbar.php\';'."\n".
+		'if (file_exists(PUN_ROOT.\'include/lang/\'.$pun_user[\'language\'].\'/fluxtoolbar.php\'))'."\n".
+		"\t".'require_once PUN_ROOT.\'include/lang/\'.$pun_user[\'language\'].\'/fluxtoolbar.php\';'."\n".
 		'else'."\n".
 		"\t".'require_once PUN_ROOT.\'lang/English/fluxtoolbar.php\';'."\n".
 		'?>'."\n";

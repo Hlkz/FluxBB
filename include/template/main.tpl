@@ -19,27 +19,25 @@
 	</div>
 </div>
 
+<div id="main" style="width: <pun_mainwidth>">
+
 <div class="mainbox-top"></div>
-<div class="mainbox-topleft"></div>
-<div class="mainbox-topright"></div>
-<div class="mainbox-left">
+<div class="mainbox">
 <div class="mainbox-right">
 <div class="punwrap">
 
 <pun_header>
-
 <div id="brdmain">
 <pun_main>
 </div>
-
 <pun_footer>
 
 </div>
 </div>
 </div>
 <div class="mainbox-bot"></div>
-<div class="mainbox-botleft"></div>
-<div class="mainbox-botright"></div>
+
+</div>
 
 <div id="footer" class="block">
 </div>

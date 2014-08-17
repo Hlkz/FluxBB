@@ -3,19 +3,50 @@ Options +FollowSymLinks -MultiViews
 RewriteEngine On
 RewriteBase /
 
+# Index
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+index\.php(.*) [NC]
+RewriteRule ^ /? [R=301,L]
+#
+
+# Board
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+board.php(.*) [NC]
+RewriteRule ^ /board? [R=301,L]
+RewriteRule ^board?$ /board.php [QSA,NC,L]
+RewriteRule ^board/?$ /board.php [QSA,NC,L]
+#
+
+# Forum
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+forum\.php\?id=([0-9]{1,})(.*) [NC]
+RewriteRule ^ /board/forum-%1? [R=301,L]
+RewriteRule ^board/forum-([0-9]{1,})?$ /forum.php?id=$1 [QSA,NC,L]
+RewriteRule ^board/forum-([0-9]{1,})/?$ /forum.php?id=$1 [QSA,NC,L]
+#
+
+# Topic
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+topic\.php\?id=([0-9]{1,})&p=([0-9]{1,})(.*) [NC]
+RewriteRule ^ /board/topic-%1-%2? [R=301,L]
+RewriteRule ^board/topic-([0-9]{1,})-([0-9]{1,})?$ /topic.php?id=$1&p=$2 [QSA,NC,L]
+RewriteRule ^board/topic-([0-9]{1,})-([0-9]{1,})/?$ /topic.php?id=$1&p=2 [QSA,NC,L]
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+topic\.php\?id=([0-9]{1,})!&p(.*) [NC]
+RewriteRule ^ /board/topic-%1? [R=301,L]
+RewriteRule ^board/topic-([0-9]{1,})?$ /topic.php?id=$1 [QSA,NC,L]
+RewriteRule ^board/topic-([0-9]{1,})/?$ /topic.php?id=$1 [QSA,NC,L]
+#
+
+# View
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+view\.php\?table=([a-zA-Z]{1,})&id=([0-9]{1,})(.*) [NC]
 RewriteRule ^ /db/%1=%2? [R=301,L]
 RewriteRule ^db/([a-zA-Z]{1,})=([0-9]{1,})?$ /view.php?table=$1&id=$2 [QSA,NC,L]
-
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+view\.php\?table=([a-zA-Z]{1,})&name=([0-9a-zA-Z%20\(\)']{1,})(.*) [NC]
-RewriteRule ^ /view/%1-%2? [R=301,L]
-RewriteRule ^view/([a-zA-Z]{1,})-([0-9a-zA-Z%20\(\)']+)?$ /view.php?table=$1&name=$2 [QSA,NC,L]
+RewriteRule ^ /db/%1-%2? [R=301,L]
+RewriteRule ^db/([a-zA-Z]{1,})-([0-9a-zA-Z%20\(\)']+)?$ /view.php?table=$1&name=$2 [QSA,NC,L]
+#
 
-
+# Editor
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+editor\.php\?table=([a-zA-Z]{1,})&id=([0-9]{1,})(.*) [NC]
 RewriteRule ^ /editor/%1=%2? [R=301,L]
 RewriteRule ^editor/([a-zA-Z]{1,})=([0-9]{1,})?$ /editor.php?table=$1&id=$2 [QSA,NC,L]
-
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+editor\.php\?table=([a-zA-Z]{1,})&name=([0-9a-zA-Z%20\(\)']{1,})(.*) [NC]
 RewriteRule ^ /editor/%1-%2? [R=301,L]
 RewriteRule ^editor/([a-zA-Z]{1,})-([0-9a-zA-Z%20\(\)']+)?$ /editor.php?table=$1&name=$2 [QSA,NC,L]
+#

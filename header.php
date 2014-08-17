@@ -1,11 +1,4 @@
 <?php
-
-/**
- * Copyright (C) 2008-2012 FluxBB
- * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
- * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
- */
-
 // Make sure no one attempts to run this script "directly"
 if (!defined('PUN'))
 	exit;
@@ -91,7 +84,7 @@ if (!defined('PUN_ALLOW_INDEX'))
 	echo '<meta name="ROBOTS" content="NOINDEX, FOLLOW" />'."\n";
 
 ?>
-<title><?php echo generate_page_title($page_title, $p) ?></title>
+<title><?php echo generate_page_title($page_title, null /* $p */) ?></title>
 
 <link rel="stylesheet" type="text/css" href="<?php echo PUN_URL.'style/'.$pun_user['style'].'.css' ?>" />
 <?php
@@ -347,13 +340,20 @@ $tpl_main = str_replace('<pun_desc>', '<div id="brddesc">'.$pun_config['o_board_
 // END SUBST - <pun_desc>
 
 
+// START SUBST - <pun_mainwidth>
+$tpl_main = str_replace('<pun_mainwidth>', (PUN_ACTIVE_PAGE == 'board' || PUN_ACTIVE_PAGE == 'forum' || PUN_ACTIVE_PAGE == 'topic') ? '960px' : '1200px', $tpl_main);
+// END SUBST - <pun_title>
+
+
 // START SUBST - <pun_navlinks>
 $links = array();
 
 $links[] = '<li id="navindex"'.((PUN_ACTIVE_PAGE == 'index') ? ' class="isactive"' : '').'><a href="'.PUN_URL.'index.php">'.$lang_common['Index'].'</a></li>';
-$links[] = '<li id="navforum"'.((PUN_ACTIVE_PAGE == 'forum') ? ' class="isactive"' : '').'><a href="'.PUN_URL.'forum.php">'.$lang_common['Forum'].'</a></li>';
+$links[] = '<li id="navboard"'.((PUN_ACTIVE_PAGE == 'board') ? ' class="isactive"' : '').'><a href="'.PUN_URL.'board.php">'.$lang_common['Board'].'</a></li>';
 
-if ($pun_user['is_guest'])
+$links[] = '<li id="navdb"><a href="'.PUN_URL.'db/spelldbc-Fireball">Fireball</a></li>';
+
+/*if ($pun_user['is_guest'])
 {
 	$links[] = '<li id="navregister"'.((PUN_ACTIVE_PAGE == 'register') ? ' class="isactive"' : '').'><a href="'.PUN_URL.'register.php">'.$lang_common['Register'].'</a></li>';
 	$links[] = '<li id="navlogin"'.((PUN_ACTIVE_PAGE == 'login') ? ' class="isactive"' : '').'><a href="'.PUN_URL.'login.php">'.$lang_common['Login'].'</a></li>';
@@ -366,7 +366,7 @@ else
 		$links[] = '<li id="navadmin"'.((PUN_ACTIVE_PAGE == 'admin') ? ' class="isactive"' : '').'><a href="'.PUN_URL.'admin_index.php">'.$lang_common['Admin'].'</a></li>';
 
 	$links[] = '<li id="navlogout"><a href="'.PUN_URL.'login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a></li>';
-}
+}*/
 
 	$lang = "English";
 	$languages = forum_list_langs();
@@ -374,7 +374,7 @@ else
 		foreach ($languages as $temp)
 			if ($pun_user['language'] != $temp)
 				$lang = $temp;
-	$actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	$actual_link = PUN_URL;
 	if ((substr($actual_link, -4) == ".php") || (substr($actual_link, -1) == "/"))
 		$links[] = '<li id="navlanguage"><a href="'.$actual_link.'?lang='.$lang.'">'.$lang_common['Language'].'</a></li>';
 	else

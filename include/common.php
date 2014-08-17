@@ -1,11 +1,4 @@
 <?php
-
-/**
- * Copyright (C) 2008-2012 FluxBB
- * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
- * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
- */
-
 if (!defined('PUN_ROOT'))
 	exit('The constant PUN_ROOT must be defined and point to a valid FluxBB installation root directory.');
 
@@ -200,8 +193,8 @@ else if ($pun_user['id'])
 }
 
 // Attempt to load the common language file
-if (file_exists(PUN_ROOT.'lang/'.$pun_user['language'].'/common.php'))
-	include PUN_ROOT.'lang/'.$pun_user['language'].'/common.php';
+if (file_exists(PUN_ROOT.'include/lang/'.$pun_user['language'].'/common.php'))
+	include PUN_ROOT.'include/lang/'.$pun_user['language'].'/common.php';
 else
 	error('There is no valid language pack \''.pun_htmlspecialchars($pun_user['language']).'\' installed. Please reinstall a language of that name');
 
