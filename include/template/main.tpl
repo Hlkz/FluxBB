@@ -26,13 +26,7 @@
 <div class="mainbox-right">
 <div class="punwrap">
 
-<div id="brdheader" class="	block">
-	<div class="box">
-		<pun_status>
-	</div>
-</div>
-
-<pun_announcement>
+<pun_header>
 
 <div id="brdmain">
 <pun_main>
@@ -43,12 +37,11 @@
 </div>
 </div>
 </div>
-<div class="mainbox-bot">
-</div><div class="mainbox-botleft"></div>
+<div class="mainbox-bot"></div>
+<div class="mainbox-botleft"></div>
 <div class="mainbox-botright"></div>
 
-<div id="footer">
-	<pun_changelang>
+<div id="footer" class="block">
 </div>
 
 </div>

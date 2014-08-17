@@ -1,0 +1,21 @@
+Options +FollowSymLinks -MultiViews
+
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+view\.php\?table=([a-zA-Z]{1,})&id=([0-9]{1,})(.*) [NC]
+RewriteRule ^ /db/%1=%2? [R=301,L]
+RewriteRule ^db/([a-zA-Z]{1,})=([0-9]{1,})?$ /view.php?table=$1&id=$2 [QSA,NC,L]
+
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+view\.php\?table=([a-zA-Z]{1,})&name=([0-9a-zA-Z%20\(\)']{1,})(.*) [NC]
+RewriteRule ^ /view/%1-%2? [R=301,L]
+RewriteRule ^view/([a-zA-Z]{1,})-([0-9a-zA-Z%20\(\)']+)?$ /view.php?table=$1&name=$2 [QSA,NC,L]
+
+
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+editor\.php\?table=([a-zA-Z]{1,})&id=([0-9]{1,})(.*) [NC]
+RewriteRule ^ /editor/%1=%2? [R=301,L]
+RewriteRule ^editor/([a-zA-Z]{1,})=([0-9]{1,})?$ /editor.php?table=$1&id=$2 [QSA,NC,L]
+
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+editor\.php\?table=([a-zA-Z]{1,})&name=([0-9a-zA-Z%20\(\)']{1,})(.*) [NC]
+RewriteRule ^ /editor/%1-%2? [R=301,L]
+RewriteRule ^editor/([a-zA-Z]{1,})-([0-9a-zA-Z%20\(\)']+)?$ /editor.php?table=$1&name=$2 [QSA,NC,L]

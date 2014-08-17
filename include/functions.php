@@ -22,7 +22,7 @@ function get_microtime()
 //
 function check_cookie(&$pun_user)
 {
-	global $db, $db_type, $dbauth, $pun_config, $cookie_name, $cookie_seed;
+	global $db, $db_type, $dba, $pun_config, $cookie_name, $cookie_seed;
 
 	$now = time();
 
@@ -51,8 +51,8 @@ function check_cookie(&$pun_user)
 		}
 
 		// Check if there's a user with the user ID and password hash from the cookie
-		$result = $dbauth->query("SELECT id, username, sha_pass_hash FROM ".$dbauth->prefix."account WHERE id=".$cookie['user_id']) or error('Unable to fetch user information', __FILE__, __LINE__, $dbauth->error());
-		$valid_user = $dbauth->fetch_assoc($result);
+		$result = $dba->query("SELECT id, username, sha_pass_hash FROM ".$dba->prefix."account WHERE id=".$cookie['user_id']) or error('Unable to fetch user information', __FILE__, __LINE__, $dba->error());
+		$valid_user = $dba->fetch_assoc($result);
 
 		// If user authorisation failed
 		if (!isset($valid_user['id']) || forum_hmac(pun_hash($valid_user['sha_pass_hash']), $cookie_seed.'_password_hash') !== $cookie['password_hash'])
@@ -455,7 +455,7 @@ function check_bans()
 //
 function check_account($account)
 {
-	global $dbauth, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
+	global $dba, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
 
 	// Include UTF-8 function
 	require_once PUN_ROOT.'include/utf8/strcasecmp.php';
@@ -469,8 +469,8 @@ function check_account($account)
 		$errors[] = $lang_prof_reg['Account bad chars'];
 	else
 	{
-		$result = $dbauth->query('SELECT `id` FROM '.$dbauth->prefix.'`account` WHERE `account`="'.$account.'"') or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
-		if ($dbauth->result($result))
+		$result = $dba->query('SELECT `id` FROM '.$dba->prefix.'`account` WHERE `account`="'.$account.'"') or error('Unable to fetch user info', __FILE__, __LINE__, $dba->error());
+		if ($dba->result($result))
 			$errors[] = $lang_prof_reg['Account taken'];
 	}
 }
@@ -481,7 +481,7 @@ function check_account($account)
 //
 function check_username($username)
 {
-	global $dbauth, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
+	global $dba, $pun_config, $errors, $lang_prof_reg, $lang_register, $lang_common, $pun_bans;
 
 	// Include UTF-8 function
 	require_once PUN_ROOT.'include/utf8/strcasecmp.php';
@@ -495,8 +495,8 @@ function check_username($username)
 		$errors[] = $lang_prof_reg['Username bad chars'];
 	else
 	{
-		$result = $dbauth->query('SELECT `id` FROM '.$dbauth->prefix.'`account` WHERE `username`="'.$username.'"') or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
-		if ($dbauth->result($result))
+		$result = $dba->query('SELECT `id` FROM '.$dba->prefix.'`account` WHERE `username`="'.$username.'"') or error('Unable to fetch user info', __FILE__, __LINE__, $dba->error());
+		if ($dba->result($result))
 			$errors[] = $lang_prof_reg['Username taken'];
 	}
 }

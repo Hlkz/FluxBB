@@ -173,7 +173,7 @@ function generate_stopwords_cache()
 //
 function generate_users_info_cache()
 {
-	global $db, $dbauth;
+	global $db, $dba;
 
 	$stats = array();
 
@@ -182,8 +182,8 @@ function generate_users_info_cache()
 
 	$result = $db->query('SELECT id FROM '.$db->prefix.'users WHERE group_id!='.PUN_UNVERIFIED.' ORDER BY registered DESC LIMIT 1') or error('Unable to fetch newest registered user', __FILE__, __LINE__, $db->error());
 	$lastuserid = $db->result($result);
-	$result = $dbauth->query('SELECT id, username FROM '.$dbauth->prefix.'account WHERE id='.$lastuserid) or error('Unable to fetch newest registered user', __FILE__, __LINE__, $dbauth->error());
-	$stats['last_user'] = $dbauth->fetch_assoc($result);
+	$result = $dba->query('SELECT id, username FROM '.$dba->prefix.'account WHERE id='.$lastuserid) or error('Unable to fetch newest registered user', __FILE__, __LINE__, $dba->error());
+	$stats['last_user'] = $dba->fetch_assoc($result);
 
 	// Output users info as PHP code
 	$content = '<?php'."\n\n".'define(\'PUN_USERS_INFO_LOADED\', 1);'."\n\n".'$stats = '.var_export($stats, true).';'."\n\n".'?>';

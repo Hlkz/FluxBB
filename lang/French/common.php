@@ -104,6 +104,7 @@ $lang_common = array(
 'Not logged in'			=>  	'Vous n\'êtes pas identifié(e).',
 'Profile'			=>	'Membre',
 'Logout'			=>	'Déconnexion',
+'Language'				=>  	'Langage',
 'Logged in as'			=>	'Connecté(e) sous l\'identité&#160;',
 'Admin'				=>	'Administration',
 'Last visit'			=>	'Dernière visite&#160;: %s',

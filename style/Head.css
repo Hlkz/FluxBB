@@ -239,8 +239,6 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 ----------------------------------------------------------------*/
 
 #brdmain {
-	border-style: solid none;
-	border-width: 2px 0;
 	margin-bottom: 12px;
 	padding: 12px 0;
 }
@@ -1516,32 +1514,6 @@ html, body, .pun {
 	color: #333;
 }
 
-.pun .infldset, #adintro .inbox, #adstats .inbox {
-	background: #f3f2ed;
-	border-color: #ebe0dc;
-}
-
-.pun label, .pun legend, #adminconsole fieldset th {
-	color: #836359;
-}
-
-.pun fieldset p {
-	border-color: #cec7b9;
-}
-
-.pun .blockmenu ul, .pun .blockmenu li {
-	border-color: #cec7b9;
-}
-
-.pun .blockmenu a:hover, .pun .blockmenu a:active, .pun .blockmenu a:focus {
-	background: #ffffe6;
-}
-
-.pun .blockmenu .isactive a:link, .pun .blockmenu .isactive a:visited {
-	color: #333;
-	background: #f3f2ed;
-	}
-
 .pun #viewprofile .box {
 	border-color: #cec7b9 #e7e2d9;
 	background: #ecebe7;
@@ -1669,8 +1641,6 @@ html, body, .pun {
 }
 
 #footer {
-	float:right;
-	height: 80px;
 	width: 100%;
 	margin-top: 12px;
 	margin-right: 48px;
@@ -1744,32 +1714,32 @@ html, body, .pun {
 /* Db
 ----------------------------------------------------------------*/
 
-.pun #db {
+.pun #item {
 	float:left;
 	width: 100%;
 }
 
-.pun #db .field {
+.pun #item .field {
 	color: #fff;
 	float: left;
 	margin: 6px 12px 6px 12px;
 	background: #161616;
 }
 
-.pun #db .field .fieldname {
+.pun #item .field .fieldname {
 	padding: 8px;
 }
-#db .field .fieldcontent {
+#item .field .fieldcontent {
 	background: #333;
 	padding: 8px;
 }
 	
-#db .interligne {
+#item .interligne {
 	float:left;
 	width: 100%;
 }
 
-#db input[type=text], #db textarea {
+#item input[type=text], #item textarea {
 	border: 0;
 	padding: 2px;
 	margin: 0;
@@ -1777,7 +1747,7 @@ html, body, .pun {
 	color: #fff;
 }
 
-#db input[type=text]:focus, #db textarea:focus {
+#item input[type=text]:focus, #item textarea:focus {
 	border: 0;
 	padding: 2px;
 	margin: 0;
@@ -1785,33 +1755,34 @@ html, body, .pun {
 	color: #fff;
 }
 
-#db .bbnote {
+#item .bbnote {
 	font-style: italic;
 	padding-left: 24px;
 }
 
-#db #searchresult td {
+#item #searchresult td {
 	padding: 7px;
 }
 
-#db .tabbuttonul {
-	margin: 12px 0 12px 0;
-}
-#db .tabbuttonli {
+#item .tabbutton {
+	padding: 12px 0px 12px 0px; }
+#item .tabbuttonul {
+	margin: 12px 0 12px 0; }
+#item .tabbuttonli {
 	border: 0;
 	color: #f60;
-	margin: 0 24px 0 0;
 	background: #1c1c1c;
 	margin: 12px;
-	padding: 12px 16px 12px 16px;
-}
-#db .tabbuttonli a:hover {
+	padding: 12px 32px 12px 32px; }
+#item .tabbuttonli:focus {
+	outline:0; }
+#item .tabbuttonli a:hover {
 	text-decoration: none; }
-#db .tabbuttonli a:focus {
+#item .tabbuttonli a:focus {
 	text-decoration: none;
 	outline:0; }
 
-#db .ui-state-active{
+#item .ui-state-active{
 	background: #333;
 	color: #0f6;
 }
