@@ -1,20 +1,12 @@
 <?php
-
-/**
- * Copyright (C) 2008-2012 FluxBB
- * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
- * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
- */
-
 if (isset($_GET['action']))
 	define('PUN_QUIET_VISIT', 1);
 
 define('PUN_ROOT', dirname(__FILE__).'/');
+define('PUN_URL', dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']).'/');
 require PUN_ROOT.'include/common.php';
 
-
-// Load the login.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/login.php';
+require PUN_ROOT.'include/lang/'.$pun_user['language'].'/login.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
@@ -26,9 +18,9 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 	$form_password_hash = pun_hash(pun_hash(strtoupper($form_username).':'.strtoupper($form_password))); // Will result in a SHA-1 hash
 
-	$username_sql = ($dbauth_type == 'mysql' || $dbauth_type == 'mysqli' || $dbauth_type == 'mysql_innodb' || $dbauth_type == 'mysqli_innodb') ? 'account=\''.$db->escape($form_username).'\'' : 'LOWER(account)=LOWER(\''.$db->escape($form_username).'\')';
-	$result = $dbauth->query('SELECT id FROM '.$dbauth->prefix.'account WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
-	$user_id = $dbauth->fetch_assoc($result);
+	$username_sql = ($dba_type == 'mysql' || $dba_type == 'mysqli' || $dba_type == 'mysql_innodb' || $dba_type == 'mysqli_innodb') ? 'account=\''.$db->escape($form_username).'\'' : 'LOWER(account)=LOWER(\''.$db->escape($form_username).'\')';
+	$result = $dba->query('SELECT id FROM '.$dba->prefix.'account WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $dba->error());
+	$user_id = $dba->fetch_assoc($result);
 	if ($user_id['id'])
 		$user_id = $user_id['id'];
 	else
@@ -41,8 +33,8 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 	if ($user_id)
 	{
-		$result = $dbauth->query("SELECT COUNT(*) AS sha_count FROM ".$dbauth->prefix."account WHERE id=".$user_id." AND sha_pass_hash=SHA1(CONCAT(UPPER('$form_username'),':',UPPER('$form_password')))") or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
-		$sha = $dbauth->fetch_assoc($result);
+		$result = $dba->query("SELECT COUNT(*) AS sha_count FROM ".$dba->prefix."account WHERE id=".$user_id." AND sha_pass_hash=SHA1(CONCAT(UPPER('$form_username'),':',UPPER('$form_password')))") or error('Unable to fetch user info', __FILE__, __LINE__, $dba->error());
+		$sha = $dba->fetch_assoc($result);
 		if ($sha['sha_count'])
 			$authorized = true;
 	}
@@ -247,7 +239,7 @@ if (!empty($_SERVER['HTTP_REFERER']))
 
 	if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
 		//$redirect_url = $_SERVER['HTTP_REFERER'];
-		$redirect_url = 'forum.php';
+		$redirect_url = 'index.php';
 }
 
 if (!isset($redirect_url))
@@ -261,33 +253,38 @@ $focus_element = array('login', 'req_username');
 define('PUN_ACTIVE_PAGE', 'login');
 require PUN_ROOT.'header.php';
 
-?>
-<div class="blockform">
-	<h2><span><?php echo $lang_common['Login'] ?></span></h2>
-	<div class="box">
-		<form id="login" method="post" action="login.php?action=in" onsubmit="return process_form(this)">
-			<div class="inform">
-				<fieldset>
-					<legend><?php echo $lang_login['Login legend'] ?></legend>
-					<div class="infldset">
-						<input type="hidden" name="form_sent" value="1" />
-						<input type="hidden" name="redirect_url" value="<?php echo pun_htmlspecialchars($redirect_url) ?>" />
-						<label class="conl required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br /></label>
-						<label class="conl required"><strong><?php echo $lang_common['Password'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><br /><input type="password" name="req_password" size="25" tabindex="2" /><br /></label>
-
-						<div class="rbox clearb">
-							<label><input type="checkbox" name="save_pass" value="1" tabindex="3" /><?php echo $lang_login['Remember me'] ?><br /></label>
-						</div>
-
-						<p class="clearb"><?php echo $lang_login['Login info'] ?></p>
-						<p class="actions"><span><a href="register.php" tabindex="5"><?php echo $lang_login['Not registered'] ?></a></span> <span><a href="login.php?action=forget" tabindex="6"><?php echo $lang_login['Forgotten pass'] ?></a></span></p>
-					</div>
-				</fieldset>
-			</div>
-			<p class="buttons"><input type="submit" name="login" value="<?php echo $lang_common['Login'] ?>" tabindex="4" /></p>
-		</form>
-	</div>
-</div>
-<?php
+echo '<div class="blockform">'.
+		'<h2><span>'.$lang_common['Login'].'</span></h2>'.
+		'<div class="box">'.
+			'<form id="login" method="post" action="login.php?action=in" onsubmit="return process_form(this)">'.
+				'<div class="inform">'.
+					'<fieldset>'.
+						'<input type="hidden" name="form_sent" value="1" />'.
+						'<input type="hidden" name="redirect_url" value="'.pun_htmlspecialchars($redirect_url).'" />'.
+						'<div class="infldset">'.
+							'<label class="conl required"><strong>'.$lang_common['Username'].'<span>'.$lang_common['Required'].'</span></strong>'.
+								'<input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br/>'.
+							'</label><br/>'.
+						'</div>'.
+						'<div class="infldset">'.
+							'<label class="conl required"><strong>'.$lang_common['Password'].'<span>'.$lang_common['Required'].'</span></strong>'.
+								'<input type="password" name="req_password" size="25" maxlength="25" tabindex="2" /><br/>'.
+							'</label>'.
+						'</div>'.
+						'<div class="infldset">'.
+							'<label>'.
+								'<input type="submit" name="login" value="'.$lang_common['Login'].'" tabindex="4" /><div class="space"></div>'.
+								'<input type="checkbox" name="save_pass" value="1" tabindex="3" />'.$lang_common['Remember me'].'<br/>'.
+							'</label>'.
+						'</div>'.
+						'<div class="infldset">'.
+							'<a href="register.php" tabindex="5">'.$lang_common['Signin'].'</a><div class="space"></div>'.
+							'<a href="login.php?action=forget" tabindex="6">'.$lang_common['Forgotten pass'].'</a>'.
+						'</div>'.
+					'</fieldset>'.
+				'</div>'.
+			'</form>'.
+		'</div>'.
+	'</div>';
 
 require PUN_ROOT.'footer.php';

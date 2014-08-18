@@ -15,12 +15,12 @@
 		<pun_navlinks>
 	</div>
 	<div id="headerlogo">
-		<a href="index.php"></a>
+		<a href="<pun_url>"></a>
 	</div>
 </div>
 
 <div id="main" style="width: <pun_mainwidth>">
-
+<pun_account>
 <div class="mainbox-top"></div>
 <div class="mainbox">
 <div class="mainbox-right">
@@ -36,7 +36,6 @@
 </div>
 </div>
 <div class="mainbox-bot"></div>
-
 </div>
 
 <div id="footer" class="block">

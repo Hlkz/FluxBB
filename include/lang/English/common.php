@@ -11,6 +11,41 @@ $lang_common = array(
 'lang_decimal_point'				=>	'.',
 'lang_thousands_sep'				=>	',',
 
+// Menu
+'Nav Index'							=>	'Index',
+'Nav Game'							=>	'Game',
+'Nav News'							=>	'News',
+'Nav Board'							=>	'Board',
+'Nav Database'						=>	'Database',
+'Nav Account'						=>	'Account',
+'Nav Language'						=>	'Language',
+'Login'								=>	'Login',
+'Logout'							=>	'Logout',
+'Signin'							=>	'Register',
+'Not logged in'						=>	'You are not logged in.',
+'Logged in as'						=>	'Logged in as',
+'Remember me'						=>	'Remember me',
+'Forgotten pass'					=>	'Forgotten pass',
+
+// Board
+'Board'								=>	'Board',
+'Forum'								=>	'Forum',
+'Topic'								=>	'Topic',
+'Post'								=>	'Post',
+'Submit'							=>	'Submit',
+
+// User
+'Account'							=>	'Account',
+'Username'							=>	'Username',
+'Password'							=>	'Password',
+'Password2'							=>	'Confirm',
+'Email'								=>	'Email',
+'ToolTip Account'					=>	'Name used to log you in.',
+'ToolTip Username'					=>	'Showed to the world. Can differ from your Account name.',
+'ToolTip Password'					=>	'Password used to log you in.',
+'ToolTip Password2'					=>	'Confirm your password.',
+'ToolTip Email'						=>	'Used to retrieve your password or sending important informations.',
+
 // Notices
 'Bad request'						=>	'Bad request. The link you followed is incorrect or outdated.',
 'No view'							=>	'You do not have permission to view these forums.',
@@ -22,14 +57,8 @@ $lang_common = array(
 'Pun include error'					=>	'Unable to process user include %s from template %s. There is no such file in neither the template directory nor in the user include directory',
 
 // Miscellaneous
-'Board'								=>	'Board',
 'Announcement'						=>	'Announcement',
 'Options'							=>	'Options',
-'Submit'							=>	'Submit', // "Name" of submit buttons
-'Ban message'						=>	'You are banned from this forum.',
-'Ban message 2'						=>	'The ban expires at the end of',
-'Ban message 3'						=>	'The administrator or moderator that banned you left the following message:',
-'Ban message 4'						=>	'Please direct any inquiries to the forum administrator at',
 'Never'								=>	'Never',
 'Today'								=>	'Today',
 'Yesterday'							=>	'Yesterday',
@@ -47,10 +76,6 @@ $lang_common = array(
 'by'								=>	'by', // As in last post by some user
 'New posts'							=>	'New posts', // The link that leads to the first new post
 'New posts info'					=>	'Go to the first new post in this topic.', // The popup text for new posts links
-'Account'							=>	'Account',
-'Username'							=>	'Username',
-'Password'							=>	'Password',
-'Email'								=>	'Email',
 'Send email'						=>	'Send email',
 'Moderated by'						=>	'Moderated by',
 'Registered'						=>	'Registered',
@@ -95,46 +120,19 @@ $lang_common = array(
 'BBCode code problem'				=>	'There is a problem with your [code] tags',
 'BBCode list size error'			=>	'Your list was too long to parse, please make it smaller!',
 
-// Stuff for the navigator (top of every page)
-'Index'								=>	'Index',
-'User list'							=>	'User list',
-'Rules'								=>	'Rules',
-'Search'							=>	'Search',
-'Register'							=>	'Register',
-'Login'								=>	'Login',
-'Logout'							=>	'Logout',
-'Language'							=>	'Language',
-'Not logged in'						=>	'You are not logged in.',
-'Profile'							=>	'Profile',
-'Logged in as'						=>	'Logged in as',
-'Admin'								=>	'Administration',
 'Last visit'						=>	'Last visit: %s',
-'Topic searches'					=>	'Topics:',
-'New posts header'					=>	'New',
-'Active topics'						=>	'Active',
-'Unanswered topics'					=>	'Unanswered',
-'Posted topics'						=>	'Posted',
-'Show new posts'					=>	'Find topics with new posts since your last visit.',
-'Show active topics'				=>	'Find topics with recent posts.',
-'Show unanswered topics'			=>	'Find topics with no replies.',
-'Show posted topics'				=>	'Find topics you have posted to.',
 'Mark all as read'					=>	'Mark all topics as read',
 'Mark forum read'					=>	'Mark this forum as read',
 'Title separator'					=>	' / ',
 
 // Stuff for the page footer
 'Board footer'						=>	'Board footer',
-'Jump to'							=>	'Jump to',
-'Go'								=>	' Go ', // Submit button in forum jump
-'Moderate topic'					=>	'Moderate topic',
-'All'					=>	'All',
+'All'								=>	'All',
 'Move topic'						=>	'Move topic',
 'Open topic'						=>	'Open topic',
 'Close topic'						=>	'Close topic',
 'Unstick topic'						=>	'Unstick topic',
 'Stick topic'						=>	'Stick topic',
-'Moderate forum'					=>	'Moderate forum',
-'Powered by'						=>	'Powered by %s',
 
 // Debug information
 'Debug table'						=>	'Debug information',
@@ -144,21 +142,6 @@ $lang_common = array(
 'Query times'						=>	'Time (s)',
 'Query'								=>	'Query',
 'Total query time'					=>	'Total query time: %s',
-
-// For extern.php RSS feed
-'RSS description'					=>	'The most recent topics at %s.',
-'RSS description topic'				=>	'The most recent posts in %s.',
-'RSS reply'							=>	'Re: ', // The topic subject will be appended to this string (to signify a reply)
-'RSS active topics feed'			=>	'RSS active topics feed',
-'Atom active topics feed'			=>	'Atom active topics feed',
-'RSS forum feed'					=>	'RSS forum feed',
-'Atom forum feed'					=>	'Atom forum feed',
-'RSS topic feed'					=>	'RSS topic feed',
-'Atom topic feed'					=>	'Atom topic feed',
-
-// Admin related stuff in the header
-'New reports'						=>	'There are new reports',
-'Maintenance mode enabled'			=>	'Maintenance mode is enabled!',
 
 // Units for file sizes
 'Size unit B'						=>	'%s B',

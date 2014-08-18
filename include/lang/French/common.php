@@ -4,31 +4,62 @@
 $lang_common = array(
 
 // Text orientation and encoding
-'lang_direction'		=>	'ltr',	// ltr (Left-To-Right) or rtl (Right-To-Left)
-'lang_identifier'		=>	'fr', //iso code 639-1 value (see http://www.loc.gov/standards/iso639-2/php/code_list.php)
+'lang_direction'					=>	'ltr',	// ltr (Left-To-Right) or rtl (Right-To-Left)
+'lang_identifier'					=>	'fr', //iso code 639-1 value (see http://www.loc.gov/standards/iso639-2/php/code_list.php)
 
 // Number formatting
-'lang_decimal_point'            =>        ',',
-'lang_thousands_sep'            =>        ' ',
+'lang_decimal_point'            	=>	',',
+'lang_thousands_sep'            	=>	' ',
+
+// Menu
+'Nav Index'							=>	'Acceuil',
+'Nav Game'							=>	'Jeu',
+'Nav News'							=>	'Actualité',
+'Nav Board'							=>	'Board',
+'Nav Database'						=>	'Base de données',
+'Nav Account'						=>	'Compte',
+'Nav Language'						=>	'Langage',
+'Login'								=>	'Connexion',
+'Logout'							=>	'Déconnexion',
+'Signin'							=>	'Création de compte',
+'Not logged in'						=>	'Vous n\'êtes pas connecté.',
+'Logged in as'						=>	'Connecté en tant que ',
+'Remember me'						=>	'Se souvenir',
+'Forgotten pass'					=>	'Mot de passe oublié',
+
+// Board
+'Board'								=>	'Board',
+'Forum'								=>	'Forum',
+'Topic'								=>	'Sujet',
+'Post'								=>	'Message',
+'Submit'							=>	'Valider',
+
+// User
+'Account'							=>	'Compte',
+'Username'							=>	'Nom d\'affichage',
+'Password'							=>	'Mot de passe',
+'Password2'							=>	'Confirmation',
+'Email'								=>	'Adresse mail',
+'ToolTip Account'					=>	'Nom de compte utilisé pour vous connecter.',
+'ToolTip Username'					=>	'Affiché publiquement. Peut différer de votre nom de compte.',
+'ToolTip Password'					=>	'Mot de passe utilisé pour vous connecter.',
+'ToolTip Password2'					=>	'Confirmez votre mot de passe.',
+'ToolTip Email'						=>	'Utilisée pour retrouver votre mot de passe ou vous envoyer des informations importantes.',
 
 // Notices
-'Bad request'			=>	'Erreur. Le lien que vous avez suivi est incorrect ou périmé.',
-'No view'			=>	'Vous n\'êtes pas autorisé(e) à visiter ces forums.',
-'No permission'			=>	'Vous n\'êtes pas autorisé(e) à afficher cette page.',
-'Bad referrer'			=>	'Mauvais HTTP_REFERER. Vous avez été renvoyé(e) vers cette page par une source inconnue ou interdite. Si le problème persiste, assurez-vous que le champ «&#160;URL de base&#160;» de la page Administration&#160;» Options est correctement renseigné et que vous vous rendez sur ces forums en utilisant cette URL. Vous pourrez trouver davantage d\'informations dans la documentation de FluxBB.',
-'No cookie'			=>	'Vous semblez avoir été identifié(e), cependant aucun cookie n\'a été envoyé. Veuillez vérifier vos paramètres et, si possible, activer les cookies pour ce site.',
+'Bad request'						=>	'Erreur. Le lien que vous avez suivi est incorrect ou périmé.',
+'No view'							=>	'Vous n\'êtes pas autorisé(e) à visiter ces forums.',
+'No permission'						=>	'Vous n\'êtes pas autorisé(e) à afficher cette page.',
+'Bad referrer'						=>	'Mauvais HTTP_REFERER. Vous avez été renvoyé(e) vers cette page par une source inconnue ou interdite. Si le problème persiste, assurez-vous que le champ «&#160;URL de base&#160;» de la page Administration&#160;» Options est correctement renseigné et que vous vous rendez sur ces forums en utilisant cette URL. Vous pourrez trouver davantage d\'informations dans la documentation de FluxBB.',
+'No cookie'							=>	'Vous semblez avoir été identifié(e), cependant aucun cookie n\'a été envoyé. Veuillez vérifier vos paramètres et, si possible, activer les cookies pour ce site.',
 'Pun include extension'  			=>	'Impossible de procéder à l\'inclusion utilisateur %s depuis le gabarit %s. Fichiers "%s" non autorisés',
 'Pun include directory'				=>	'Impossible de procéder à l\'inclusion utilisateur %s depuis le gabarit %s. Ouverture de dossier non autorisé',
-'Pun include error'		=>	'Impossible de procéder à l\'inclusion utilisateur %s à partir du gabarit %s. Ce fichier ne se trouve ni dans le dossier des gabarits, ni dans le dossier d\'inclusion d\'utilisateur.',
+'Pun include error'					=>	'Impossible de procéder à l\'inclusion utilisateur %s à partir du gabarit %s. Ce fichier ne se trouve ni dans le dossier des gabarits, ni dans le dossier d\'inclusion d\'utilisateur.',
 
 // Miscellaneous
 'Announcement'			=>	'Annonce',
 'Options'			=>	'Options',
-'Submit'			=>	'Valider',	// "name" of submit buttons
-'Ban message'			=>	'Vous êtes banni(e) de ce forum.',
-'Ban message 2'			=>	'Votre bannissement expire le',
-'Ban message 3'			=>	'L\'administrateur ou le modérateur qui vous a banni envoie le message suivant :',
-'Ban message 4'			=>	'Pour toute question, contactez l\'administrateur',
+'Submit'			=>	'Valider',
 'Never'				=>	'Jamais',
 'Today'				=>	'Aujourd\'hui',
 'Yesterday'			=>	'Hier',
@@ -46,10 +77,6 @@ $lang_common = array(
 'by'				=>	'par',	// as in last post by someuser
 'New posts'			=>	'Nouveaux messages',
 'New posts info'		=>	'Atteindre le premier nouveau message de cette discussion.',	// the popup text for new posts links
-'Account'			=>	'Identifiant',
-'Username'			=>	'Nom d\'utilisateur',
-'Password'			=>	'Mot de passe',
-'Email'				=>	'E-mail',
 'Send email'			=>	'Envoyer un e-mail',
 'Moderated by'			=>	'Modéré par',
 'Registered'			=>	'Date d\'inscription',
@@ -95,17 +122,10 @@ $lang_common = array(
 'BBCode list size error'		=>	'Votre liste étant trop longue pour être analysée, veuillez la réduire s\'il vous plaît&#160;!',
 
 // Stuff for the navigator (top of every page)
-'Index'				=>	'Accueil',
 'User list'			=>	'Liste des membres',
 'Rules'				=>  	'Règles',
 'Search'			=>  	'Recherche',
 'Register'			=>  	'Inscription',
-'Login'				=>  	'Identification',
-'Not logged in'			=>  	'Vous n\'êtes pas identifié(e).',
-'Profile'			=>	'Membre',
-'Logout'			=>	'Déconnexion',
-'Language'				=>  	'Langage',
-'Logged in as'			=>	'Connecté(e) sous l\'identité&#160;',
 'Admin'				=>	'Administration',
 'Last visit'			=>	'Dernière visite&#160;: %s',
 'Topic searches'		=>	'Contributions&#160;:',
@@ -122,17 +142,11 @@ $lang_common = array(
 'Title separator'		=>	' / ',
 
 // Stuff for the page footer
-'Board footer'			=>	'Pied de page des forums',
-'Jump to'			=>	'Atteindre',
-'Go'				=>	'Aller',		// submit button in forum jump
-'Moderate topic'                =>      'Modérer la discussion',
 'Move topic'			=>  	'Déplacer la discussion',
 'Open topic'			=>  	'Ouvrir la discussion',
 'Close topic'			=>  	'Fermer la discussion',
 'Unstick topic'			=>  	'Détacher la discussion',
 'Stick topic'			=>  	'Épingler la discussion',
-'Moderate forum'		=>	'Modérer le forum',
-'Powered by'                    =>      'Propulsé par %s',
  
 // Debug information
 'Debug table'                   =>        'Informations de débogage',
@@ -142,17 +156,6 @@ $lang_common = array(
 'Query times'                   =>        'Temps (s)',
 'Query'                         =>        'Requête',
 'Total query time'              =>        'Temps total d\'exécution de la requête&#160;: %s',
-
-// For extern.php RSS feed
-'RSS description'                                 =>        'Les sujets les plus récents sur %s.',
-'RSS description topic'                           =>        'Les sujets les plus récents dans %s.',
-'RSS reply'                                       =>        'Réponse à&#160;:  ', // The topic subject will be appended to this string (to signify a reply)
-'RSS active topics feed'			  =>	    'Flux RSS des discussions actives',
-'Atom active topics feed'			  =>	    'Flux Atom des discussions actives',
-'RSS forum feed'				  =>	    'Flux RSS du forum',
-'Atom forum feed'				  =>	    'Flux Atom du forum',
-'RSS topic feed'				  =>	    'Flux RSS de la discussion',
-'Atom topic feed'				  =>	    'Flux Atom de la discussion',
 
 // Admin related stuff in the header
 'New reports'					  =>	    'De nouveaux signalements ont été envoyés&#160;!',

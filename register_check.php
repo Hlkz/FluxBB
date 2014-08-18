@@ -1,10 +1,8 @@
 <?php
-
 define('PUN_ROOT', dirname(__FILE__).'/');
+define('PUN_URL', dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']).'/');
 require PUN_ROOT.'include/common.php';
-
-// Load the register.php/profile.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/prof_reg.php';
+require PUN_ROOT.'include/lang/'.$pun_user['language'].'/prof_reg.php';
 
 if(isset($_POST['check_account']))
 {
@@ -21,8 +19,8 @@ if(isset($_POST['check_account']))
 		$err = true;
 		$msg = $lang_prof_reg['Account bad chars']; }
 	else {
-		$result = $dbauth->query('SELECT `id` FROM '.$dbauth->prefix.'`account` WHERE `account`="'.$check_account.'"') or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
-		if ($dbauth->result($result)) {
+		$result = $dba->query('SELECT `id` FROM '.$dba->prefix.'`account` WHERE `account`="'.$check_account.'"') or error('Unable to fetch user info', __FILE__, __LINE__, $dba->error());
+		if ($dba->result($result)) {
 			$err = true;
 			$msg = $lang_prof_reg['Account taken']; }
 		else $msg = $lang_prof_reg['Account available']; }
@@ -47,8 +45,8 @@ else if(isset($_POST['username']))
 		$err = true;
 		$msg = $lang_prof_reg['Username bad chars']; }
 	else {
-		$result = $dbauth->query('SELECT `id` FROM '.$dbauth->prefix.'`account` WHERE `username`="'.$username.'"') or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
-		if ($dbauth->result($result)) {
+		$result = $dba->query('SELECT `id` FROM '.$dba->prefix.'`account` WHERE `username`="'.$username.'"') or error('Unable to fetch user info', __FILE__, __LINE__, $dba->error());
+		if ($dba->result($result)) {
 			$err = true;
 			$msg = $lang_prof_reg['Username taken']; }
 		else $msg = $lang_prof_reg['Username available']; }

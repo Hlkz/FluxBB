@@ -1,27 +1,10 @@
 <?php
-
-/**
- * Copyright (C) 2008-2012 FluxBB
- * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
- * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
- */
-
 define('PUN_ROOT', dirname(__FILE__).'/');
+define('PUN_URL', dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']).'/');
 require PUN_ROOT.'include/common.php';
 
-
-// If we are logged in, we shouldn't be here
-if (!$pun_user['is_guest'])
-{
-	header('Location: index.php');
-	exit;
-}
-
-// Load the register.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
-
-// Load the register.php/profile.php language file
-require PUN_ROOT.'lang/'.$pun_user['language'].'/prof_reg.php';
+require PUN_ROOT.'include/lang/'.$pun_user['language'].'/register.php';
+require PUN_ROOT.'include/lang/'.$pun_user['language'].'/prof_reg.php';
 
 if ($pun_config['o_regs_allow'] == '0')
 	message($lang_register['No new regs']);
@@ -30,35 +13,6 @@ if ($pun_config['o_regs_allow'] == '0')
 // User pressed the cancel button
 if (isset($_GET['cancel']))
 	redirect('index.php', $lang_register['Reg cancel redirect']);
-
-
-else if ($pun_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POST['form_sent']))
-{
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_register['Register'], $lang_register['Forum rules']);
-	define('PUN_ACTIVE_PAGE', 'register');
-	require PUN_ROOT.'header.php';
-
-?>
-<div id="rules" class="blockform">
-	<div class="hd"><h2><span><?php echo $lang_register['Forum rules'] ?></span></h2></div>
-	<div class="box">
-		<form method="get" action="register.php">
-			<div class="inform">
-				<fieldset>
-					<legend><?php echo $lang_register['Rules legend'] ?></legend>
-					<div class="infldset">
-						<div class="usercontent"><?php echo $pun_config['o_rules_message'] ?></div>
-					</div>
-				</fieldset>
-			</div>
-			<p class="buttons"><input type="submit" name="agree" value="<?php echo $lang_register['Agree'] ?>" /> <input type="submit" name="cancel" value="<?php echo $lang_register['Cancel'] ?>" /></p>
-		</form>
-	</div>
-</div>
-<?php
-
-	require PUN_ROOT.'footer.php';
-}
 
 // Start with a clean slate
 $errors = array();
@@ -117,8 +71,8 @@ if (isset($_POST['form_sent']))
 		$intial_group_id = ($pun_config['o_regs_verify'] == '0') ? $pun_config['o_default_user_group'] : PUN_UNVERIFIED;
 		$password_hash = pun_hash(strtoupper($account).':'.strtoupper($password1));
 
-		$dbauth->query('INSERT INTO account(account, username, sha_pass_hash, email, joindate, last_ip, expansion) VALUES(\''.$dbauth->escape($account).'\', \''.$dbauth->escape($username).'\', \''.$password_hash.'\', \''.$dbauth->escape($email).'\', '.$now.', \''.$dbauth->escape(get_remote_address()).'\', 2)') or error('Unable to create user', __FILE__, __LINE__, $dbauth->error());
-		$new_uid = $dbauth->insert_id();
+		$dba->query('INSERT INTO account(account, username, sha_pass_hash, email, joindate, last_ip, expansion) VALUES(\''.$dba->escape($account).'\', \''.$dba->escape($username).'\', \''.$password_hash.'\', \''.$dba->escape($email).'\', '.$now.', \''.$dba->escape(get_remote_address()).'\', 2)') or error('Unable to create user', __FILE__, __LINE__, $dba->error());
+		$new_uid = $dba->insert_id();
 
 		// Add the user
 		$db->query('INSERT INTO '.$db->prefix.'users (id, group_id, email, email_setting, timezone, dst, language, style, registered, registration_ip, last_visit) VALUES('.$new_uid.', '.$intial_group_id.', \''.$db->escape($email).'\', '.$email_setting.', '.$timezone.' , '.$dst.', \''.$db->escape($language).'\', \''.$pun_config['o_default_style'].'\', '.$now.', \''.$db->escape(get_remote_address()).'\', '.$now.')') or error('Unable to create user', __FILE__, __LINE__, $db->error());
@@ -183,8 +137,7 @@ if (isset($_POST['form_sent']))
 if(isset($_POST['check_account']))
 {
     $chack_account = $_POST['check_account'];
-	$result = $dbauth->query('SELECT id FROM '.$dbauth->prefix.'account WHERE account='.$check_account) or error('Unable to fetch user info', __FILE__, __LINE__, $dbauth->error());
-	//echo $dbauth->error();
+	$result = $dba->query('SELECT id FROM '.$dba->prefix.'account WHERE account='.$check_account) or error('Unable to fetch user info', __FILE__, __LINE__, $dba->error());
 	if ($result) echo '<font color="red">Unavaliable.</font>';
     else         echo '<font color="green">Avaliable.</font>';
 }
@@ -223,39 +176,82 @@ if (!empty($errors))
 <?php
 
 }
-?>
-<div id="regerr" hidden="true"></div>
-<div id="regform" class="blockform">
-	<h2><span><?php echo $lang_register['Register'] ?></span></h2>
-	<div class="box">
-		<form id="register" name="register" method="post" action="register.php?action=register" onsubmit="this.register.disabled=true;if(process_form(this)){return true;}else{this.register.disabled=false;return false;}">
-			<div class="inform">
-				<fieldset>
-					<legend></legend>
-					<div class="infldset">
-						<input type="hidden" name="form_sent" value="1" />
-						<label class="conl required"><strong><?php echo $lang_common['Account'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><input type="text" id="req_account"  name="req_account"  value="<?php if (isset($_POST['req_account']))  echo pun_htmlspecialchars($_POST['req_account']); ?>"  size="25" maxlength="12" /><br /></label><label class='conl' id="rep_account"><div id="req_account_err"></div></label><br />
-						<label class="conl required"><strong><?php echo $lang_common['Username'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><input type="text" id="req_username" name="req_username" value="<?php if (isset($_POST['req_username'])) echo pun_htmlspecialchars($_POST['req_username']); ?>" size="25" maxlength="12" /><br /></label><label class='conl' id="rep_username"><div id="req_username_err"></div></label>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend></legend>
-					<div class="infldset">
-						<label class="conl required"><strong><?php echo $lang_common['Password'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><input type="password" id="req_password1" name="req_password1" value="<?php if (isset($_POST['req_password1'])) echo pun_htmlspecialchars($_POST['req_password1']); ?>" size="16" /><br /></label><label class='conl' id="rep_password1"><div id="req_password1_err"></div></label><br />
-						<label class="conl required"><strong><?php echo $lang_prof_reg['Confirm pass'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><input type="password" id="req_password2" name="req_password2" value="<?php if (isset($_POST['req_password2'])) echo pun_htmlspecialchars($_POST['req_password2']); ?>" size="16" /><br /></label><label class='conl' id="rep_password2"><div id="req_password2_err"></label>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend></legend>
-					<div class="infldset">
-						<label class="conl required"><strong><?php echo $lang_common['Email'] ?> <span><?php echo $lang_common['Required'] ?></span></strong><input type="text" id="req_email" name="req_email" value="<?php if (isset($_POST['req_email'])) echo pun_htmlspecialchars($_POST['req_email']); ?>" size="50" maxlength="80" /><br /></label><label class='conl' id="rep_email"><div id="req_email_err"></label>
-					</div>
-				</fieldset>
-			</div>
-			<p class="buttons"><input type="submit" id="register" name="register" value="<?php echo $lang_register['Register'] ?>" /></p>
-		</form>
-	</div>
-</div>
-<?php
+
+echo '<div id="regerr" hidden="true"></div>'.
+	'<div id="regform" class="blockform">'.
+		'<h2><span>'.$lang_register['Register'].'</span></h2>'.
+		'<div class="box">'.
+		'<form id="register" name="register" method="post" action="register.php?action=register" onsubmit="this.register.disabled=true;if(process_form(this)){return true;}else{this.register.disabled=false;return false;}">'.
+			'<div class="inform">'.
+				'<fieldset>'.
+					'<div class="infldset">'.
+						'<input type="hidden" name="form_sent" value="1" />'.
+
+						'<label class="conl required">'.
+							'<div id="field_req_account" style="display:inline"><div id="hover_field_req_account" style="display:none; position:absolute">'.
+								'<div class="tooltip"><div class="tooltipleft">'.$lang_common['ToolTip Account'].'</div></div>'.
+							'</div>'.
+							'<strong>'.$lang_common['Account'].'</div><span>'.$lang_common['Required'].'</span></strong>'.
+							'<input type="text" id="req_account"  name="req_account"  value="'.(isset($_POST['req_account']) ?  pun_htmlspecialchars($_POST['req_account']) : '').'"  size="25" maxlength="12" />'.
+						'</label>'.
+						'<label class="conl" id="rep_account"><div id="req_account_err"></div>'.
+						'</label><br/>'.
+
+						'<label class="conl required">'.
+							'<div id="field_req_username" style="display:inline"><div id="hover_field_req_username" style="display:none; position:absolute">'.
+								'<div class="tooltip"><div class="tooltipleft">'.$lang_common['ToolTip Username'].'</div></div>'.
+							'</div>'.
+							'<strong>'.$lang_common['Username'].'</div><span>'.$lang_common['Required'].'</span></strong>'.
+							'<input type="text" id="req_username"  name="req_username"  value="'.(isset($_POST['req_username']) ?  pun_htmlspecialchars($_POST['req_username']) : '').'"  size="25" maxlength="12" />'.
+						'</label>'.
+						'<label class="conl" id="rep_username"><div id="req_username_err"></div>'.
+						'</label><br/>'.
+
+					'</div>'.
+				'</fieldset>'.
+				'<fieldset>'.
+					'<div class="infldset">'.
+
+						'<label class="conl required">'.
+							'<div id="field_req_password" style="display:inline"><div id="hover_field_req_password" style="display:none; position:absolute">'.
+								'<div class="tooltip"><div class="tooltipleft">'.$lang_common['ToolTip Password'].'</div></div>'.
+							'</div>'.
+							'<strong>'.$lang_common['Password'].'</div><span>'.$lang_common['Required'].'</span></strong>'.
+							'<input type="password" id="req_password1" name="req_password1" value="'.(isset($_POST['req_password1']) ? pun_htmlspecialchars($_POST['req_password1']) : '').'" size="16" />'.
+						'</label>'.
+						'<label class="conl" id="rep_password1"><div id="req_password1_err"></div>'.
+						'</label><br/>'.
+
+						'<label class="conl required">'.
+							'<div id="field_req_password2" style="display:inline"><div id="hover_field_req_password2" style="display:none; position:absolute">'.
+								'<div class="tooltip"><div class="tooltipleft">'.$lang_common['ToolTip Password2'].'</div></div>'.
+							'</div>'.
+							'<strong>'.$lang_common['Password2'].'</div><span>'.$lang_common['Required'].'</span></strong>'.
+							'<input type="password" id="req_password2" name="req_password2" value="'.(isset($_POST['req_password2']) ? pun_htmlspecialchars($_POST['req_password2']) : '').'" size="16" />'.
+						'</label>'.
+						'<label class="conl" id="rep_password2"><div id="req_password2_err"></div>'.
+						'</label>'.
+
+					'</div>'.
+				'</fieldset>'.
+				'<fieldset>'.
+					'<div class="infldset">'.
+
+						'<label class="conl required">'.
+							'<div id="field_req_email" style="display:inline"><div id="hover_field_req_email" style="display:none; position:absolute">'.
+								'<div class="tooltip"><div class="tooltipleft">'.$lang_common['ToolTip Email'].'</div></div>'.
+							'</div>'.
+							'<strong>'.$lang_common['Email'].'</div><span><'.$lang_common['Required'].'</span></strong>'.
+							'<input type="text" id="req_email" name="req_email" value="'.(isset($_POST['req_email']) ? pun_htmlspecialchars($_POST['req_email']) : '').'" size="50" maxlength="80" />'.
+						'</label>'.
+						'<label class="conl" id="rep_email"><div id="req_email_err"></label>'.
+
+					'</div>'.
+				'</fieldset>'.
+			'</div>'.
+			'<p class="buttons"><input type="submit" id="register" name="register" value="'.$lang_register['Register'].'" /></p>'.
+		'</form>'.
+	'</div>'.
+'</div>';
 
 require PUN_ROOT.'footer.php';

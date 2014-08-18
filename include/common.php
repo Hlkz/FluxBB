@@ -156,10 +156,8 @@ if ($pun_user['is_guest'])
 			forum_setcookie($cookie_name.'_lang', $change_lang, 0);
 			$pun_config['o_default_lang'] = $pun_user['language'] = $change_lang;
 
-			$redirect_url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-			$redirect_url = rtrim($redirect_url, "lang=".$_GET['lang']);
-			$redirect_url = rtrim($redirect_url, "?");
-			$redirect_url = rtrim($redirect_url, "&");
+			if (isset($_POST['lang_redirect_url']))	$redirect_url = $_POST['lang_redirect_url'];
+			else	message($lang_common['Bad request'], false, '404 Not Found');
 			header('Location: '.str_replace('&amp;', '&', $redirect_url));
 		}
 	}
