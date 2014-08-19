@@ -994,7 +994,8 @@ html, body, .pun {
 #main {
 	margin: 0 auto; }
 
-#brdheader, #brdfooter {}
+#brdheader, #brdfooter {
+	clear: both; }
 #brdheader .topright, #brdfooter .topright {
 	float: right; }
 #brdheader .bigbuttons, #brdfooter .bigbuttons {
@@ -1009,6 +1010,77 @@ html, body, .pun {
 #brdheader .nobot, #brdfooter .nobot {
 	height: 20px; }
 
+/* Links
+----------------------------------------------------------------*/
+
+.pun a, .pun a:link, .pun a:visited {
+	color: #f60; /*d50*/
+	text-decoration: none; }
+
+.pun a:hover, .pun a:active, .pun a:focus {
+	color: #0f6;
+	text-decoration: none; }
+
+.pun .lang_button {
+	background:none!important;
+	border:none;
+	padding:0!important;
+	color: #f60;
+    font-family:arial,sans-serif;
+    cursor:pointer; }
+.pun .lang_button:hover {
+	color: #0f6; }
+.pun .lang_button:focus {
+	outline:0; }
+
+.pun input[type=text], .pun input[type=password], .pun textarea {
+	border: 0;
+	padding: 2px;
+	margin: 0;
+	background: #333;
+	color: #fff; }
+
+.pun input[type=text]:focus, .pun input[type=password], .pun textarea:focus {
+	border: 0;
+	padding: 2px;
+	margin: 0;
+	background: #333;
+	color: #fff;
+	outline:0;
+}
+
+.pun .bigbuttons {
+	margin: 12px 0px 12px 0;
+}
+
+.bigbutton,.bigbuttons a, .itembutton {
+	border: 0;
+	color: #f60;
+	margin: 0 24px 0 0;
+	background: #1c1c1c;
+	padding: 16px; }
+.itembutton {
+	margin: 6px 0 0 0;
+	padding: 10px; }
+
+.bigbutton:hover, .bigbuttons a:hover, .itembutton:hover {
+	background: #333;
+	color: #0f6;
+}
+
+.pun .tooltip {
+	color: #fff;
+	float: left;
+	margin: 6px 12px 6px 12px;
+	background: #161616; }
+.pun .tooltip .tooltipleft {
+	float: left;
+	padding: 8px; }
+.pun .tooltip .tooltipright {
+	float: left;
+	background: #333;
+	padding: 8px; }
+
 /* Board
 ----------------------------------------------------------------*/
 
@@ -1017,12 +1089,19 @@ html, body, .pun {
 	padding: 0px 0px 0px 8px; }
 
 #board .forum {
-	background: #1c1c1c;
+	background: url("../img/icons/INV_Misc_Book_10.png") no-repeat #1c1c1c;
+	background-size: 32px 32px;
+	background-position: 6px 6px;
 	margin-top: 24px;
+	margin-right: 20px;
 	padding: 12px;
-	width: 120px; }
+	padding-left: 46px;
+	width: 160px;
+	float:left; }
 #board .forum:hover {
-	background: #333;
+	background: url("../img/icons/INV_Misc_Book_10.png") no-repeat #333;
+	background-size: 32px 32px;
+	background-position: 6px 6px;
     cursor: pointer; }
 #board .forum:hover .forumlink {
 	color: #0f6; }
@@ -1033,12 +1112,17 @@ html, body, .pun {
 .pun #forum { }
 
 #forum .topic {
-	background: #1c1c1c;
+	background: url("../img/icons/INV_Misc_Note_01.png") no-repeat #1c1c1c;
+	background-size: 32px 32px;
+	background-position: 6px 6px;
 	margin-top: 24px;
 	padding: 12px;
+	padding-left: 42px;
 	width: 94%; }
 #forum .topic:hover {
-	background: #333;
+	background: url("../img/icons/INV_Misc_Note_01.png") no-repeat #333;
+	background-size: 32px 32px;
+	background-position: 6px 6px;
     cursor: pointer; }
 #forum .topic:hover .topiclink {
 	color: #0f6; }
@@ -1139,75 +1223,3 @@ html, body, .pun {
 #item .ui-state-active{
 	background: #333;
 	color: #0f6; }
-
-/* Links
-----------------------------------------------------------------*/
-
-.pun a, .pun a:link, .pun a:visited {
-	color: #d50;
-	text-decoration: none; }
-
-.pun a:hover, .pun a:active, .pun a:focus {
-	color: #0f6;
-	text-decoration: none; }
-
-.pun .lang_button {
-	background:none!important;
-	border:none;
-	padding:0!important;
-	color: #f60;
-    font-family:arial,sans-serif;
-    cursor:pointer; }
-.pun .lang_button:hover {
-	color: #0f6; }
-.pun .lang_button:focus {
-	outline:0; }
-
-.pun input[type=text], .pun input[type=password], .pun textarea {
-	border: 0;
-	padding: 2px;
-	margin: 0;
-	background: #333;
-	color: #fff;
-}
-
-.pun input[type=text]:focus, .pun input[type=password], .pun textarea:focus {
-	border: 0;
-	padding: 2px;
-	margin: 0;
-	background: #333;
-	color: #fff;
-	outline:0;
-}
-
-.pun .bigbuttons {
-	margin: 12px 0px 12px 0;
-}
-
-.bigbutton,.bigbuttons a, .itembutton {
-	border: 0;
-	color: #f60;
-	margin: 0 24px 0 0;
-	background: #1c1c1c;
-	padding: 16px; }
-.itembutton {
-	margin: 6px 0 0 0;
-	padding: 10px; }
-
-.bigbutton:hover, .bigbuttons a:hover, .itembutton:hover {
-	background: #333;
-	color: #0f6;
-}
-
-.pun .tooltip {
-	color: #fff;
-	float: left;
-	margin: 6px 12px 6px 12px;
-	background: #161616; }
-.pun .tooltip .tooltipleft {
-	float: left;
-	padding: 8px; }
-.pun .tooltip .tooltipright {
-	float: left;
-	background: #333;
-	padding: 8px; }

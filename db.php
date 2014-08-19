@@ -8,7 +8,7 @@ if ($pun_user['g_read_board'] == '0')
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']));
 define('PUN_ALLOW_INDEX', 1);
-define('PUN_ACTIVE_PAGE', 'index');
+define('PUN_ACTIVE_PAGE', 'db');
 require PUN_ROOT.'header.php';
 
 echo '<div id="idx0" class="block"><div class="box"><div class="inbox"><p>En construction.</p></div></div></div>';

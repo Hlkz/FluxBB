@@ -202,22 +202,21 @@ $tpl_main = str_replace('<pun_navlinks>', $tpl_temp, $tpl_main);
 
 // START SUBST - <pun_account>
 $tpl_temp = '<div id="headeraccount">';
+
+if ($pun_user['is_guest'])	$tpl_temp .= $lang_common['Not logged in'].' <a href="'.PUN_URL.'login.php">'.$lang_common['Login'].'</a>';
+else						$tpl_temp .= $lang_common['Logged in as'].' '.$pun_user['username'].' <a href="'.PUN_URL.'login.php?action=out">'.$lang_common['Logout'].'</a>'.
+										'<a href="'.PUN_URL.'account.php?id='.$pun_user['id'].'">'.'<div class="space"></div>'.
+										$lang_common['Manage account'].'</a>';
+$tpl_temp .= '<div class="space"></div>'.
+			'<a href="'.PUN_URL.'register.php">'.$lang_common['Signin'].'</a>'.
+			'<div class="space"></div>';
+
 $lang_to_switch = "English";	$languages = forum_list_langs();
 if (count($languages) > 1)	foreach ($languages as $temp)	if ($pun_user['language'] != $temp)	$lang_to_switch = $temp;
 $tpl_temp .= '<form id="lang_form" method="POST" action="'.PUN_URL.'?lang='.$lang_to_switch.'" style="display:inline">'.
 			'<input type="hidden" name="lang_redirect_url" value="http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].'" />'.
-			'<input class="lang_button" type="submit" value="'.$lang_common['Nav Language'].'" /></form>'.
-			'<div class="space"></div>';
-
-if ($pun_user['is_guest'])	$tpl_temp .= $lang_common['Not logged in'].' <a href="'.PUN_URL.'login.php">'.$lang_common['Login'].'</a>';
-else						$tpl_temp .= $lang_common['Logged as'].' '.$pun_user['username'].
-										'<a href="'.PUN_URL.'account.php?id='.$pun_user['id'].'">'.$lang_common['Nav Account'].'</a>'.
-										'<div class="space"></div>';
-										'<a href="'.PUN_URL.'logout.php">'.$lang_common['Logout'].'</a>';
-$tpl_temp .= '<div class="space"></div>'.
-			'<a href="'.PUN_URL.'register.php">'.$lang_common['Signin'].'</a>'.
-			'<div class="space"></div>'.
-			'</div>';
+			'<input class="lang_button" type="submit" value="'.$lang_common['Nav Language'].'" /></form>';
+$tpl_temp .= '</div>';
 $tpl_main = str_replace('<pun_account>', $tpl_temp, $tpl_main);
 // END SUBST - <pun_account>
 

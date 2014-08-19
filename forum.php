@@ -10,8 +10,6 @@ $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id < 1)
 	message($lang_common['Bad request'], false, '404 Not Found');
 
-require PUN_ROOT.'include/lang/'.$pun_user['language'].'/common.php';
-
 // Fetch some info about the forum
 $result = $db->query('SELECT f.forum_name, f.redirect_url FROM '.$db->prefix.'board_forums AS f WHERE f.id='.$id) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 if (!$db->num_rows($result))	message($lang_common['Bad request'], false, '404 Not Found');

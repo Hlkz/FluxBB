@@ -6,8 +6,6 @@ define('PUN_ROOT', dirname(__FILE__).'/');
 define('PUN_URL', dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']).'/');
 require PUN_ROOT.'include/common.php';
 
-require PUN_ROOT.'include/lang/'.$pun_user['language'].'/login.php';
-
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
 if (isset($_POST['form_sent']) && $action == 'in')
@@ -16,31 +14,26 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$form_password = pun_trim($_POST['req_password']);
 	$save_pass = isset($_POST['save_pass']);
 
-	$form_password_hash = pun_hash(pun_hash(strtoupper($form_username).':'.strtoupper($form_password))); // Will result in a SHA-1 hash
+	$form_password_hash = pun_hash(strtoupper(pun_hash(strtoupper($form_username).':'.strtoupper($form_password)))); // Will result in a SHA-1 hash
 
 	$username_sql = ($dba_type == 'mysql' || $dba_type == 'mysqli' || $dba_type == 'mysql_innodb' || $dba_type == 'mysqli_innodb') ? 'account=\''.$db->escape($form_username).'\'' : 'LOWER(account)=LOWER(\''.$db->escape($form_username).'\')';
 	$result = $dba->query('SELECT id FROM '.$dba->prefix.'account WHERE '.$username_sql) or error('Unable to fetch user info', __FILE__, __LINE__, $dba->error());
 	$user_id = $dba->fetch_assoc($result);
-	if ($user_id['id'])
-		$user_id = $user_id['id'];
-	else
-		$user_id =  0;
+	if ($user_id['id'])	$user_id = $user_id['id'];
+	else				$user_id =  0;
 
 	$authorized = false;
 
 	$result = $db->query('SELECT * FROM '.$db->prefix.'users WHERE id='.$user_id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	$cur_user = $db->fetch_assoc($result);
 
-	if ($user_id)
-	{
+	if ($user_id) {
 		$result = $dba->query("SELECT COUNT(*) AS sha_count FROM ".$dba->prefix."account WHERE id=".$user_id." AND sha_pass_hash=SHA1(CONCAT(UPPER('$form_username'),':',UPPER('$form_password')))") or error('Unable to fetch user info', __FILE__, __LINE__, $dba->error());
 		$sha = $dba->fetch_assoc($result);
 		if ($sha['sha_count'])
-			$authorized = true;
-	}
+			$authorized = true; }
 
-	if (!$authorized)
-		message($lang_login['Wrong user/pass'].' <a href="login.php?action=forget">'.$lang_login['Forgotten pass'].'</a>');
+	if (!$authorized)	message($lang_common['Wrong user/pass'].' <a href="'.PUN_URL.'login.php?action=forget">'.$lang_common['Forgotten pass'].'</a>');
 
 	// Update the status if this is the first time the user logged in
 	if ($cur_user['group_id'] == PUN_UNVERIFIED)
@@ -64,13 +57,13 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	// Reset tracked topics
 	set_tracked_topics(null);
 
-	redirect(pun_htmlspecialchars($_POST['redirect_url']), $lang_login['Login redirect']);
+	redirect(pun_htmlspecialchars($_POST['redirect_url']));
 }
 
 
 else if ($action == 'out')
 {
-	if ($pun_user['is_guest'] || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'] || !isset($_GET['csrf_token']) || $_GET['csrf_token'] != pun_hash($pun_user['id'].pun_hash(get_remote_address())))
+	if ($pun_user['is_guest']) // || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'] || !isset($_GET['csrf_token']) || $_GET['csrf_token'] != pun_hash($pun_user['id'].pun_hash(get_remote_address())))
 	{
 		header('Location: index.php');
 		exit;
@@ -85,7 +78,7 @@ else if ($action == 'out')
 
 	pun_setcookie(1, pun_hash(uniqid(rand(), true)), time() + 31536000);
 
-	redirect('index.php', $lang_login['Logout redirect']);
+	redirect('index.php');
 }
 
 
@@ -243,7 +236,7 @@ if (!empty($_SERVER['HTTP_REFERER']))
 }
 
 if (!isset($redirect_url))
-	$redirect_url = 'forum.php';
+	$redirect_url = '/';
 else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
 	$redirect_url .= '#p'.$matches[1];
 
@@ -272,10 +265,8 @@ echo '<div class="blockform">'.
 							'</label>'.
 						'</div>'.
 						'<div class="infldset">'.
-							'<label>'.
-								'<input type="submit" name="login" value="'.$lang_common['Login'].'" tabindex="4" /><div class="space"></div>'.
-								'<input type="checkbox" name="save_pass" value="1" tabindex="3" />'.$lang_common['Remember me'].'<br/>'.
-							'</label>'.
+							'<input type="submit" name="login" value="'.$lang_common['Login'].'" tabindex="4" /><div class="space"></div>'.
+							'<label class="conl"><input type="checkbox" name="save_pass" value="1" tabindex="3" />'.$lang_common['Remember me'].'</label><br/>'.
 						'</div>'.
 						'<div class="infldset">'.
 							'<a href="register.php" tabindex="5">'.$lang_common['Signin'].'</a><div class="space"></div>'.

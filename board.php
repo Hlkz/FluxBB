@@ -62,7 +62,7 @@ while ($cur_forum = $db->fetch_assoc($result))
 			echo '<div style="height:18px"></div>';
 		
 		echo '<div id="idx'.$cat_count.'" class="blocktable">'.
-				'<h2><span>'.pun_htmlspecialchars($cur_forum['cat_name']).'</span></h2>';
+				'<h2><span>'.$lang_common[pun_htmlspecialchars($cur_forum['cat_name'])].'</span></h2>';
 
 		$cur_category = $cur_forum['cid'];
 	}
@@ -75,21 +75,17 @@ while ($cur_forum = $db->fetch_assoc($result))
 	$link = "";
 
 	// Is this a redirect forum?
-	if ($cur_forum['redirect_url'] != '')
-	{
+	if ($cur_forum['redirect_url'] != '') {
 		$link = pun_htmlspecialchars($cur_forum['redirect_url']);
 		$forum_field = '<h3><span class="redirtext">'.$lang_index['Link to'].'</span> <a href="'.$link.'" title="'.$lang_index['Link to'].' '.pun_htmlspecialchars($cur_forum['redirect_url']).'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</a></h3>';
 		$num_topics = $num_posts = '-';
 		$item_status .= ' iredirect';
-		$icon_type = 'icon';
-	}
-	else
-	{
+		$icon_type = 'icon'; }
+	else {
 		$link = PUN_URL.'forum.php?id='.$cur_forum['fid'];
-		$forum_field = '<div class="forumlink"><a href="'.$link.'">'.pun_htmlspecialchars($cur_forum['forum_name']).'</a></div>'.(!empty($forum_field_new) ? ' '.$forum_field_new : '');
+		$forum_field = '<a href="'.$link.'" class="forumlink">'.pun_htmlspecialchars($cur_forum['forum_name']).'</a>'.(!empty($forum_field_new) ? ' '.$forum_field_new : '');
 		$num_topics = $cur_forum['num_topics'];
-		$num_posts = $cur_forum['num_posts'];
-	}
+		$num_posts = $cur_forum['num_posts']; }
 
 	if ($cur_forum['forum_desc'] != '')
 		$forum_field .= "\n\t\t\t\t\t\t\t\t".'<div class="forumdesc">'.$cur_forum['forum_desc'].'</div>';

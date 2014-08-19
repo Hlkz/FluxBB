@@ -6,14 +6,11 @@ require PUN_ROOT.'include/common.php';
 if ($pun_user['g_read_board'] == '0')
 	message($lang_common['No view'], false, '403 Forbidden');
 
-
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $pid = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
 if ($id < 1 && $pid < 1)
 	message($lang_common['Bad request'], false, '404 Not Found');
-
-require PUN_ROOT.'include/lang/'.$pun_user['language'].'/topic.php';
 
 
 // If a post ID is specified we determine topic ID and page number so we can redirect to the correct message
@@ -179,8 +176,9 @@ while ($cur_post = $db->fetch_assoc($result))
 
 	echo '<tr id="p'.$cur_post['id'].'" class="post">'.
 			'<td class="postleft">'.
-				'<a href="topic.php?pid='.$cur_post['id'].'#p'.$cur_post['id'].'#'.$cur_post['id'].'</a> '.implode($post_actions).
-				format_time($cur_post['posted'], false, "y/m/d", "h:s").' '.$cur_username.
+				'<a href="'.PUN_URL.'account.php?id='.$cur_post['poster_id'].'">'.$cur_username.'</a><br/>'.
+				'<a href="topic.php?pid='.$cur_post['id'].'#p'.$cur_post['id'].'#'.$cur_post['id'].'">#'.$cur_post['id'].'</a> '.implode($post_actions).
+				format_time($cur_post['posted'], false, "y/m/d", "h:s").
 			'</td>'.
 			'<td class="postright">'.$cur_post['message'].'</td>'.
 		'</tr>'.
@@ -189,9 +187,10 @@ while ($cur_post = $db->fetch_assoc($result))
 
 echo '</table>';
 
+if (!$pun_user['is_guest'])
+{
 // Display quick post
 $cur_index = 1;
-
 ?>
 <div id="quickpost" class="blockform">
 		<form id="quickpostform" method="post" action="post.php?tid=<?php echo $id ?>" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">
@@ -214,11 +213,13 @@ else
 	require FORUM_CACHE_DIR.'cache_fluxtoolbar_quickform.php';
 }
 ?>
-			<p class="buttons"><input type="submit" name="submit" class="bigbutton" tabindex="<?php echo $cur_index++ ?>" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" /> <input type="submit" name="preview" class="bigbutton" value="<?php echo $lang_topic['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /></p>
+			<p class="buttons"><input type="submit" name="submit" class="bigbutton" tabindex="<?php echo $cur_index++ ?>" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" />
+			 <input type="submit" name="preview" class="bigbutton" value="<?php echo $lang_common['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /></p>
 		</form>
 </div>
-
 <?php
+}
+
 echo '<div id="brdfooter">'.
 		'<div class="botright">'.$botright_links.'</div>'.
 		'<div class="botleft">'.$botleft_links.'</div>'.

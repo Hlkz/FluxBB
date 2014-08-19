@@ -1,13 +1,4 @@
 <?php
-
-/**
- * Copyright (C) 2008-2012 FluxBB
- * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
- * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
- */
-
-
-
 //
 // Return current timestamp (with microseconds) as a float
 //
@@ -16,6 +7,7 @@ function get_microtime()
 	list($usec, $sec) = explode(' ', microtime());
 	return ((float)$usec + (float)$sec);
 }
+
 
 //
 // Cookie stuff!
@@ -55,7 +47,7 @@ function check_cookie(&$pun_user)
 		$valid_user = $dba->fetch_assoc($result);
 
 		// If user authorisation failed
-		if (!isset($valid_user['id']) || forum_hmac(pun_hash($valid_user['sha_pass_hash']), $cookie_seed.'_password_hash') !== $cookie['password_hash'])
+		if (!isset($valid_user['id']) || forum_hmac(pun_hash(strtoupper($valid_user['sha_pass_hash'])), $cookie_seed.'_password_hash') !== $cookie['password_hash'])
 		{
 			$expire = $now + 31536000; // The cookie expires after a year
 			pun_setcookie(1, pun_hash(uniqid(rand(), true)), $expire);
@@ -64,13 +56,14 @@ function check_cookie(&$pun_user)
 			return;
 		}
 
-		$pun_user['username'] = $valid_user['username'];
 		$result = $db->query('SELECT u.*, g.*, o.logged, o.idle FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id LEFT JOIN '.$db->prefix.'online AS o ON o.user_id=u.id WHERE u.id='.intval($cookie['user_id'])) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
 		$pun_user = $db->fetch_assoc($result);
 
+		$pun_user['username'] = $valid_user['username'];
+
 		// Send a new, updated cookie with a new expiration timestamp
 		$expire = ($cookie['expiration_time'] > $now + $pun_config['o_timeout_visit']) ? $now + 1209600 : $now + $pun_config['o_timeout_visit'];
-		pun_setcookie($pun_user['id'], pun_hash($valid_user['sha_pass_hash']), $expire);
+		pun_setcookie($pun_user['id'], pun_hash(strtoupper($valid_user['sha_pass_hash'])), $expire);
 
 		// Set a default language if the user selected language no longer exists
 		if (!file_exists(PUN_ROOT.'include/lang/'.$pun_user['language']))
@@ -136,7 +129,7 @@ function check_cookie(&$pun_user)
 		}
 
 		$pun_user['is_guest'] = false;
-		$pun_user['is_admmod'] = $pun_user['g_id'] == PUN_ADMIN || $pun_user['g_moderator'] == '1';
+		$pun_user['is_admin'] = $pun_user['g_id'] == PUN_ADMIN || $pun_user['g_moderator'] == '1';
 	}
 	else
 		set_default_user();
@@ -1329,7 +1322,7 @@ function maintenance_message()
 //
 // Display $message and redirect user to $destination_url
 //
-function redirect($destination_url, $message)
+function redirect($destination_url, $delay = false, $message = null)
 {
 	global $db, $pun_config, $lang_common, $pun_user;
 
@@ -1341,7 +1334,7 @@ function redirect($destination_url, $message)
 	$destination_url = preg_replace('%([\r\n])|(\%0[ad])|(;\s*data\s*:)%i', '', $destination_url);
 
 	// If the delay is 0 seconds, we might as well skip the redirect all together
-	if ($pun_config['o_redirect_delay'] == '0')
+	if (!$delay || $pun_config['o_redirect_delay'] == '0')
 	{
 		$db->end_transaction();
 		$db->close();

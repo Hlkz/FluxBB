@@ -22,6 +22,7 @@ $lang_common = array(
 'Login'								=>	'Connexion',
 'Logout'							=>	'Déconnexion',
 'Signin'							=>	'Création de compte',
+'Manage account'					=>	'Gestion de compte',
 'Not logged in'						=>	'Vous n\'êtes pas connecté.',
 'Logged in as'						=>	'Connecté en tant que ',
 'Remember me'						=>	'Se souvenir',
@@ -33,6 +34,8 @@ $lang_common = array(
 'Topic'								=>	'Sujet',
 'Post'								=>	'Message',
 'Submit'							=>	'Valider',
+'Preview'							=>	'Prévisualisation',
+'Cat Realm'							=>	'Royaume d\'Aviana',
 
 // User
 'Account'							=>	'Compte',
@@ -45,6 +48,7 @@ $lang_common = array(
 'ToolTip Password'					=>	'Mot de passe utilisé pour vous connecter.',
 'ToolTip Password2'					=>	'Confirmez votre mot de passe.',
 'ToolTip Email'						=>	'Utilisée pour retrouver votre mot de passe ou vous envoyer des informations importantes.',
+'Wrong user/pass'					=>	'Ces informations de correspondent à aucun compte.',
 
 // Notices
 'Bad request'						=>	'Erreur. Le lien que vous avez suivi est incorrect ou périmé.',

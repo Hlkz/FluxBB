@@ -3,9 +3,6 @@ define('PUN_ROOT', dirname(__FILE__).'/');
 define('PUN_URL', dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']).'/');
 require PUN_ROOT.'include/common.php';
 
-require PUN_ROOT.'include/lang/'.$pun_user['language'].'/register.php';
-require PUN_ROOT.'include/lang/'.$pun_user['language'].'/prof_reg.php';
-
 if ($pun_config['o_regs_allow'] == '0')
 	message($lang_register['No new regs']);
 
@@ -249,7 +246,7 @@ echo '<div id="regerr" hidden="true"></div>'.
 					'</div>'.
 				'</fieldset>'.
 			'</div>'.
-			'<p class="buttons"><input type="submit" id="register" name="register" value="'.$lang_register['Register'].'" /></p>'.
+			'<p class="buttons"><input type="submit" id="register" name="register" value="'.$lang_common['Register'].'" /></p>'.
 		'</form>'.
 	'</div>'.
 '</div>';

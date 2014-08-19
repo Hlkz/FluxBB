@@ -22,6 +22,7 @@ $lang_common = array(
 'Login'								=>	'Login',
 'Logout'							=>	'Logout',
 'Signin'							=>	'Register',
+'Manage account'					=>	'Manage account',
 'Not logged in'						=>	'You are not logged in.',
 'Logged in as'						=>	'Logged in as',
 'Remember me'						=>	'Remember me',
@@ -33,6 +34,8 @@ $lang_common = array(
 'Topic'								=>	'Topic',
 'Post'								=>	'Post',
 'Submit'							=>	'Submit',
+'Preview'							=>	'Preview',
+'Cat Realm'							=>	'Aviana Realm',
 
 // User
 'Account'							=>	'Account',
@@ -45,6 +48,7 @@ $lang_common = array(
 'ToolTip Password'					=>	'Password used to log you in.',
 'ToolTip Password2'					=>	'Confirm your password.',
 'ToolTip Email'						=>	'Used to retrieve your password or sending important informations.',
+'Wrong user/pass'					=>	'There are no account matching your informations.',
 
 // Notices
 'Bad request'						=>	'Bad request. The link you followed is incorrect or outdated.',
