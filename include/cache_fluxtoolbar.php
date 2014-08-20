@@ -96,13 +96,13 @@ function generate_ftb_cache($form = 'form')
 
 	// Start output JS
 	$output .=
-		'<script type="text/javascript" src="include/toolbar_func.js"></script>'."\n".
-		'<script type="text/javascript" src="include/jscolor/jscolor.js"></script>'."\n".
+		'<script type="text/javascript" src="'.PUN_URL.'include/js/toolbar_func.js"></script>'."\n".
+		'<script type="text/javascript" src="'.PUN_URL.'include/jscolor/jscolor.js"></script>'."\n".
 		'<noscript><p><strong><?php echo $lang_ftb[\'enable_js\'] ?></strong></p></noscript>'."\n".
 		'<script type="text/javascript">'."\n".
 		'/* <![CDATA[ */'."\n";
 	$output .= 
-		"\t".'var tb = new toolBar(document.getElementById(\'req_message\'), \'img/fluxtoolbar/'.$ftb_conf['img_pack'].'/\', \'img/smilies/\');'."\n";
+		"\t".'var tb = new toolBar(document.getElementById(\'req_message\'), \''.PUN_URL.'img/fluxtoolbar/'.$ftb_conf['img_pack'].'/\', \'img/smilies/\');'."\n";
 
 	// Retrieve buttons
 	$do_smilies = false;

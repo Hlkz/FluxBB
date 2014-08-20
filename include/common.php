@@ -147,7 +147,7 @@ $pun_user = array();
 check_cookie($pun_user);
 
 if ($pun_user['is_guest'])
-{	
+{
 	if (isset($_GET['lang']))
 	{
 		$change_lang = $_GET['lang'];
@@ -181,10 +181,8 @@ else if ($pun_user['id'])
 			$pun_config['o_default_lang'] = $pun_user['language'] = $change_lang;
 			$db->query('UPDATE '.$db->prefix.'users SET language = "'.$change_lang.'" WHERE id='.$pun_user['id']);
 
-			$redirect_url = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-			$redirect_url = rtrim($redirect_url, "lang=".$_GET['lang']);
-			$redirect_url = rtrim($redirect_url, "?");
-			$redirect_url = rtrim($redirect_url, "&");
+			if (isset($_POST['lang_redirect_url']))	$redirect_url = $_POST['lang_redirect_url'];
+			else	message($lang_common['Bad request'], false, '404 Not Found');
 			header('Location: '.str_replace('&amp;', '&', $redirect_url));
 		}
 	}

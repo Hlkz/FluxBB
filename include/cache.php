@@ -147,13 +147,13 @@ function generate_stopwords_cache()
 {
 	$stopwords = array();
 
-	$d = dir(PUN_ROOT.'lang');
+	$d = dir(PUN_ROOT.'include/lang');
 	while (($entry = $d->read()) !== false)
 	{
 		if ($entry{0} == '.')
 			continue;
 
-		if (is_dir(PUN_ROOT.'lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/stopwords.txt'))
+		if (is_dir(PUN_ROOT.'include/lang/'.$entry) && file_exists(PUN_ROOT.'lang/'.$entry.'/stopwords.txt'))
 			$stopwords = array_merge($stopwords, file(PUN_ROOT.'lang/'.$entry.'/stopwords.txt'));
 	}
 	$d->close();

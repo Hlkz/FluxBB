@@ -179,15 +179,6 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 /* Stats
 ----------------------------------------------------------------*/
 
-#brdstats .conl {
-	float: left;
-}
-
-#brdstats .conr {
-	float: right;
-	text-align: right;
-}
-
 #brdstats #onlinelist {
 	border-top-style: dotted;
 	border-top-width: 1px;
@@ -422,7 +413,7 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 
 .pun .quotebox {
 	border-style: solid;
-	border-width: 1px 1px 1px 3px;
+	border-width: 1px 1px 1px 2px;
 	margin: 0.75em 1em;
 	padding: 0 0.75em;
 }
@@ -494,7 +485,8 @@ MAIN FORMS
 
 
 .pun .inform {
-	padding: 0 18px;
+	padding: 0 12px 0 12px;
+	position: relative;
 }
 
 .pun legend {
@@ -565,11 +557,6 @@ MAIN FORMS
 	resize: vertical;
 }
 
-.pun #quickpost .txtarea {
-	padding-right: 12px;
-	position: relative;
-}
-
 .pun .blockform .bblinks {
 	padding-top: 0;
 }
@@ -583,14 +570,6 @@ MAIN FORMS
 	margin-right: 8px;
 	padding-left: 20px;
 	display: inline-block;
-}
-
-.pun #quickpost .bblinks {
-	padding-top: 0;
-}
-
-.pun #quickpost .bblinks li {
-	display: inline;
 }
 
 .pun #login p.clearb {
@@ -869,17 +848,17 @@ html, body, .pun {
 }
 
 .pun .postsignature, .pun .postmsg .postedit {
-	color: #665858;
+	color: #ccc;
 }
 
 .pun .quotebox {
-	background: #f4f4e8;
+	background: #1c1c1c;
 	border-color: #ccc;
-	color: #665858;
+	color: #ccc;
 }
 
 .pun .quotebox cite {
-	color: #836359;
+	color: #ccc;
 }
 
 .pun .codebox, #punhelp .codebox code {
@@ -915,9 +894,24 @@ html, body, .pun {
 /* Common
 ----------------------------------------------------------------*/
 
+.pun .conl {
+	float: left; }
+.pun .conr {
+	float: right;
+	text-align: right; }
 .pun .space {
 	display: inline-block;
 	width: 40px; }
+.pun .botleft {
+	font-size: 1.08em;
+	padding: 24px 24px 24px 8px; }
+.pun .botright {
+	font-weight: bold;
+	float: right;
+	font-size: 1.08em;
+	padding: 24px 24px 24px 8px; }
+.pun .nobot {
+	height: 20px; }
 
 /* System
 ----------------------------------------------------------------*/
@@ -1000,18 +994,13 @@ html, body, .pun {
 	float: right; }
 #brdheader .bigbuttons, #brdfooter .bigbuttons {
 	margin-left: 0px; }
-#brdheader .botleft, #brdfooter .botleft {
-	font-size: 1.08em;
-	padding: 24px 24px 24px 8px; }
-#brdheader .botright, #brdfooter .botright {
-	float: right;
-	font-size: 1.18em;
-	padding: 24px 24px 24px 8px; }
-#brdheader .nobot, #brdfooter .nobot {
-	height: 20px; }
 
 /* Links
 ----------------------------------------------------------------*/
+
+.pun table, .pun td, .pun th, .pun input, .pun select, .pun optgroup, .pun textarea, .pun legend {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em; }
 
 .pun a, .pun a:link, .pun a:visited {
 	color: #f60; /*d50*/
@@ -1046,27 +1035,24 @@ html, body, .pun {
 	margin: 0;
 	background: #333;
 	color: #fff;
-	outline:0;
-}
+	outline:0; }
 
 .pun .bigbuttons {
-	margin: 12px 0px 12px 0;
-}
-
+	margin: 12px 0px 12px 0; }
 .bigbutton,.bigbuttons a, .itembutton {
 	border: 0;
 	color: #f60;
-	margin: 0 24px 0 0;
+	margin: 0 12px 0 0;
 	background: #1c1c1c;
-	padding: 16px; }
+	padding: 12px;
+    cursor:pointer; }
 .itembutton {
 	margin: 6px 0 0 0;
 	padding: 10px; }
-
 .bigbutton:hover, .bigbuttons a:hover, .itembutton:hover {
 	background: #333;
-	color: #0f6;
-}
+	color: #0f6; }
+
 
 .pun .tooltip {
 	color: #fff;
@@ -1080,6 +1066,14 @@ html, body, .pun {
 	float: left;
 	background: #333;
 	padding: 8px; }
+
+.pun #postform, .pun #editform, .pun #deleteform, .pun #quickpost {
+	padding: 16px 0 24px 0;
+	margin: 24px 0 24px 0;
+	width: 94%;
+	background: #1c1c1c; }
+.pun #postform textarea, .pun #editform textarea, .pun #deleteform textarea, .pun #quickpost textarea {
+	width: 100%; }
 
 /* Board
 ----------------------------------------------------------------*/
@@ -1115,7 +1109,6 @@ html, body, .pun {
 	background: url("../img/icons/INV_Misc_Note_01.png") no-repeat #1c1c1c;
 	background-size: 32px 32px;
 	background-position: 6px 6px;
-	margin-top: 24px;
 	padding: 12px;
 	padding-left: 42px;
 	width: 94%; }
@@ -1137,8 +1130,18 @@ html, body, .pun {
 ----------------------------------------------------------------*/
 
 .pun #topic {
-	width: 94%; }
+	width: 864px; }
 
+.pun #topicname {
+	background: url("../img/icons/INV_Misc_Note_01.png") no-repeat #1c1c1c;
+	background-size: 40px 40px;
+	background-position: 6px 6px;
+	padding: 10px 20px 16px 54px;
+	margin: 0 54px 12px 0;
+	min-height: 22px;
+	max-width: 864px; }
+#topicname .topicactions {
+	padding: 6px 0 0 12px; }
 #topic .post {
 	background: #333; }
 #topic .post:hover {
@@ -1149,12 +1152,11 @@ html, body, .pun {
 	background: #1c1c1c;
 	text-align: right; }
 #topic .post .postright {
-	padding: 8px 10px 8px 10px;
-}
+	padding: 8px 10px 8px 10px; }
 #topic .postinter {
 	background: #1c1c1c;
 	height: 12px;
-	width: 94%; }
+	width: 864px; }
 
 /* Item
 ----------------------------------------------------------------*/

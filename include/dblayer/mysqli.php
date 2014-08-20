@@ -96,6 +96,35 @@ class DBLayer
 	}
 
 
+	function queries($sql, $unbuffered = false)
+	{
+		if (defined('PUN_SHOW_QUERIES'))
+			$q_start = get_microtime();
+
+		$this->query_result = @mysqli_multi_query($this->link_id, $sql);
+
+		if ($this->query_result)
+		{
+			if (defined('PUN_SHOW_QUERIES'))
+				$this->saved_queries[] = array($sql, sprintf('%.5f', get_microtime() - $q_start));
+
+			++$this->num_queries;
+
+			return $this->query_result;
+		}
+		else
+		{
+			if (defined('PUN_SHOW_QUERIES'))
+				$this->saved_queries[] = array($sql, 0);
+
+			$this->error_no = @mysqli_errno($this->link_id);
+			$this->error_msg = @mysqli_error($this->link_id);
+
+			return false;
+		}
+	}
+
+
 	function result($query_id = 0, $row = 0, $col = 0)
 	{
 		if ($query_id)

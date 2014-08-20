@@ -76,7 +76,6 @@ if (!defined('PUN_ALLOW_INDEX'))
 
 ?>
 <title><?php echo generate_page_title($page_title, null /* $p */) ?></title>
-
 <link rel="stylesheet" type="text/css" href="<?php echo PUN_URL.'style/'.$pun_user['style'].'.css' ?>" />
 <?php
 
@@ -186,7 +185,7 @@ $links = array();
 $links[] = '<li id="navgame"'.((PUN_ACTIVE_PAGE == 'game') ? ' class="isactive"' : '').'><a href="'.PUN_URL.'game.php">'.$lang_common['Nav Game'].'</a></li>';
 $links[] = '<li id="navnews"'.((PUN_ACTIVE_PAGE == 'news') ? ' class="isactive"' : '').'><a href="'.PUN_URL.'news.php">'.$lang_common['Nav News'].'</a></li>';
 $links[] = '<li id="navboard"'.((PUN_ACTIVE_PAGE == 'board') ? ' class="isactive"' : '').'><a href="'.PUN_URL.'board.php">'.$lang_common['Nav Board'].'</a></li>';
-$links[] = '<li id="navdb"'.((PUN_ACTIVE_PAGE == 'db') ? ' class="isactive"' : '').'><a href="'.PUN_URL.'db.php">'.$lang_common['Nav Database'].'</a></li>';
+$links[] = '<li id="navdb"'.((PUN_ACTIVE_PAGE == 'database') ? ' class="isactive"' : '').'><a href="'.PUN_URL.'database.php">'.$lang_common['Nav Database'].'</a></li>';
 
 // Are there any additional navlinks we should insert into the array before imploding it?
 /* if ($pun_user['g_read_board'] == '1' && $pun_config['o_additional_navlinks'] != '') {

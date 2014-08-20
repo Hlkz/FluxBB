@@ -17,8 +17,7 @@ if ($id < 1 && $pid < 1)
 if ($pid)
 {
 	$result = $db->query('SELECT topic_id, posted FROM '.$db->prefix.'board_posts WHERE id='.$pid) or error('Unable to fetch topic ID', __FILE__, __LINE__, $db->error());
-	if (!$db->num_rows($result))
-		message($lang_common['Bad request'], false, '404 Not Found');
+	if (!$db->num_rows($result))	message($lang_common['Bad request'], false, '404 Not Found');
 
 	list($id, $posted) = $db->fetch_row($result);
 
@@ -41,11 +40,9 @@ else if ($action == 'new')
 		$result = $db->query('SELECT MIN(id) FROM '.$db->prefix.'board_posts WHERE topic_id='.$id.' AND posted>'.$last_viewed) or error('Unable to fetch first new post info', __FILE__, __LINE__, $db->error());
 		$first_new_post_id = $db->result($result);
 
-		if ($first_new_post_id)
-		{
+		if ($first_new_post_id) {
 			header('Location: topic.php?pid='.$first_new_post_id.'#p'.$first_new_post_id);
-			exit;
-		}
+			exit; }
 	}
 
 	// If there is no new post, we go to the last post
@@ -71,10 +68,10 @@ $cur_topic = $db->fetch_assoc($result);
 
 $botright_links = '';
 if (!$cur_topic['closed'] && $cur_topic['post_reply'])
-	$botright_links = '<a href="'.PUN_URL.'post.php?tid='.$id.'">'.$lang_topic['Post reply'].'</a>';
+	$botright_links = '<a href="'.PUN_URL.'post.php?tid='.$id.'">'.$lang_common['Post reply'].'</a>';
 else {
-	$botright_links = $lang_topic['Topic closed'];
-	if ($pun_user['is_admin'])	$botright_links .= ' <a href="'.PUN_URL.'post.php?tid='.$id.'">'.$lang_topic['Post reply'].'</a>'; }
+	$botright_links = $lang_common['Topic closed'];
+	if ($pun_user['is_admin'])	$botright_links .= ' <a href="'.PUN_URL.'post.php?tid='.$id.'">'.$lang_common['Post reply'].'</a>'; }
 
 // Add/update this topic in our list of tracked topics
 if (!$pun_user['is_guest'])
@@ -88,7 +85,7 @@ $result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'board_posts WHERE topi
 $cur_topic['num_replies'] = $db->result($result);
 if (!$db->num_rows($result)) exit; // tofix db error
 
-$num_pages = ceil(($cur_topic['num_replies'] + 1) / 10);
+$num_pages = ceil($cur_topic['num_replies'] / $pun_user['disp_posts']);
 $p = (!isset($_GET['p']) || $_GET['p'] <= 1 || $_GET['p'] > $num_pages) ? 1 : intval($_GET['p']);
 
 $start_from = $pun_user['disp_posts'] * ($p - 1);
@@ -120,7 +117,7 @@ define('PUN_ALLOW_INDEX', 1);
 define('PUN_ACTIVE_PAGE', 'topic');
 require PUN_ROOT.'header.php';
 
-echo '<div id="brdfooter">'.
+echo '<div id="brdheader">'.
 		'<table class="bigbuttons">'.
 			'<td><a href="'.PUN_URL.'board.php">'.$lang_common['Board'].'</a></td>'.
 			'<td><a href="'.PUN_URL.'forum.php?id='.$cur_topic['forum_id'].'">'.pun_htmlspecialchars($cur_topic['forum_name']).'</a></td>'.
@@ -130,19 +127,16 @@ echo '<div id="brdfooter">'.
 		'<div class="botleft">'.$botleft_links.'</div>'.
 	'</div>';
 
-echo '<table id="topic">';
-
 require PUN_ROOT.'include/parser.php';
 
 // Retrieve a list of post IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
 $result = $db->query('SELECT id FROM '.$db->prefix.'board_posts WHERE topic_id='.$id.' ORDER BY id LIMIT '.$start_from.','.$pun_user['disp_posts']) or error('Unable to fetch post IDs', __FILE__, __LINE__, $db->error());
 
 $post_ids = array();
-for ($i = 0;$cur_post_id = $db->result($result, $i);$i++)
-	$post_ids[] = $cur_post_id;
+for ($i = 0; $cur_post_id = $db->result($result, $i); $i++)	$post_ids[] = $cur_post_id;
+if (empty($post_ids))	error('The post table and topic table seem to be out of sync!', __FILE__, __LINE__);
 
-if (empty($post_ids))
-	error('The post table and topic table seem to be out of sync!', __FILE__, __LINE__);
+$author_name = '';	$posts = array();	$post_count = 0;	$topic_actions = array();
 
 // Retrieve the posts (and their respective poster/online status)
 $result = $db->query('SELECT p.id, p.poster_id, p.poster_ip, p.message, p.posted FROM '.$db->prefix.'board_posts AS p WHERE p.id IN ('.implode(',', $post_ids).') ORDER BY p.id', true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
@@ -152,72 +146,82 @@ while ($cur_post = $db->fetch_assoc($result))
 	$post_actions = array();
 
 	if ($pun_user['is_admin'])
-		$user_info[] = '<dd><span><a href="moderate.php?get_host='.$cur_post['id'].'" title="'.pun_htmlspecialchars($cur_post['poster_ip']).'">'.$lang_topic['IP address logged'].'</a></span></dd>';
+		$user_info[] = '<dd><span><a href="moderate.php?get_host='.$cur_post['id'].'" title="'.pun_htmlspecialchars($cur_post['poster_ip']).'">'.$lang_common['IP address logged'].'</a></span></dd>';
 
 	// Generation post action array (quote, edit, delete etc.)
 	if (!$pun_user['is_admin'])
 	{
 		if (!$cur_topic['closed'] && $cur_topic['post_reply'])
-				$post_actions[] = '<span><a href="post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang_topic['Quote'].'</a> </span>';
+				$post_actions[] = '<span><a href="'.PUN_URL.'post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang_common['Quote'].'</a> </span>';
 	}
 	else
 	{
-		$post_actions[] = '<span class="postdelete"><a href="delete.php?id='.$cur_post['id'].'">'.$lang_topic['Delete'].'</a> </span>';
-		$post_actions[] = '<span class="postedit"><a href="edit.php?id='.$cur_post['id'].'">'.$lang_topic['Edit'].'</a> </span>';
-		$post_actions[] = '<span class="postquote"><a href="post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang_topic['Quote'].'</a> </span>';
+		$post_actions[] = '<span class="postquote"><a href="'.PUN_URL.'post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang_common['Quote'].'</a></span>';
+		$post_actions[] = '<span class="postedit"><a href="'.PUN_URL.'postedit.php?id='.$cur_post['id'].'">'.$lang_common['Edit'].'</a></span>';
+		$post_actions[] = '<span class="postdelete"><a href="'.PUN_URL.'postdelete.php?id='.$cur_post['id'].'">'.$lang_common['Delete'].'</a></span>';
+		if (!$post_count) {
+			$topic_actions[] = '<span class="postedit"><a href="'.PUN_URL.'postedit.php?id='.$cur_post['id'].'">'.$lang_common['Edit'].'</a></span>';
+			$topic_actions[] = '<span class="postdelete"><a href="'.PUN_URL.'postdelete.php?id='.$cur_post['id'].'">'.$lang_common['Delete'].'</a></span>'; }
 	}
 	// Perform the main parsing of the message (BBCode, smilies, censor words etc)
 	$cur_post['message'] = parse_message($cur_post['message'], 0);
 
 	$user_result = $dba->query("SELECT account, username FROM ".$dba_prefix."account WHERE id=".$cur_post['poster_id']) or error($lang_common['DB Error'], __FILE__, __LINE__, $dba->error());
 	if (!$dba->num_rows($user_result))	message($lang_common['No user data'], false, '404 Not Found');
-	$cur_user = $db->fetch_assoc($user_result);
-	$cur_username = ($cur_user['username'] ? $cur_user['username'] : $cur_user['account']);
+	$cur_user = $dba->fetch_assoc($user_result);
+	$cur_username = $cur_user['username'];
+	if (!$post_count)	$author_name = $cur_username;
 
-	echo '<tr id="p'.$cur_post['id'].'" class="post">'.
-			'<td class="postleft">'.
-				'<a href="'.PUN_URL.'account.php?id='.$cur_post['poster_id'].'">'.$cur_username.'</a><br/>'.
-				'<a href="topic.php?pid='.$cur_post['id'].'#p'.$cur_post['id'].'#'.$cur_post['id'].'">#'.$cur_post['id'].'</a> '.implode($post_actions).
-				format_time($cur_post['posted'], false, "y/m/d", "h:s").
-			'</td>'.
-			'<td class="postright">'.$cur_post['message'].'</td>'.
-		'</tr>'.
-		'<tr class="postinter"></tr>';
+	$posts[] = 	'<tr id="p'.$cur_post['id'].'" class="post">'.
+					'<td class="postleft">'.
+						'<a href="'.PUN_URL.'account.php?id='.$cur_post['poster_id'].'">'.$cur_username.'</a><br/>'.
+						'<a href="'.PUN_URL.'topic.php?pid='.$cur_post['id'].'#p'.$cur_post['id'].'">#'.$cur_post['id'].'</a> '.
+						format_time($cur_post['posted'], false, "y/m/d", "h:s").'<br/>'.
+						implode($post_actions, ' ').
+					'</td>'.
+					'<td class="postright">'.$cur_post['message'].'</td>'.
+				'</tr>';
+	$post_count++;
 }
-
-echo '</table>';
+	
+echo 	'<div id="topicname">'.
+			'<div class="conl"><h2>'.pun_htmlspecialchars($cur_topic['subject']).'</h2></div>'.
+			'<div class="conl topicactions">'.implode($topic_actions, ' ').'</div>'.
+			'<div class="conr"><h2>'.$lang_common['Author'].' '.$author_name.'</h2></div>'.
+		'</div>'.
+		'<table id="topic">'.
+			implode($posts, '<tr class="postinter"></tr>').
+		'</table>';
 
 if (!$pun_user['is_guest'])
 {
-// Display quick post
-$cur_index = 1;
-?>
-<div id="quickpost" class="blockform">
-		<form id="quickpostform" method="post" action="post.php?tid=<?php echo $id ?>" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">
-					<legend><?php echo $lang_common['Write message legend'] ?></legend>
-						<input type="hidden" name="form_sent" value="1" />
-						<div class="clearer"></div>
-<?php
+	// Display quick post
+	$cur_index = 1;
 
-	echo "\t\t\t\t\t\t".'<label class="required"><strong>'.$lang_common['Message'].' <span>'.$lang_common['Required'].'</span></strong><br />';
+	echo '<div id="quickpost" class="blockform">'.
+			'<form id="quickpostform" method="post" action="'.PUN_URL.'post.php?tid='.$id.'" onsubmit="this.submit.disabled=true;if(process_form(this)){return true;}else{this.submit.disabled=false;return false;}">'.
+				'<div class="inform">'.
+					'<fieldset>'.
+						'<div class="infldset">'.
+							'<input type="hidden" name="form_sent" value="1" />'.
+							'<label class="required"><strong>'.$lang_common['Message'].' <span>'.$lang_common['Required'].'</span></strong><br/><br/>'.
+								'<textarea id="req_message" name="req_message" cols="95" rows="7" tabindex="'.$cur_index++.'"></textarea>'.
+							'</label>'.
+						'</div>'.
+					'</fieldset>';
+	// FluxToolBar
+	if (file_exists(FORUM_CACHE_DIR.'cache_fluxtoolbar_quickform.php'))
+		include FORUM_CACHE_DIR.'cache_fluxtoolbar_quickform.php';
+	else {
+		require_once PUN_ROOT.'include/cache_fluxtoolbar.php';
+		generate_ftb_cache('quickform');
+		require FORUM_CACHE_DIR.'cache_fluxtoolbar_quickform.php'; }
 
-?>
-<textarea id="req_message" name="req_message" rows="7" cols="75" tabindex="<?php echo $cur_index++ ?>"></textarea></label>
-<?php /* FluxToolBar */
-if (file_exists(FORUM_CACHE_DIR.'cache_fluxtoolbar_quickform.php'))
-	include FORUM_CACHE_DIR.'cache_fluxtoolbar_quickform.php';
-else
-{
-	require_once PUN_ROOT.'include/cache_fluxtoolbar.php';
-	generate_ftb_cache('quickform');
-	require FORUM_CACHE_DIR.'cache_fluxtoolbar_quickform.php';
-}
-?>
-			<p class="buttons"><input type="submit" name="submit" class="bigbutton" tabindex="<?php echo $cur_index++ ?>" value="<?php echo $lang_common['Submit'] ?>" accesskey="s" />
-			 <input type="submit" name="preview" class="bigbutton" value="<?php echo $lang_common['Preview'] ?>" tabindex="<?php echo $cur_index++ ?>" accesskey="p" /></p>
-		</form>
-</div>
-<?php
+	echo 			'<p class="buttons"><input type="submit" name="submit" class="bigbutton" tabindex="'.$cur_index++.'" value="'.$lang_common['Post message'].'" accesskey="s" />'.
+					'<input type="submit" name="preview" class="bigbutton" value="'.$lang_common['Preview'].'" tabindex="'.$cur_index++.'" accesskey="p" /></p>'.
+				'</div>'.
+			'</form>'.
+		'</div>';
 }
 
 echo '<div id="brdfooter">'.

@@ -715,11 +715,11 @@ function delete_topic($topic_id)
 	global $db;
 
 	// Delete the topic and any redirect topics
-	$db->query('DELETE FROM '.$db->prefix.'topics WHERE id='.$topic_id.' OR moved_to='.$topic_id) or error('Unable to delete topic', __FILE__, __LINE__, $db->error());
+	$db->query('DELETE FROM '.$db->prefix.'board_topics WHERE id='.$topic_id) or error('Unable to delete topic', __FILE__, __LINE__, $db->error());
 
 	// Create a list of the post IDs in this topic
 	$post_ids = '';
-	$result = $db->query('SELECT id FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT id FROM '.$db->prefix.'board_posts WHERE topic_id='.$topic_id) or error('Unable to fetch posts', __FILE__, __LINE__, $db->error());
 	while ($row = $db->fetch_row($result))
 		$post_ids .= ($post_ids != '') ? ','.$row[0] : $row[0];
 
@@ -729,11 +729,8 @@ function delete_topic($topic_id)
 		strip_search_index($post_ids);
 
 		// Delete posts in topic
-		$db->query('DELETE FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id) or error('Unable to delete posts', __FILE__, __LINE__, $db->error());
+		$db->query('DELETE FROM '.$db->prefix.'board_posts WHERE topic_id='.$topic_id) or error('Unable to delete posts', __FILE__, __LINE__, $db->error());
 	}
-
-	// Delete any subscriptions for this topic
-	$db->query('DELETE FROM '.$db->prefix.'topic_subscriptions WHERE topic_id='.$topic_id) or error('Unable to delete subscriptions', __FILE__, __LINE__, $db->error());
 }
 
 
@@ -744,32 +741,10 @@ function delete_post($post_id, $topic_id)
 {
 	global $db;
 
-	$result = $db->query('SELECT id, poster_id, posted FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id.' ORDER BY id DESC LIMIT 2') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-	list($last_id, ,) = $db->fetch_row($result);
-	list($second_last_id, $second_poster_id, $second_posted) = $db->fetch_row($result);
-
 	// Delete the post
-	$db->query('DELETE FROM '.$db->prefix.'posts WHERE id='.$post_id) or error('Unable to delete post', __FILE__, __LINE__, $db->error());
+	$db->query('DELETE FROM '.$db->prefix.'board_posts WHERE id='.$post_id) or error('Unable to delete post', __FILE__, __LINE__, $db->error());
 
 	strip_search_index($post_id);
-
-	// Count number of replies in the topic
-	$result = $db->query('SELECT COUNT(id) FROM '.$db->prefix.'posts WHERE topic_id='.$topic_id) or error('Unable to fetch post count for topic', __FILE__, __LINE__, $db->error());
-	$num_replies = $db->result($result, 0) - 1;
-
-	// If the message we deleted is the most recent in the topic (at the end of the topic)
-	if ($last_id == $post_id)
-	{
-		// If there is a $second_last_id there is more than 1 reply to the topic
-		if (!empty($second_last_id))
-			$db->query('UPDATE '.$db->prefix.'topics SET last_post='.$second_posted.', last_post_id='.$second_last_id.', last_poster_id='.$second_poster_id.', num_replies='.$num_replies.' WHERE id='.$topic_id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
-		else
-			// We deleted the only reply, so now last_post/last_post_id/last_poster is posted/id/poster_id from the topic itself
-			$db->query('UPDATE '.$db->prefix.'topics SET last_post=posted, last_post_id=id, last_poster_id=poster_id, num_replies='.$num_replies.' WHERE id='.$topic_id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
-	}
-	else
-		// Otherwise we just decrement the reply counter
-		$db->query('UPDATE '.$db->prefix.'topics SET num_replies='.$num_replies.' WHERE id='.$topic_id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
 }
 
 
@@ -1462,7 +1437,7 @@ function redirect($destination_url, $delay = false, $message = null)
 //
 function error($message, $file = null, $line = null, $db_error = false)
 {
-	global $pun_config, $lang_common;
+	global $pun_config, $pun_user, $lang_common;
 
 	// Set some default settings if the script failed before $pun_config could be populated
 	if (empty($pun_config))
@@ -1520,8 +1495,7 @@ H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADD
 	<h2>An error was encountered</h2>
 	<div>
 <?php
-
-	if (defined('PUN_DEBUG') && !is_null($file) && !is_null($line))
+	if ((defined('PUN_DEBUG') || $pun_user['is_admin']) && !is_null($file) && !is_null($line))
 	{
 		echo "\t\t".'<strong>File:</strong> '.$file.'<br />'."\n\t\t".'<strong>Line:</strong> '.$line.'<br /><br />'."\n\t\t".'<strong>FluxBB reported</strong>: '.$message."\n";
 

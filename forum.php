@@ -17,11 +17,9 @@ if (!$db->num_rows($result))	message($lang_common['Bad request'], false, '404 No
 $cur_forum = $db->fetch_assoc($result);
 
 // Is this a redirect forum? In that case, redirect!
-if ($cur_forum['redirect_url'] != '')
-{
+if ($cur_forum['redirect_url'] != '') {
 	header('Location: '.$cur_forum['redirect_url']);
-	exit;
-}
+	exit; }
 
 $cur_forum['sort_by'] = 0;
 switch ($cur_forum['sort_by'])
@@ -40,9 +38,6 @@ switch ($cur_forum['sort_by'])
 		break;
 }
 
-// Can we or can we not post new topics? YES WE CAN
-$post_link = "\t\t\t".'<p class="postlink conr"><a href="'.PUN_URL.'post.php?fid='.$id.'">'.$lang_forum['Post topic'].'</a></p>'."\n";
-
 // Get topic/forum tracking data
 if (!$pun_user['is_guest'])
 	$tracked_topics = get_tracked_topics();
@@ -55,7 +50,8 @@ $start_from = $pun_user['disp_topics'] * ($p - 1);
 
 // Generate paging links
 $botleft_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, 'forum.php?id='.$id);
-$botright_links = '';
+// Can we or can we not post new topics? YES WE CAN
+$botright_links = '<a href="'.PUN_URL.'post.php?fid='.$id.'">'.$lang_common['Post topic'].'</a>';
 
 $forum_actions = array();
 
@@ -65,7 +61,7 @@ define('PUN_ACTIVE_PAGE', 'forum');
 require PUN_ROOT.'header.php';
 $topright_links = '<input type="text" value="temp" /> <a href="'.PUN_URL.'search.php">'.$lang_common['Search'].'</a>';
 
-echo '<div id="brdfooter">'.
+echo '<div id="brdheader">'.
 		'<div class="topright">'.$topright_links.'</div>'.
 		'<table class="bigbuttons">'.
 			'<td><a href="'.PUN_URL.'board.php">'.$lang_common['Board'].'</a></td>'.
@@ -106,7 +102,7 @@ if ($db->num_rows($result))
 			$status_text[] = '<span class="stickytext">'.$lang_forum['Sticky'].'</span>';
 		}
 
-		$subject = '<a class="topiclink" href="'.$link.'"><b>'.pun_htmlspecialchars($cur_topic['subject']).'</b></a>  '.$cur_topic['poster'];
+		$subject = '<a class="topiclink" href="'.$link.'"><b>'.pun_htmlspecialchars($cur_topic['subject']).'</b></a>';
 			
 		if ($cur_topic['closed'])
 		{
@@ -128,28 +124,12 @@ if ($db->num_rows($result))
 		echo '<div class="topic" onclick="window.location=\''.$link.'\';">'.$subject.$subject_multipage.'</div>';
 	}
 }
-else
-{
+else {
 	$colspan = ($pun_config['o_topic_views'] == '1') ? 4 : 3;
+	echo '<div class="botleft">'.$lang_common['Empty forum'].'</div>'; }
 
-?>
-				<tr class="rowodd inone">
-					<td class="tcl" colspan="<?php echo $colspan ?>">
-						<div class="tclcon">
-							<div>
-								<strong><?php echo $lang_forum['Empty forum'] ?></strong>
-							</div>
-						</div>
-					</td>
-				</tr>
-<?php
-}
-?>
-			</tbody>
-			</table>
-</div>
+echo '</div>';
 
-<?php
 echo '<div id="brdfooter">'.
 		'<div class="botright">'.$botright_links.'</div>'.
 		'<div class="botleft">'.$botleft_links.'</div>'.
@@ -159,6 +139,4 @@ echo '<div id="brdfooter">'.
 		'</table>'.
 	'</div>';
 
-$forum_id = $id;
-$footer_style = 'board';
 require PUN_ROOT.'footer.php';

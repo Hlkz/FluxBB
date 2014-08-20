@@ -27,6 +27,7 @@ $lang_common = array(
 'Logged in as'						=>	'Connecté en tant que ',
 'Remember me'						=>	'Se souvenir',
 'Forgotten pass'					=>	'Mot de passe oublié',
+'Search'							=>	'Recherche',
 
 // Board
 'Board'								=>	'Board',
@@ -34,8 +35,68 @@ $lang_common = array(
 'Topic'								=>	'Sujet',
 'Post'								=>	'Message',
 'Submit'							=>	'Valider',
+'Post message'						=>	'Poster',
 'Preview'							=>	'Prévisualisation',
 'Cat Realm'							=>	'Royaume d\'Aviana',
+
+// Topic
+'Author'							=>	'Auteur :',
+'Post topic'						=>	'Nouvelle discussion',
+'Post reply'						=>	'Répondre',
+'Topic closed'						=>	'Discussion fermée',
+'Guest'								=>	'Invité',
+'Online'							=>	'En ligne',
+'Offline'							=>	'Hors ligne',
+'Last edit'							=>	'Dernière modification par',
+'Report'							=>	'Signaler',
+'Delete'							=>	'Supprimer',
+'Edit'								=>	'Modifier',
+'Quote'								=>	'Citer',
+'Is subscribed'						=>	'Vous suivez cette discussion',
+'Unsubscribe'						=>	'Ne plus suivre',
+'Subscribe'							=>	'Suivre cette discussion',
+'Quick post'						=>	'Réponse rapide',
+'Mod controls'						=>	'Modération',
+'New icon'							=>	'Nouveau message',
+'Re'								=>	'Re&#160;:',
+'Empty forum'						=>	'Forum vide.',
+
+// Delete
+'Edit post'							=>	'Modifier le message',
+'Delete post'						=>	'Supprimer le message',
+'Warning'							=>	'Vous êtes sur le point de supprimer définitivement ce message&#160;!',
+'Topic warning'						=>	'Attention&#160;! Ceci est le premier message de cette discussion, toute la discussion sera définitivement supprimée.',
+'Delete info'						=>	'Le message que vous souhaitez supprimer vous est présenté ci-dessous afin que vous puissiez le revoir avant de continuer.',
+'Confirm delete'					=>	'Confirmer la suppression',
+
+// Post
+
+// Post validation stuff (many are similiar to those in edit.php)
+'No subject'			=>	'Vous devez indiquer un sujet.',
+'No subject after censoring'    =>      'Les discussions doivent comporter un sujet. Après application des filtres de censure, le sujet n\'est pas indiqué.',
+'Too long subject'		=>	'Le sujet ne peut contenir plus de 70 caractères.',
+'No message'			=>	'Vous devez saisir un message.',
+'No message after censoring'    =>      'Vous devez saisir un message. Après application des filtres de censure, votre message est vide.',
+'Too long message'		=>	'Les messages ne peuvent contenir plus de %s octets.',
+'All caps subject'  		=>  	'Il n\'est pas autorisé d\'écrire un sujet entièrement en lettres capitales.',
+'All caps message'  		=>  	'Il n\'est pas autorisé d\'écrire un message entièrement en lettres capitales.',
+'Empty after strip'	        =>	'Il semblerait que votre message ne comporte que des balises BBCode vides. Il est possible que cela se soit passé par exemple parce que la citation imbriquée la plus ancienne a été supprimé pour cause de niveau d\'imbrication de citations supérieur à celui autorisé.',
+
+// Posting
+'Post errors'			=>	'Erreurs dans le message',
+'Post errors info'		=>	'Les erreurs suivantes doivent être corrigées pour que le message puisse être envoyé&#160;:',
+'Post preview'			=>	'Prévisualisation du message',
+'Guest name'			=>	'Nom',	// For guests (instead of Username)
+'Post redirect'			=>	'Message envoyé. Redirection&#160;…',
+'Post a reply'			=>	'Répondre',
+'Post new topic'		=>	'Nouvelle discussion',
+'Hide smilies'			=>	'Ne pas convertir les émoticônes dans ce message',
+'Subscribe'			=>	'Suivre cette discussion',
+'Stay subscribed'   		=>  	'Continuer à suivre cette discussion',
+'Topic review'			=>	'Résumé de la discussion (messages les plus récents en premier)',
+'Flood start'			=>	'Au moins %s secondes doivent s\'écouler entre deux messages ; attendez %s secondes puis essayez à nouveau.',
+
+'Edit post'							=>	'Modifier le message',
 
 // User
 'Account'							=>	'Compte',
@@ -128,8 +189,6 @@ $lang_common = array(
 // Stuff for the navigator (top of every page)
 'User list'			=>	'Liste des membres',
 'Rules'				=>  	'Règles',
-'Search'			=>  	'Recherche',
-'Register'			=>  	'Inscription',
 'Admin'				=>	'Administration',
 'Last visit'			=>	'Dernière visite&#160;: %s',
 'Topic searches'		=>	'Contributions&#160;:',

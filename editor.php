@@ -21,8 +21,8 @@ if (!$db->num_rows($result)) {
 	if (!$db->num_rows($result)) message($lang_item['No table data'], false, '404 Not Found'); } 	// No table data
 $cur_table = $db->fetch_assoc($result); // Query OK
 if (!strcmp($table_name, $cur_table['Name']))	$table_name = $cur_table['Name']; // Check table_name cAsE or id
-else	redirect('view.php?table='.$cur_table['Name'].($name ? ('&name='.$name) : ('&id='.$id)), '', true);
-if (!$cur_table['View'] && !$pun_user['is_admin'])	message($lang_item['Access denied'], false, '404 Not Found'); // Access denied
+else	redirect('editor.php?table='.$cur_table['Name'].($name ? ('&name='.$name) : ('&id='.$id)), '', true);
+if (!$cur_table['Edit'] && !$pun_user['is_admin'])	message($lang_item['Access denied'], false, '404 Not Found'); // Access denied
 $table_display = $cur_table['Display'] ? $cur_table['Display'] : $cur_table['Name'];
 $db2 = new DBLayer($db_host, $db_user, $db_pass, $cur_table['DbName'], $db_prefix, $p_connect);
 
@@ -86,7 +86,7 @@ $item = '<label id="sql_first" value="'.$sql_first.'"></label>'.
 	'<label id="field_count" value="'.$field_count.'"></label>'.
 	'<label id="primary_field" index="'.$primary_field.'" value="'.$cur_table['PrimaryField'].'"></label>'.
 	'<label id="name_field" index="'.$name_field.' value="'.$cur_table['NameField'].'"></label>'.
-	'<form id="edit" method="post" style="float:left; width:100%" action="itemsave.php?table='.$table_name.'&amp;id='.$id.'" onsubmit="return process_form(this)">'.
+	'<form id="edit" method="post" style="float:left; width:100%" action="'.PUN_URL.'save.php?table='.$table_name.'&amp;id='.$id.'" onsubmit="return process_form(this)">'.
 		'<input type="hidden" name="form_sent" value="1" />'.
 		'<input type="hidden" name="link_name" value="'.$link_name.'" />'.
 		'<div class="field"><div class="fieldname" style="float:left">'.$lang_item['Db name'].'</div><div class="fieldcontent" style="float:left">'.
@@ -115,7 +115,7 @@ for ($nb = /*($name && !$pun_user['is_admin']) ? 1 : */0; $nb < $field_count; $n
 		case 'text':
 			$lvi = $fields[$nb]['EditorTextLength'] ? $fields[$nb]['EditorTextLength'] : 60;
 			$hvi = $fields[$nb]['EditorTextHeight'] ? $fields[$nb]['EditorTextHeight'] : 10;
-			$str .= '<textarea id="req_'.$nb.'" name="req_'.$nb.'" onchange="update_sql_query()" rows="'.$hvi.'" cols="'.$lvi.'" tabindex="'.$cur_index++.'">'.(($cur) ? $cur[$fields[$nb]['Name']] : '').'</textarea>';
+			$str .= '<textarea id="req_'.$nb.'" name="req_'.$nb.'" onchange="update_sql_query()" rows="'.$hvi.'" cols="'.$lvi.'" tabindex="'.$cur_index++.'">'.(($cur) ? ($cur[$fields[$nb]['Name']] ? $cur[$fields[$nb]['Name']] : '') : '').'</textarea>';
 			break;
 		case 'list':
 			$lvi = $fields[$nb]['EditorTextLength'] ? $fields[$nb]['EditorTextLength'] : 8;
@@ -163,7 +163,7 @@ for ($nb = /*($name && !$pun_user['is_admin']) ? 1 : */0; $nb < $field_count; $n
 		case 'varchar':
 		default:
 			$lvi = $fields[$nb]['EditorTextLength'] ? $fields[$nb]['EditorTextLength'] : 30;
-			$str .= '<input id="req_'.$nb.'" type="text" name="req_'.$nb.'" onchange="update_sql_query()" value="'.(($cur) ? $cur[$fields[$nb]['Name']] : ((!strcmp($fields[$nb]['Name'], $db_tpl[$db_tpl['id']])) ? $id : '')).'" size="'.$lvi.'" maxlength="'.$lvi.'" tabindex="'.$cur_index++.'"></input>';
+			$str .= '<input id="req_'.$nb.'" type="text" name="req_'.$nb.'" onchange="update_sql_query()" value="'.(($cur) ? ($cur[$fields[$nb]['Name']] ? $cur[$fields[$nb]['Name']] : '') : '').'" size="'.$lvi.'" maxlength="'.$lvi.'" tabindex="'.$cur_index++.'"></input>';
 			break;
 	}
 	// Content END | Field END
@@ -189,7 +189,7 @@ if ($lignes[1]) { 											// If there is tabs
 }
 $cur_index = 400;											// SQL TextArea
 $item .= '<div id="tabs-'.$tab_count.'"><div class="field"><div class="fieldname">'.$lang_item['SQL'].'</div><div class="fieldcontent">'.
-				'<textarea id="req_sql" name="req_sql" cols="160" rows="16" tabindex="'.$cur_index++.'">'.$sql.'</textarea></div></div>'.
+				'<textarea id="req_sql" name="req_sql" cols="135" rows="16" tabindex="'.$cur_index++.'">'.$sql.'</textarea></div></div>'.
 		'</div><br/></div>'.								// Submit Links
 		'<input type="submit" name="submit2edit" style="float:left; width:300px; margin-right: 24px" class="itembutton" value="'.$lang_item['Save item'].'" tabindex="'.$cur_index++.'" accesskey="s" />'.
 		 '<input type="submit" name="submit" style="float:left; width:300px; margin-right: 24px" class="itembutton" value="'.$lang_item['Save item + Back'].'" tabindex="'.$cur_index++.'" accesskey="c" />'.
