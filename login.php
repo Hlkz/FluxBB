@@ -51,11 +51,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	$db->query('DELETE FROM '.$db->prefix.'online WHERE ident=\''.$db->escape(get_remote_address()).'\'') or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
 
 	$expire = ($save_pass == '1') ? time() + 1209600 : time() + $pun_config['o_timeout_visit'];
-
 	pun_setcookie($cur_user['id'], $form_password_hash, $expire);
-
-	// Reset tracked topics
-	set_tracked_topics(null);
 
 	redirect(pun_htmlspecialchars($_POST['redirect_url']));
 }
@@ -63,11 +59,12 @@ if (isset($_POST['form_sent']) && $action == 'in')
 
 else if ($action == 'out')
 {
-	if ($pun_user['is_guest']) // || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'] || !isset($_GET['csrf_token']) || $_GET['csrf_token'] != pun_hash($pun_user['id'].pun_hash(get_remote_address())))
-	{
-		header('Location: index.php');
-		exit;
-	}
+	$redirect_url = get_referrer();
+	if (!isset($redirect_url))	$redirect_url = '/';
+
+	if ($pun_user['is_guest']) { // || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'] || !isset($_GET['csrf_token']) || $_GET['csrf_token'] != pun_hash($pun_user['id'].pun_hash(get_remote_address())))
+		header('Location: '.$redirect_url);
+		exit; }
 
 	// Remove user from "users online" list
 	$db->query('DELETE FROM '.$db->prefix.'online WHERE user_id='.$pun_user['id']) or error('Unable to delete from online list', __FILE__, __LINE__, $db->error());
@@ -78,7 +75,7 @@ else if ($action == 'out')
 
 	pun_setcookie(1, pun_hash(uniqid(rand(), true)), time() + 31536000);
 
-	redirect('index.php');
+	redirect($redirect_url);
 }
 
 
@@ -209,36 +206,10 @@ if (!$pun_user['is_guest'])
 	exit;
 }
 
-// Try to determine if the data in HTTP_REFERER is valid (if not, we redirect to index.php after login)
-if (!empty($_SERVER['HTTP_REFERER']))
-{
-	$referrer = parse_url($_SERVER['HTTP_REFERER']);
-	// Remove www subdomain if it exists
-	if (strpos($referrer['host'], 'www.') === 0)
-		$referrer['host'] = substr($referrer['host'], 4);
-
-	// Make sure the path component exists
-	if (!isset($referrer['path']))
-		$referrer['path'] = '';
-
-	$valid = parse_url(get_base_url());
-	// Remove www subdomain if it exists
-	if (strpos($valid['host'], 'www.') === 0)
-		$valid['host'] = substr($valid['host'], 4);
-
-	// Make sure the path component exists
-	if (!isset($valid['path']))
-		$valid['path'] = '';
-
-	if ($referrer['host'] == $valid['host'] && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
-		//$redirect_url = $_SERVER['HTTP_REFERER'];
-		$redirect_url = 'index.php';
-}
-
-if (!isset($redirect_url))
-	$redirect_url = '/';
-else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
-	$redirect_url .= '#p'.$matches[1];
+$redirect_url = get_referrer();
+if (!isset($redirect_url))	$redirect_url = PUN_URL;
+// else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
+//	$redirect_url .= '#p'.$matches[1];
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Login']);
 $required_fields = array('req_username' => $lang_common['Username'], 'req_password' => $lang_common['Password']);
@@ -255,19 +226,24 @@ echo '<div class="blockform">'.
 						'<input type="hidden" name="form_sent" value="1" />'.
 						'<input type="hidden" name="redirect_url" value="'.pun_htmlspecialchars($redirect_url).'" />'.
 						'<div class="infldset">'.
-							'<label class="conl required"><strong>'.$lang_common['Username'].'<span>'.$lang_common['Required'].'</span></strong>'.
+							'<label class="infld conl required"><strong>'.$lang_common['Username'].'<span>'.$lang_common['Required'].'</span></strong>'.
 								'<input type="text" name="req_username" size="25" maxlength="25" tabindex="1" /><br/>'.
-							'</label><br/>'.
-						'</div>'.
-						'<div class="infldset">'.
-							'<label class="conl required"><strong>'.$lang_common['Password'].'<span>'.$lang_common['Required'].'</span></strong>'.
-								'<input type="password" name="req_password" size="25" maxlength="25" tabindex="2" /><br/>'.
 							'</label>'.
 						'</div>'.
 						'<div class="infldset">'.
-							'<input type="submit" name="login" value="'.$lang_common['Login'].'" tabindex="4" /><div class="space"></div>'.
-							'<label class="conl"><input type="checkbox" name="save_pass" value="1" tabindex="3" />'.$lang_common['Remember me'].'</label><br/>'.
+							'<label class="infld conl required"><strong>'.$lang_common['Password'].'<span>'.$lang_common['Required'].'</span></strong>'.
+								'<input type="password" name="req_password" size="25" maxlength="25" tabindex="2" /><br/>'.
+							'</label>'.
 						'</div>'.
+						'<div class="infldset buttons">'.
+							'<input type="submit" name="login" class="conl" value="'.$lang_common['Login'].'" tabindex="4" />'.
+							'<div class="conl space"></div>'.
+							'<label class="conl">'.
+								'<input type="checkbox" name="save_pass" value="1" tabindex="3" />'.$lang_common['Remember me'].
+							'</label>'.
+						'</div>'.
+					'</fieldset>'.
+					'<fieldset>'.
 						'<div class="infldset">'.
 							'<a href="register.php" tabindex="5">'.$lang_common['Signin'].'</a><div class="space"></div>'.
 							'<a href="login.php?action=forget" tabindex="6">'.$lang_common['Forgotten pass'].'</a>'.

@@ -52,14 +52,22 @@ function check_cookie(&$pun_user)
 			$expire = $now + 31536000; // The cookie expires after a year
 			pun_setcookie(1, pun_hash(uniqid(rand(), true)), $expire);
 			set_default_user();
-
 			return;
 		}
 
 		$result = $db->query('SELECT u.*, g.*, o.logged, o.idle FROM '.$db->prefix.'users AS u INNER JOIN '.$db->prefix.'groups AS g ON u.group_id=g.g_id LEFT JOIN '.$db->prefix.'online AS o ON o.user_id=u.id WHERE u.id='.intval($cookie['user_id'])) or error('Unable to fetch user information', __FILE__, __LINE__, $db->error());
 		$pun_user = $db->fetch_assoc($result);
 
-		$pun_user['username'] = $valid_user['username'];
+		$result = $dba->query("SELECT gmlevel FROM ".$dba->prefix."account_access WHERE Id = ".$valid_user['id'].' AND RealmId = -1') or error('Unable to fetch user information', __FILE__, __LINE__, $dba->error());
+		$gmlevel = $dba->result($result);
+		if (!$gmlevel)	$gmlevel = 0;
+
+		$pun_user['username'] 	= $valid_user['username'];	// Username from Auth
+		$pun_user['level']		= $gmlevel;					// GmLevel
+		$pun_user['is_guest']	= false;					// User is logged
+		$pun_user['is_mj']		= $pun_user['level'] > 2;	// User permissions
+		$pun_user['is_dev']		= $pun_user['level'] > 3;
+		$pun_user['is_admin']	= $pun_user['level'] > 4;
 
 		// Send a new, updated cookie with a new expiration timestamp
 		$expire = ($cookie['expiration_time'] > $now + $pun_config['o_timeout_visit']) ? $now + 1209600 : $now + $pun_config['o_timeout_visit'];
@@ -101,9 +109,6 @@ function check_cookie(&$pun_user)
 						$db->query('INSERT INTO '.$db->prefix.'online (user_id, ident, logged) SELECT '.$pun_user['id'].', \''.$db->escape($pun_user['username']).'\', '.$pun_user['logged'].' WHERE NOT EXISTS (SELECT 1 FROM '.$db->prefix.'online WHERE user_id='.$pun_user['id'].')') or error('Unable to insert into online list', __FILE__, __LINE__, $db->error());
 						break;
 				}
-
-				// Reset tracked topics
-				set_tracked_topics(null);
 			}
 			else
 			{
@@ -116,23 +121,11 @@ function check_cookie(&$pun_user)
 
 				$idle_sql = ($pun_user['idle'] == '1') ? ', idle=0' : '';
 				$db->query('UPDATE '.$db->prefix.'online SET logged='.$now.$idle_sql.' WHERE user_id='.$pun_user['id']) or error('Unable to update online list', __FILE__, __LINE__, $db->error());
-
-				// Update tracked topics with the current expire time
-				if (isset($_COOKIE[$cookie_name.'_track']))
-					forum_setcookie($cookie_name.'_track', $_COOKIE[$cookie_name.'_track'], $now + $pun_config['o_timeout_visit']);
 			}
 		}
-		else
-		{
-			if (!$pun_user['logged'])
-				$pun_user['logged'] = $pun_user['last_visit'];
-		}
-
-		$pun_user['is_guest'] = false;
-		$pun_user['is_admin'] = $pun_user['g_id'] == PUN_ADMIN || $pun_user['g_moderator'] == '1';
+		else	if (!$pun_user['logged'])	$pun_user['logged'] = $pun_user['last_visit'];
 	}
-	else
-		set_default_user();
+	else	set_default_user();
 }
 
 
@@ -603,93 +596,6 @@ function generate_page_title($page_title, $p = null)
 
 
 //
-// Save array of tracked topics in cookie
-//
-function set_tracked_topics($tracked_topics)
-{
-	global $cookie_name, $cookie_path, $cookie_domain, $cookie_secure, $pun_config;
-
-	$cookie_data = '';
-	if (!empty($tracked_topics))
-	{
-		// Sort the arrays (latest read first)
-		arsort($tracked_topics['topics'], SORT_NUMERIC);
-		arsort($tracked_topics['forums'], SORT_NUMERIC);
-
-		// Homebrew serialization (to avoid having to run unserialize() on cookie data)
-		foreach ($tracked_topics['topics'] as $id => $timestamp)
-			$cookie_data .= 't'.$id.'='.$timestamp.';';
-		foreach ($tracked_topics['forums'] as $id => $timestamp)
-			$cookie_data .= 'f'.$id.'='.$timestamp.';';
-
-		// Enforce a byte size limit (4096 minus some space for the cookie name - defaults to 4048)
-		if (strlen($cookie_data) > FORUM_MAX_COOKIE_SIZE)
-		{
-			$cookie_data = substr($cookie_data, 0, FORUM_MAX_COOKIE_SIZE);
-			$cookie_data = substr($cookie_data, 0, strrpos($cookie_data, ';')).';';
-		}
-	}
-
-	forum_setcookie($cookie_name.'_track', $cookie_data, time() + $pun_config['o_timeout_visit']);
-	$_COOKIE[$cookie_name.'_track'] = $cookie_data; // Set it directly in $_COOKIE as well
-}
-
-
-//
-// Extract array of tracked topics from cookie
-//
-function get_tracked_topics()
-{
-	global $cookie_name;
-
-	$cookie_data = isset($_COOKIE[$cookie_name.'_track']) ? $_COOKIE[$cookie_name.'_track'] : false;
-	if (!$cookie_data)
-		return array('topics' => array(), 'forums' => array());
-
-	if (strlen($cookie_data) > FORUM_MAX_COOKIE_SIZE)
-		return array('topics' => array(), 'forums' => array());
-
-	// Unserialize data from cookie
-	$tracked_topics = array('topics' => array(), 'forums' => array());
-	$temp = explode(';', $cookie_data);
-	foreach ($temp as $t)
-	{
-		$type = substr($t, 0, 1) == 'f' ? 'forums' : 'topics';
-		$id = intval(substr($t, 1));
-		$timestamp = intval(substr($t, strpos($t, '=') + 1));
-		if ($id > 0 && $timestamp > 0)
-			$tracked_topics[$type][$id] = $timestamp;
-	}
-
-	return $tracked_topics;
-}
-
-
-//
-// Update posts, topics, last_post, last_post_id and last_poster for a forum
-//
-function update_forum($forum_id)
-{
-	global $db;
-
-	$result = $db->query('SELECT COUNT(id), SUM(num_replies) FROM '.$db->prefix.'topics WHERE forum_id='.$forum_id) or error('Unable to fetch forum topic count', __FILE__, __LINE__, $db->error());
-	list($num_topics, $num_posts) = $db->fetch_row($result);
-
-	$num_posts = $num_posts + $num_topics; // $num_posts is only the sum of all replies (we have to add the topic posts)
-
-	$result = $db->query('SELECT last_post, last_post_id, last_poster_id FROM '.$db->prefix.'topics WHERE forum_id='.$forum_id.' AND moved_to IS NULL ORDER BY last_post DESC LIMIT 1') or error('Unable to fetch last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
-	if ($db->num_rows($result)) // There are topics in the forum
-	{
-		list($last_post, $last_post_id, $last_poster_id) = $db->fetch_row($result);
-
-		$db->query('UPDATE '.$db->prefix.'forums SET num_topics='.$num_topics.', num_posts='.$num_posts.', last_post='.$last_post.', last_post_id='.$last_post_id.', last_poster_id='.$last_poster_id.' WHERE id='.$forum_id) or error('Unable to update last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
-	}
-	else // There are no topics
-		$db->query('UPDATE '.$db->prefix.'forums SET num_topics='.$num_topics.', num_posts='.$num_posts.', last_post=NULL, last_post_id=NULL, last_poster_id=NULL WHERE id='.$forum_id) or error('Unable to update last_post/last_post_id/last_poster', __FILE__, __LINE__, $db->error());
-}
-
-
-//
 // Deletes any avatars owned by the specified user ID
 //
 function delete_avatar($user_id)
@@ -700,10 +606,8 @@ function delete_avatar($user_id)
 
 	// Delete user avatar
 	foreach ($filetypes as $cur_type)
-	{
 		if (file_exists(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type))
 			@unlink(PUN_ROOT.$pun_config['o_avatars_dir'].'/'.$user_id.'.'.$cur_type);
-	}
 }
 
 
@@ -731,6 +635,8 @@ function delete_topic($topic_id)
 		// Delete posts in topic
 		$db->query('DELETE FROM '.$db->prefix.'board_posts WHERE topic_id='.$topic_id) or error('Unable to delete posts', __FILE__, __LINE__, $db->error());
 	}
+
+	$db->query('DELETE FROM '.$db->prefix.'board_tracked_topic WHERE topic_id = '.$topic_id) or error($lang_common['DB Error'], __FILE__, __LINE__, $db->error());
 }
 
 
@@ -1495,7 +1401,7 @@ H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADD
 	<h2>An error was encountered</h2>
 	<div>
 <?php
-	if ((defined('PUN_DEBUG') || $pun_user['is_admin']) && !is_null($file) && !is_null($line))
+	if ((defined('PUN_DEBUG') || $pun_user['is_dev']) && !is_null($file) && !is_null($line))
 	{
 		echo "\t\t".'<strong>File:</strong> '.$file.'<br />'."\n\t\t".'<strong>Line:</strong> '.$line.'<br /><br />'."\n\t\t".'<strong>FluxBB reported</strong>: '.$message."\n";
 
@@ -2109,4 +2015,28 @@ function dump()
 
 	echo '</pre>';
 	exit;
+}
+
+
+//
+// Get referer (signin, login, logout)
+//
+function get_referrer()
+{
+	// Try to determine if the data in HTTP_REFERER is valid
+	if (!empty($_SERVER['HTTP_REFERER']))
+	{
+		$referrer = parse_url($_SERVER['HTTP_REFERER']);
+		if (strpos($referrer['host'], 'www.') === 0)	$referrer['host'] = substr($referrer['host'], 4); // Remove www subdomain if it exists
+		//if (!isset($referrer['path']))	$referrer['path'] = '';	// Make sure the path component exists
+
+		$valid = parse_url(get_base_url());
+		if (strpos($valid['host'], 'www.') === 0)	$valid['host'] = substr($valid['host'], 4); // Remove www subdomain if it exists
+		//if (!isset($valid['path']))	$valid['path'] = ''; // Make sure the path component exists
+			
+		if ($referrer['host'] == $valid['host']) // && preg_match('%^'.preg_quote($valid['path'], '%').'/(.*?)\.php%i', $referrer['path']))
+			$redirect_url = $_SERVER['HTTP_REFERER'];
+	}
+	if (!isset($redirect_url))	$redirect_url = null;
+	return $redirect_url;
 }

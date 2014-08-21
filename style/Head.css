@@ -483,10 +483,8 @@ html, body, .pun table, .pun div, .pun form, .pun p, .pun h1, .pun h2, .pun h3, 
 MAIN FORMS
 *****************************************************************/
 
-
 .pun .inform {
 	padding: 0 12px 0 12px;
-	position: relative;
 }
 
 .pun legend {
@@ -504,11 +502,12 @@ MAIN FORMS
 
 .pun .infldset {
 	padding: 12px 18px;
+	clear: left;
 }
 
-.pun fieldset p {
-	padding: 0 0 7px 0;
-	width: 100%;
+.pun .infld {
+	min-height: 21px;
+	clear: left;
 }
 
 .pun fieldset .usercontent p {
@@ -900,6 +899,7 @@ html, body, .pun {
 	float: right;
 	text-align: right; }
 .pun .space {
+	min-height: 1px;
 	display: inline-block;
 	width: 40px; }
 .pun .botleft {
@@ -1057,7 +1057,6 @@ html, body, .pun {
 .pun .tooltip {
 	color: #fff;
 	float: left;
-	margin: 6px 12px 6px 12px;
 	background: #161616; }
 .pun .tooltip .tooltipleft {
 	float: left;
@@ -1083,20 +1082,26 @@ html, body, .pun {
 	padding: 0px 0px 0px 8px; }
 
 #board .forum {
-	background: url("../img/icons/INV_Misc_Book_10.png") no-repeat #1c1c1c;
+	width: 160px;
+	float: left;
+	background: url("../img/icons/INV_Misc_Book_04.png") no-repeat #1c1c1c;
 	background-size: 32px 32px;
 	background-position: 6px 6px;
-	margin-top: 24px;
-	margin-right: 20px;
-	padding: 12px;
-	padding-left: 46px;
-	width: 160px;
-	float:left; }
+	margin: 24px 20px 0 0;
+	padding: 12px 12px 12px 46px; }
+#board .read {
+	background: url("../img/icons/INV_Misc_Book_03.png") no-repeat #1c1c1c;
+	background-size: 32px 32px;
+	background-position: 6px 6px; }
 #board .forum:hover {
-	background: url("../img/icons/INV_Misc_Book_10.png") no-repeat #333;
+	background: url("../img/icons/INV_Misc_Book_04.png") no-repeat #333;
 	background-size: 32px 32px;
 	background-position: 6px 6px;
     cursor: pointer; }
+#board .read:hover {
+	background: url("../img/icons/INV_Misc_Book_03.png") no-repeat #333;
+	background-size: 32px 32px;
+	background-position: 6px 6px; }
 #board .forum:hover .forumlink {
 	color: #0f6; }
 
@@ -1105,20 +1110,35 @@ html, body, .pun {
 
 .pun #forum { }
 
+#forum #forumheader {
+	width: 94%;
+	margin: 0 0 8px 0;
+	padding: 0 12px 0 42px; }
 #forum .topic {
-	background: url("../img/icons/INV_Misc_Note_01.png") no-repeat #1c1c1c;
+	width: 94%;
+	min-height: 18px;
+	background: url("../img/icons/INV_Scroll_04.png") no-repeat #1c1c1c;
 	background-size: 32px 32px;
 	background-position: 6px 6px;
-	padding: 12px;
-	padding-left: 42px;
-	width: 94%; }
+	margin: 0 0 8px 0;
+	padding: 12px 12px 12px 42px; }
+#forum .read {
+	background: url("../img/icons/INV_Scroll_07.png") no-repeat #1c1c1c;
+	background-size: 32px 32px;
+	background-position: 6px 6px; }
 #forum .topic:hover {
-	background: url("../img/icons/INV_Misc_Note_01.png") no-repeat #333;
+	background: url("../img/icons/INV_Scroll_04.png") no-repeat #333;
 	background-size: 32px 32px;
 	background-position: 6px 6px;
     cursor: pointer; }
+#forum .read:hover {
+	background: url("../img/icons/INV_Scroll_07.png") no-repeat #333;
+	background-size: 32px 32px;
+	background-position: 6px 6px; }
 #forum .topic:hover .topiclink {
 	color: #0f6; }
+#forum .space {
+	width: 80px; }
 
 .pun .lastpost {
 	background: #1c1c1c;
@@ -1138,7 +1158,7 @@ html, body, .pun {
 	background-position: 6px 6px;
 	padding: 10px 20px 16px 54px;
 	margin: 0 54px 12px 0;
-	min-height: 22px;
+	min-height: 25px;
 	max-width: 864px; }
 #topicname .topicactions {
 	padding: 6px 0 0 12px; }

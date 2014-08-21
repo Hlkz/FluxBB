@@ -22,6 +22,7 @@ $lang_common = array(
 'Login'								=>	'Connexion',
 'Logout'							=>	'Déconnexion',
 'Signin'							=>	'Création de compte',
+'Register'							=>	'Enregistrer',
 'Manage account'					=>	'Gestion de compte',
 'Not logged in'						=>	'Vous n\'êtes pas connecté.',
 'Logged in as'						=>	'Connecté en tant que ',
@@ -30,46 +31,38 @@ $lang_common = array(
 'Search'							=>	'Recherche',
 
 // Board
+
 'Board'								=>	'Board',
 'Forum'								=>	'Forum',
 'Topic'								=>	'Sujet',
-'Post'								=>	'Message',
+'Topics'							=>	'Sujets',
 'Submit'							=>	'Valider',
-'Post message'						=>	'Poster',
-'Preview'							=>	'Prévisualisation',
-'Cat Realm'							=>	'Royaume d\'Aviana',
-
-// Topic
-'Author'							=>	'Auteur :',
-'Post topic'						=>	'Nouvelle discussion',
-'Post reply'						=>	'Répondre',
+'Post'								=>	'Message',
+//'Quick post'						=>	'Réponse rapide',	UNUSED
+'Author'							=>	'Auteur',
+'Author:'							=>	'Auteur&#160;:',
+'Forum closed'						=>	'Forum fermé',
 'Topic closed'						=>	'Discussion fermée',
-'Guest'								=>	'Invité',
-'Online'							=>	'En ligne',
-'Offline'							=>	'Hors ligne',
-'Last edit'							=>	'Dernière modification par',
-'Report'							=>	'Signaler',
-'Delete'							=>	'Supprimer',
-'Edit'								=>	'Modifier',
-'Quote'								=>	'Citer',
-'Is subscribed'						=>	'Vous suivez cette discussion',
-'Unsubscribe'						=>	'Ne plus suivre',
-'Subscribe'							=>	'Suivre cette discussion',
-'Quick post'						=>	'Réponse rapide',
-'Mod controls'						=>	'Modération',
-'New icon'							=>	'Nouveau message',
-'Re'								=>	'Re&#160;:',
-'Empty forum'						=>	'Forum vide.',
-
-// Delete
-'Edit post'							=>	'Modifier le message',
-'Delete post'						=>	'Supprimer le message',
-'Warning'							=>	'Vous êtes sur le point de supprimer définitivement ce message&#160;!',
-'Topic warning'						=>	'Attention&#160;! Ceci est le premier message de cette discussion, toute la discussion sera définitivement supprimée.',
 'Delete info'						=>	'Le message que vous souhaitez supprimer vous est présenté ci-dessous afin que vous puissiez le revoir avant de continuer.',
-'Confirm delete'					=>	'Confirmer la suppression',
+'Delete post warning'				=>	'Vous êtes sur le point de supprimer définitivement ce message.',
+'Delete topic warning'				=>	'Attention&#160;! Ceci est le premier message de cette discussion, toute la discussion sera définitivement supprimée.',
+'Board empty'						=>	'Board vide.',
+'Forum empty'						=>	'Forum vide.',
 
-// Post
+'Post message'						=>	'Poster',
+'Post reply'						=>	'Répondre',
+'Post topic'						=>	'Nouvelle discussion',
+'Quote'								=>	'Citer',
+'Edit'								=>	'Modifier',
+'Edit post'							=>	'Modifier le message',
+'Preview'							=>	'Prévisualisation',
+'Delete'							=>	'Supprimer',
+'Delete post'						=>	'Supprimer le message',
+'Delete topic'						=>	'Supprimer la discussion',
+'Delete post confirm'				=>	'Confirmer la suppression',
+//'Report'							=>	'Signaler',	UNUSED
+
+'Cat Realm'							=>	'Royaume d\'Aviana',
 
 // Post validation stuff (many are similiar to those in edit.php)
 'No subject'			=>	'Vous devez indiquer un sujet.',
@@ -95,8 +88,6 @@ $lang_common = array(
 'Stay subscribed'   		=>  	'Continuer à suivre cette discussion',
 'Topic review'			=>	'Résumé de la discussion (messages les plus récents en premier)',
 'Flood start'			=>	'Au moins %s secondes doivent s\'écouler entre deux messages ; attendez %s secondes puis essayez à nouveau.',
-
-'Edit post'							=>	'Modifier le message',
 
 // User
 'Account'							=>	'Compte',

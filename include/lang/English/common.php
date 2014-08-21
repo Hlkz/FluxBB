@@ -21,7 +21,8 @@ $lang_common = array(
 'Nav Language'						=>	'Language',
 'Login'								=>	'Login',
 'Logout'							=>	'Logout',
-'Signin'							=>	'Register',
+'Signin'							=>	'Register', // Page register
+'Register'							=>	'Register', // Button register
 'Manage account'					=>	'Manage account',
 'Not logged in'						=>	'You are not logged in.',
 'Logged in as'						=>	'Logged in as',
@@ -30,46 +31,38 @@ $lang_common = array(
 'Search'							=>	'Search',
 
 // Board
+
 'Board'								=>	'Board',
 'Forum'								=>	'Forum',
 'Topic'								=>	'Topic',
-'Post'								=>	'Post',
+'Topics'							=>	'Topics',
 'Submit'							=>	'Submit',
-'Post message'						=>	'Post',
-'Preview'							=>	'Preview',
-'Cat Realm'							=>	'Aviana Realm',
-
-// Topic
-'Author'							=>	'Author:',
-'Post topic'						=>	'New thread',
-'Post reply'						=>	'Post reply',
+'Post'								=>	'Post',
+//'Quick post'						=>	'Quick post',	UNUSED
+'Author'							=>	'Author',
+'Author:'							=>	'Author:',
+'Forum closed'						=>	'Forum closed',
 'Topic closed'						=>	'Topic closed',
-'Guest'								=>	'Guest',
-'Online'							=>	'Online',
-'Offline'							=>	'Offline',
-'Last edit'							=>	'Last edited by',
-'Report'							=>	'Report',
-'Delete'							=>	'Delete',
-'Edit'								=>	'Edit',
-'Quote'								=>	'Quote',
-'Is subscribed'						=>	'You are currently subscribed to this topic',
-'Unsubscribe'						=>	'Unsubscribe',
-'Subscribe'							=>	'Subscribe to this topic',
-'Quick post'						=>	'Quick reply',
-'Mod controls'						=>	'Moderator controls',
-'New icon'							=>	'New post',
-'Re'								=>	'Re:',
-'Empty forum'						=>	'Forum empty.',
-
-// Delete
-'Edit post'							=>	'Edit post',
-'Delete post'						=>	'Delete post',
-'Warning'							=>	'You are about to permanently delete this post.',
-'Topic warning'						=>	'Warning! This is the first post in the topic, the whole topic will be permanently deleted.',
 'Delete info'						=>	'The post you have chosen to delete is set out below for you to review before proceeding.',
-'Confirm delete'					=>	'Confirm deletion',
+'Delete post warning'				=>	'You are about to permanently delete this post.',
+'Delete topic warning'				=>	'Warning! This is the first post in the topic, the whole topic will be permanently deleted.',
+'Board empty'						=>	'Board vide.',
+'Forum empty'						=>	'Forum vide.',
 
-// Post
+'Post message'						=>	'Post',
+'Post reply'						=>	'Reply',
+'Post topic'						=>	'New thread',
+'Quote'								=>	'Quote',
+'Edit'								=>	'Edit',
+'Edit post'							=>	'Edit post',
+'Preview'							=>	'Preview',
+'Delete'							=>	'Delete',
+'Delete post'						=>	'Delete post',
+'Delete topic'						=>	'Delete topic',
+'Delete post confirm'				=>	'Confirm deletion',
+//'Report'							=>	'Report',	UNUSED
+
+'Cat Realm'							=>	'Aviana Realm',
 
 // Post validation stuff (many are similiar to those in edit.php)
 'No subject'		=>	'Topics must contain a subject.',
@@ -86,7 +79,6 @@ $lang_common = array(
 'Post errors'		=>	'Post errors',
 'Post errors info'	=>	'The following errors need to be corrected before the message can be posted:',
 'Post preview'		=>	'Post preview',
-'Guest name'		=>	'Name', // For guests (instead of Username)
 'Post redirect'		=>	'Post entered. Redirecting …',
 'Post a reply'		=>	'Post a reply',
 'Post new topic'	=>	'Post new topic',
@@ -95,12 +87,10 @@ $lang_common = array(
 'Stay subscribed'	=>	'Stay subscribed to this topic',
 'Topic review'		=>	'Topic review (newest first)',
 'Flood start'		=>	'At least %s seconds have to pass between posts. Please wait %s seconds and try posting again.',
-'Preview'			=>	'Preview', // submit button to preview message
 
 // Edit post
 'Edit post legend'	=>	'Edit the post and submit changes',
 'Silent edit'		=>	'Silent edit (don\'t display "Edited by ..." in topic view)',
-'Edit post'			=>	'Edit post',
 'Edit redirect'		=>	'Post updated. Redirecting …',
 
 // User

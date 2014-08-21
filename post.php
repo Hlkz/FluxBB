@@ -3,13 +3,11 @@ define('PUN_ROOT', dirname(__FILE__).'/');
 define('PUN_URL', dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']).'/');
 require PUN_ROOT.'include/common.php';
 
-if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view'], false, '403 Forbidden');
+if ($pun_user['g_read_board'] == '0')	message($lang_common['No view'], false, '403 Forbidden');
 
 $tid = isset($_GET['tid']) ? intval($_GET['tid']) : 0;
 $fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
-if ($tid < 1 && $fid < 1 || $tid > 0 && $fid > 0)
-	message($lang_common['Bad request'], false, '404 Not Found');
+if ($tid < 1 && $fid < 1 || $tid > 0 && $fid > 0)	message($lang_common['Bad request'], false, '404 Not Found');
 
 // Fetch some info about the topic and/or the forum
 if ($tid)	$result = $db->query('SELECT f.id, f.forum_name, f.redirect_url, f.post_reply, f.post_topic, t.subject, t.closed
@@ -20,26 +18,18 @@ else	$result = $db->query('SELECT f.id, f.forum_name, f.redirect_url, f.post_rep
 								WHERE f.id='.$fid) or error('Unable to fetch forum info', __FILE__, __LINE__, $db->error());
 								
 if (!$db->num_rows($result))	message($lang_common['Bad request'], false, '404 Not Found');
-
 $cur_posting = $db->fetch_assoc($result);
+
 $is_subscribed = $tid && $cur_posting['is_subscribed'];
 
 // Is someone trying to post into a redirect forum?
-if ($cur_posting['redirect_url'] != '')
-	message($lang_common['Bad request'], false, '404 Not Found');
+if ($cur_posting['redirect_url'] != '')	message($lang_common['Bad request'], false, '404 Not Found');
 
-// Sort out who the moderators are and if we are currently a moderator (or an admin)
-$mods_array = ($cur_posting['moderators'] != '') ? unserialize($cur_posting['moderators']) : array();
-$is_admmod = ($pun_user['g_id'] == PUN_ADMIN || ($pun_user['g_moderator'] == '1' && array_key_exists($pun_user['username'], $mods_array))) ? true : false;
+if ($tid && $pun_config['o_censoring'] == '1')	$cur_posting['subject'] = censor_words($cur_posting['subject']);
 
-if ($tid && $pun_config['o_censoring'] == '1')
-	$cur_posting['subject'] = censor_words($cur_posting['subject']);
-
-// Do we have permission to post?
-if ((($tid && (($cur_posting['post_replies'] == '' && $pun_user['g_post_replies'] == '0') || $cur_posting['post_replies'] == '0')) ||
-	($fid && (($cur_posting['post_topics'] == '' && $pun_user['g_post_topics'] == '0') || $cur_posting['post_topics'] == '0')) ||
-	(isset($cur_posting['closed']) && $cur_posting['closed'] == '1')) &&
-	!$is_admmod)
+if ((($tid && (!$cur_posting['post_reply'] || $cur_posting['closed'])) || // Do we have permission to post?
+	($fid && !$cur_posting['post_topic'])) &&
+	!$pun_user['is_mj'])
 	message($lang_common['No permission'], false, '403 Forbidden');
 
 // Start with a clean slate
@@ -65,7 +55,7 @@ if (isset($_POST['form_sent']))
 			$errors[] = $lang_common['No subject'];
 		else if ($pun_config['o_censoring'] == '1' && $censored_subject == '')
 			$errors[] = $lang_common['No subject after censoring'];
-		else if (pun_strlen($subject) > 70)
+		else if (pun_strlen($subject) > 40)
 			$errors[] = $lang_common['Too long subject'];
 		else if ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admmod'])
 			$errors[] = $lang_common['All caps subject'];
@@ -181,7 +171,10 @@ if (isset($_POST['form_sent']))
 			update_search_index('post', $new_pid, $message, $subject);
 		}
 
-		redirect('topic.php?pid='.$new_pid.'#p'.$new_pid, $lang_common['Post redirect'], true);
+		// Delete entries from tracked_topic
+		$db->query('DELETE FROM '.$db->prefix.'board_tracked_topic WHERE topic_id = '.$new_tid) or error($lang_common['DB Error'], __FILE__, __LINE__, $db->error());
+
+		redirect('topic.php?pid='.$new_pid.'#p'.$new_pid);
 	}
 }
 
@@ -211,7 +204,6 @@ if ($tid)
 		if (strpos($q_message, '[code]') !== false && strpos($q_message, '[/code]') !== false)
 		{
 			list($inside, $outside) = split_text($q_message, '[code]', '[/code]');
-
 			$q_message = implode("\1", $outside);
 		}
 
@@ -244,10 +236,8 @@ if ($tid)
 			// If username contains a square bracket, we add "" or '' around it (so we know when it starts and ends)
 			if (strpos($q_poster_pseudo, '[') !== false || strpos($q_poster_pseudo, ']') !== false)
 			{
-				if (strpos($q_poster_pseudo, '\'') !== false)
-					$q_poster_pseudo = '"'.$q_poster_pseudo.'"';
-				else
-					$q_poster_pseudo = '\''.$q_poster_pseudo.'\'';
+				if (strpos($q_poster_pseudo, '\'') !== false)	$q_poster_pseudo = '"'.$q_poster_pseudo.'"';
+				else											$q_poster_pseudo = '\''.$q_poster_pseudo.'\'';
 			}
 			else
 			{
@@ -255,39 +245,30 @@ if ($tid)
 				$ends = substr($q_poster_pseudo, 0, 1).substr($q_poster_pseudo, -1, 1);
 
 				// Deal with quoting "Username" or 'Username' (becomes '"Username"' or "'Username'")
-				if ($ends == '\'\'')
-					$q_poster_pseudo = '"'.$q_poster_pseudo.'"';
-				else if ($ends == '""')
-					$q_poster_pseudo = '\''.$q_poster_pseudo.'\'';
+				if ($ends == '\'\'')	$q_poster_pseudo = '"'.$q_poster_pseudo.'"';
+				else if ($ends == '""')	$q_poster_pseudo = '\''.$q_poster_pseudo.'\'';
 			}
 
 			$quote = '[quote='.$q_poster_pseudo.']'.$q_message.'[/quote]'."\n";
 		}
-		else
-			$quote = '> '.$q_poster_pseudo.' '.$lang_common['wrote']."\n\n".'> '.$q_message."\n";
+		else	$quote = '> '.$q_poster_pseudo.' '.$lang_common['wrote']."\n\n".'> '.$q_message."\n";
 	}
 }
 // If a forum ID was specified in the url (new topic)
-else if ($fid)
-{
+else if ($fid) {
 	$action = $lang_common['Post topic'];
-	$form = '<form id="post" method="post" action="post.php?action=post&amp;fid='.$fid.'" onsubmit="return process_form(this)">';
-}
-else
-	message($lang_common['Bad request'], false, '404 Not Found');
+	$form = '<form id="post" method="post" action="post.php?action=post&amp;fid='.$fid.'" onsubmit="return process_form(this)">'; }
+else	message($lang_common['Bad request'], false, '404 Not Found');
 
 
 $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $action);
 $required_fields = array('req_email' => $lang_common['Email'], 'req_subject' => $lang_common['Subject'], 'req_message' => $lang_common['Message']);
 $focus_element = array('post');
 
-if (!$pun_user['is_guest'])
-	$focus_element[] = ($fid) ? 'req_subject' : 'req_message';
-else
-{
+if (!$pun_user['is_guest'])	$focus_element[] = ($fid) ? 'req_subject' : 'req_message';
+else {
 	$required_fields['req_username'] = $lang_common['Guest name'];
-	$focus_element[] = 'req_username';
-}
+	$focus_element[] = 'req_username'; }
 
 define('PUN_ACTIVE_PAGE', 'index');
 require PUN_ROOT.'header.php';
@@ -342,7 +323,7 @@ echo '<div id="postform" class="blockform">'.
 				'</div>'.
 				'<div class="infldset">';
 if ($fid)	echo 	'<label class="required"><strong>'.$lang_common['Subject'].'<span>'.$lang_common['Required'].'</span></strong><br/><br/>'.
-						'<input class="longinput" type="text" name="req_subject" value="'.((isset($_POST['req_subject'])) ? pun_htmlspecialchars($subject) : '').'" size="80" maxlength="70" tabindex="'.$cur_index++.'" />'.
+						'<input class="longinput" type="text" name="req_subject" value="'.((isset($_POST['req_subject'])) ? pun_htmlspecialchars($subject) : '').'" size="60" maxlength="40" tabindex="'.$cur_index++.'" />'.
 					'</label><br/>';
 echo 				'<label class="required"><strong>'.$lang_common['Message'].'<span>'.$lang_common['Required'].'</span></strong><br/><br/>'.
 						'<textarea id="req_message" name="req_message" cols="95" rows="20" tabindex="'.$cur_index++.'">'.(isset($_POST['req_message']) ? pun_htmlspecialchars($orig_message) : (isset($quote) ? $quote : '')).'</textarea>'.
@@ -367,8 +348,7 @@ echo 			'<div class="infldset">'.
 			'</fieldset>';
 
 $checkboxes = array();
-if ($fid && $is_admin)
-	$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['stick_topic']) ? ' checked="checked"' : '').' />'.$lang_common['Stick topic'].'<br /></label>';
+if ($fid && $pun_user['is_mj'])	$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" tabindex="'.($cur_index++).'"'.(isset($_POST['stick_topic']) ? ' checked="checked"' : '').' />'.$lang_common['Stick topic'].'<br /></label>';
 
 if (!empty($checkboxes))
 {

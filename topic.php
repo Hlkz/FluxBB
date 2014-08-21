@@ -3,15 +3,12 @@ define('PUN_ROOT', dirname(__FILE__).'/');
 define('PUN_URL', dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']).'/');
 require PUN_ROOT.'include/common.php';
 
-if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view'], false, '403 Forbidden');
+if ($pun_user['g_read_board'] == '0')	message($lang_common['No view'], false, '403 Forbidden');
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $pid = isset($_GET['pid']) ? intval($_GET['pid']) : 0;
-if ($id < 1 && $pid < 1)
-	message($lang_common['Bad request'], false, '404 Not Found');
-
+if ($id < 1 && $pid < 1)	message($lang_common['Bad request'], false, '404 Not Found');
 
 // If a post ID is specified we determine topic ID and page number so we can redirect to the correct message
 if ($pid)
@@ -27,29 +24,6 @@ if ($pid)
 
 	$_GET['p'] = ceil($num_posts / $pun_user['disp_posts']);
 }
-
-// If action=new, we redirect to the first new post (if any)
-else if ($action == 'new')
-{
-	if (!$pun_user['is_guest'])
-	{
-		// We need to check if this topic has been viewed recently by the user
-		$tracked_topics = get_tracked_topics();
-		$last_viewed = isset($tracked_topics['topics'][$id]) ? $tracked_topics['topics'][$id] : $pun_user['last_visit'];
-
-		$result = $db->query('SELECT MIN(id) FROM '.$db->prefix.'board_posts WHERE topic_id='.$id.' AND posted>'.$last_viewed) or error('Unable to fetch first new post info', __FILE__, __LINE__, $db->error());
-		$first_new_post_id = $db->result($result);
-
-		if ($first_new_post_id) {
-			header('Location: topic.php?pid='.$first_new_post_id.'#p'.$first_new_post_id);
-			exit; }
-	}
-
-	// If there is no new post, we go to the last post
-	redirect('topic.php?id='.$id.'&action=last', '', true);
-	exit;
-}
-
 else if ($action == 'last') { // If action=last, we redirect to the last post
 	$result = $db->query('SELECT MAX(id) FROM '.$db->prefix.'board_posts WHERE topic_id='.$id) or error('Unable to fetch last post info', __FILE__, __LINE__, $db->error());
 	$last_post_id = $db->result($result);
@@ -66,22 +40,18 @@ $result = $db->query('SELECT t.subject, t.closed, t.sticky, f.id AS forum_id, f.
 if (!$db->num_rows($result))	message($lang_common['Bad request'], false, '404 Not Found');
 $cur_topic = $db->fetch_assoc($result);
 
-$botright_links = '';
-if (!$cur_topic['closed'] && $cur_topic['post_reply'])
-	$botright_links = '<a href="'.PUN_URL.'post.php?tid='.$id.'">'.$lang_common['Post reply'].'</a>';
-else {
-	$botright_links = $lang_common['Topic closed'];
-	if ($pun_user['is_admin'])	$botright_links .= ' <a href="'.PUN_URL.'post.php?tid='.$id.'">'.$lang_common['Post reply'].'</a>'; }
-
-// Add/update this topic in our list of tracked topics
+$botright_links = array();
 if (!$pun_user['is_guest'])
 {
-	$tracked_topics = get_tracked_topics();
-	$tracked_topics['topics'][$id] = time();
-	set_tracked_topics($tracked_topics);
+	if (!$cur_topic['post_reply'])	$botright_links[] = $lang_common['Forum closed'];
+	else if ($cur_topic['closed'])	$botright_links[] = $lang_common['Topic closed'];
+	if ($pun_user['is_mj'] || (!$cur_topic['closed'] && $cur_topic['post_reply']))
+		$botright_links[] = '<a href="'.PUN_URL.'post.php?tid='.$id.'">'.$lang_common['Post reply'].'</a>';
 }
+if ($botright_links)	$botright_links = implode($botright_links, ' ');
+else					$botright_links = '';
 
-$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'board_posts WHERE topic_id='.$id) or error('Unable to fetch topic info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT COUNT(*) FROM '.$db->prefix.'board_posts WHERE topic_id='.$id) or error($lang_common['DB Error'], __FILE__, __LINE__, $db->error());
 $cur_topic['num_replies'] = $db->result($result);
 if (!$db->num_rows($result)) exit; // tofix db error
 
@@ -92,27 +62,9 @@ $start_from = $pun_user['disp_posts'] * ($p - 1);
 
 $botleft_links = '<span class="pages-label">'.$lang_common['Pages'].' </span>'.paginate($num_pages, $p, PUN_URL.'topic.php?id='.$id);
 
-if ($pun_config['o_censoring'] == '1')
-	$cur_topic['subject'] = censor_words($cur_topic['subject']);
+if ($pun_config['o_censoring'] == '1')	$cur_topic['subject'] = censor_words($cur_topic['subject']);
 
-
-$quickpost = false;
-if ((!$cur_topic['closed'] && $cur_topic['post_reply']) || $pun_user['is_admin'])
-{
-	// Load the post.php language file
-	require PUN_ROOT.'include/lang/'.$pun_user['language'].'/post.php';
-
-	$required_fields = array('req_message' => $lang_common['Message']);
-	if ($pun_user['is_guest'])
-	{
-		$required_fields['req_username'] = $lang_post['Guest name'];
-		if ($pun_config['p_force_guest_email'] == '1')
-			$required_fields['req_email'] = $lang_common['Email'];
-	}
-	$quickpost = true;
-}
-
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), pun_htmlspecialchars($cur_topic['forum_name']), pun_htmlspecialchars($cur_topic['subject']));
+$page_title = pun_htmlspecialchars($cur_topic['subject']);
 define('PUN_ALLOW_INDEX', 1);
 define('PUN_ACTIVE_PAGE', 'topic');
 require PUN_ROOT.'header.php';
@@ -142,27 +94,23 @@ $author_name = '';	$posts = array();	$post_count = 0;	$topic_actions = array();
 $result = $db->query('SELECT p.id, p.poster_id, p.poster_ip, p.message, p.posted FROM '.$db->prefix.'board_posts AS p WHERE p.id IN ('.implode(',', $post_ids).') ORDER BY p.id', true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 while ($cur_post = $db->fetch_assoc($result))
 {
-	$user_info = array();
 	$post_actions = array();
-
-	if ($pun_user['is_admin'])
-		$user_info[] = '<dd><span><a href="moderate.php?get_host='.$cur_post['id'].'" title="'.pun_htmlspecialchars($cur_post['poster_ip']).'">'.$lang_common['IP address logged'].'</a></span></dd>';
-
-	// Generation post action array (quote, edit, delete etc.)
-	if (!$pun_user['is_admin'])
+	if (!$pun_user['is_guest'])
 	{
-		if (!$cur_topic['closed'] && $cur_topic['post_reply'])
-				$post_actions[] = '<span><a href="'.PUN_URL.'post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang_common['Quote'].'</a> </span>';
+		if ($pun_user['is_mj'] || (!$cur_topic['closed'] && $cur_topic['post_reply']))
+			$post_actions[] = '<span class="postquote"><a href="'.PUN_URL.'post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang_common['Quote'].'</a></span>';
+		if ($pun_user['is_mj'] || (!$cur_topic['closed'] && $cur_topic['post_reply'] && $pun_user['id'] == $cur_post['poster_id']))
+		{
+			$post_actions[] = '<span class="postedit"><a href="'.PUN_URL.'postedit.php?id='.$cur_post['id'].'">'.$lang_common['Edit'].'</a></span>';
+			if (!$post_count)	$topic_actions[] = '<span class="postedit"><a href="'.PUN_URL.'postedit.php?id='.$cur_post['id'].'">'.$lang_common['Edit'].'</a></span>';
+		}
+		if ($pun_user['is_mj'])
+		{
+			$post_actions[] = '<span class="postdelete"><a href="'.PUN_URL.'postdelete.php?id='.$cur_post['id'].'">'.$lang_common['Delete'].'</a></span>';
+			if (!$post_count)	$topic_actions[] = '<span class="postdelete"><a href="'.PUN_URL.'postdelete.php?id='.$cur_post['id'].'">'.$lang_common['Delete'].'</a></span>';
+		}
 	}
-	else
-	{
-		$post_actions[] = '<span class="postquote"><a href="'.PUN_URL.'post.php?tid='.$id.'&amp;qid='.$cur_post['id'].'">'.$lang_common['Quote'].'</a></span>';
-		$post_actions[] = '<span class="postedit"><a href="'.PUN_URL.'postedit.php?id='.$cur_post['id'].'">'.$lang_common['Edit'].'</a></span>';
-		$post_actions[] = '<span class="postdelete"><a href="'.PUN_URL.'postdelete.php?id='.$cur_post['id'].'">'.$lang_common['Delete'].'</a></span>';
-		if (!$post_count) {
-			$topic_actions[] = '<span class="postedit"><a href="'.PUN_URL.'postedit.php?id='.$cur_post['id'].'">'.$lang_common['Edit'].'</a></span>';
-			$topic_actions[] = '<span class="postdelete"><a href="'.PUN_URL.'postdelete.php?id='.$cur_post['id'].'">'.$lang_common['Delete'].'</a></span>'; }
-	}
+
 	// Perform the main parsing of the message (BBCode, smilies, censor words etc)
 	$cur_post['message'] = parse_message($cur_post['message'], 0);
 
@@ -187,15 +135,14 @@ while ($cur_post = $db->fetch_assoc($result))
 echo 	'<div id="topicname">'.
 			'<div class="conl"><h2>'.pun_htmlspecialchars($cur_topic['subject']).'</h2></div>'.
 			'<div class="conl topicactions">'.implode($topic_actions, ' ').'</div>'.
-			'<div class="conr"><h2>'.$lang_common['Author'].' '.$author_name.'</h2></div>'.
+			'<div class="conr"><h2>'.$lang_common['Author:'].' '.$author_name.'</h2></div>'.
 		'</div>'.
 		'<table id="topic">'.
 			implode($posts, '<tr class="postinter"></tr>').
 		'</table>';
 
-if (!$pun_user['is_guest'])
+if (!$pun_user['is_guest'] && ($pun_user['is_mj'] || (!$cur_topic['closed'] && $cur_topic['post_reply']))) // Display quick post
 {
-	// Display quick post
 	$cur_index = 1;
 
 	echo '<div id="quickpost" class="blockform">'.
@@ -236,6 +183,11 @@ echo '<div id="brdfooter">'.
 
 if ($pun_config['o_topic_views'] == '1') // Increment "num_views" for topic
 	$db->query('UPDATE '.$db->prefix.'board_topics SET num_views=num_views+1 WHERE id='.$id) or error('Unable to update topic', __FILE__, __LINE__, $db->error());
+
+if (!$pun_user['is_guest'])	{ // Add tracked topic
+	$db->query('DELETE FROM '.$db->prefix.'board_tracked_topic WHERE user_id = '.$pun_user['id'].' AND topic_id = '.$id) or error($lang_common['DB Error'], __FILE__, __LINE__, $db->error());
+	$db->query('INSERT INTO '.$db->prefix.'board_tracked_topic (user_id, forum_id, topic_id) VALUES (\''.$pun_user['id'].'\', \''.$cur_topic['forum_id'].'\', \''.$id.'\')') or error($lang_common['DB Error'], __FILE__, __LINE__, $db->error());
+}
 
 $forum_id = $id;
 $footer_style = 'board';

@@ -23,69 +23,54 @@ if ($pun_config['o_censoring'] == '1') {
 	$cur_post['subject'] = censor_words($cur_post['subject']);
 	$cur_post['message'] = censor_words($cur_post['message']); }
 
-// Do we have permission to edit this post?
-if (($pun_user['g_edit_posts'] == '0' ||
-	$cur_post['poster_id'] != $pun_user['id'] ||
-	$cur_post['closed'] == '1') &&
-	!$pun_user['is_admin'])
+if (((!$cur_post['post_reply'] || $cur_post['closed']) || // Do we have permission to post?
+	($cur_post['poster_id'] != $pun_user['id'])) &&
+	!$pun_user['is_mj'])
 	message($lang_common['No permission'], false, '403 Forbidden');
 
-// Start with a clean slate
-$errors = array();
+$errors = array(); // Start with a clean slate
 
 if (isset($_POST['form_sent']))
 {
-	// If it's a topic it must contain a subject
-	if ($can_edit_subject)
+	if ($can_edit_subject) // If it's a topic it must contain a subject
 	{
 		$subject = pun_trim($_POST['req_subject']);
-
-		if ($pun_config['o_censoring'] == '1')
-			$censored_subject = pun_trim(censor_words($subject));
+		if ($pun_config['o_censoring'] == '1')	$censored_subject = pun_trim(censor_words($subject));
 
 		if ($subject == '')
 			$errors[] = $lang_common['No subject'];
 		else if ($pun_config['o_censoring'] == '1' && $censored_subject == '')
 			$errors[] = $lang_common['No subject after censoring'];
-		else if (pun_strlen($subject) > 70)
+		else if (pun_strlen($subject) > 40)
 			$errors[] = $lang_common['Too long subject'];
-		else if ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_admin'])
+		else if ($pun_config['p_subject_all_caps'] == '0' && is_all_uppercase($subject) && !$pun_user['is_mj'])
 			$errors[] = $lang_common['All caps subject'];
 	}
 
-	// Clean up message from POST
-	$message = pun_linebreaks(pun_trim($_POST['req_message']));
+	$message = pun_linebreaks(pun_trim($_POST['req_message'])); // Clean up message from POST
 
 	// Here we use strlen() not pun_strlen() as we want to limit the post to PUN_MAX_POSTSIZE bytes, not characters
 	if (strlen($message) > PUN_MAX_POSTSIZE)
 		$errors[] = sprintf($lang_common['Too long message'], forum_number_format(PUN_MAX_POSTSIZE));
-	else if ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_admin'])
+	else if ($pun_config['p_message_all_caps'] == '0' && is_all_uppercase($message) && !$pun_user['is_mj'])
 		$errors[] = $lang_common['All caps message'];
 
-	// Validate BBCode syntax
-	if ($pun_config['p_message_bbcode'] == '1')
-	{
+	if ($pun_config['p_message_bbcode'] == '1') { // Validate BBCode syntax
 		require PUN_ROOT.'include/parser.php';
-		$message = preparse_bbcode($message, $errors);
-	}
+		$message = preparse_bbcode($message, $errors); }
 
 	if (empty($errors))
 	{
-		if ($message == '')
-			$errors[] = $lang_common['No message'];
+		if ($message == '')	$errors[] = $lang_common['No message'];
 		else if ($pun_config['o_censoring'] == '1')
 		{
-			// Censor message to see if that causes problems
-			$censored_message = pun_trim(censor_words($message));
-
-			if ($censored_message == '')
-				$errors[] = $lang_common['No message after censoring'];
+			$censored_message = pun_trim(censor_words($message)); // Censor message to see if that causes problems
+			if ($censored_message == '')	$errors[] = $lang_common['No message after censoring'];
 		}
 	}
 
 	$stick_topic = isset($_POST['stick_topic']) ? '1' : '0';
-	if (!$pun_user['is_admin'])
-		$stick_topic = $cur_post['sticky'];
+	if (!$pun_user['is_mj'])	$stick_topic = $cur_post['sticky'];
 
 	// Replace four-byte characters (MySQL cannot handle them)
 	$message = strip_bad_multibyte_chars($message);
@@ -174,7 +159,7 @@ echo '<div id="editform" class="blockform">'.
 					'<div class="infldset">';
 if ($can_edit_subject)
 	echo				'<label class="required"><strong>'.$lang_common['Subject'].'<span>'.$lang_common['Required'].'</span></strong>'.
-							'<input class="longinput" type="text" name="req_subject" size="80" maxlength="70" tabindex="'.$cur_index++.'" value="'.(pun_htmlspecialchars(isset($_POST['req_subject']) ? $_POST['req_subject'] : $cur_post['subject'])).'" /><br/>'.
+							'<input class="longinput" type="text" name="req_subject" size="60" maxlength="40" tabindex="'.$cur_index++.'" value="'.(pun_htmlspecialchars(isset($_POST['req_subject']) ? $_POST['req_subject'] : $cur_post['subject'])).'" /><br/>'.
 						'</label><br/>';
 echo					'<label class="required"><strong>'.$lang_common['Message'].'<span>'.$lang_common['Required'].'</span></strong><br/>'.
 							'<textarea id="req_message" name="req_message" cols="200" rows="14" tabindex="'.$cur_index++.'">'.(pun_htmlspecialchars(isset($_POST['req_message']) ? $message : $cur_post['message'])).'</textarea><br/>
@@ -197,7 +182,7 @@ echo 			'<div class="infldset">'.
 				'</div>'.
 			'</fieldset>';
 $checkboxes = array();
-if ($can_edit_subject && $pun_user['is_admin'])
+if ($can_edit_subject && $pun_user['is_mj'])
 {
 	if (isset($_POST['stick_topic']) || $cur_post['sticky'] == '1')
 		$checkboxes[] = '<label><input type="checkbox" name="stick_topic" value="1" checked="checked" tabindex="'.($cur_index++).'" />'.$lang_common['Stick topic'].'<br /></label>';

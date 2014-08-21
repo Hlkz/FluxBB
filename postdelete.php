@@ -3,17 +3,15 @@ define('PUN_ROOT', dirname(__FILE__).'/');
 define('PUN_URL', dirname('http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']).'/');
 require PUN_ROOT.'include/common.php';
 
-if ($pun_user['g_read_board'] == '0')
-	message($lang_common['No view'], false, '403 Forbidden');
+if ($pun_user['g_read_board'] == '0')	message($lang_common['No view'], false, '403 Forbidden');
+if (!$pun_user['is_mj'])	message($lang_common['No permission'], false, '403 Forbidden');
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-if ($id < 1)
-	message($lang_common['Bad request'], false, '404 Not Found');
+if ($id < 1)	message($lang_common['Bad request'], false, '404 Not Found');
 
 // Fetch some info about the post, the topic and the forum
 $result = $db->query('SELECT f.id AS fid, f.forum_name, f.redirect_url, f.post_reply, f.post_topic, t.id AS tid, t.subject, t.closed, p.posted, p.poster_id, p.message FROM '.$db->prefix.'board_posts AS p INNER JOIN '.$db->prefix.'board_topics AS t ON t.id=p.topic_id INNER JOIN '.$db->prefix.'board_forums AS f ON f.id=t.forum_id WHERE p.id='.$id) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
-if (!$db->num_rows($result))
-	message($lang_common['Bad request'], false, '404 Not Found');
+if (!$db->num_rows($result))	message($lang_common['Bad request'], false, '404 Not Found');
 
 $cur_post = $db->fetch_assoc($result);
 
@@ -21,28 +19,15 @@ $result = $db->query('SELECT id FROM '.$db->prefix.'board_posts WHERE topic_id='
 $first_id = $db->result($result);
 $is_topic_post = ($first_id == $id);
 
-// Do we have permission to edit this post?
-if (!$pun_user['is_admin'])
-	message($lang_common['No permission'], false, '403 Forbidden');
-
 if (isset($_POST['delete']))
 {
-	// Make sure they got here from the site
-	confirm_referrer('postdelete.php');
-
 	require PUN_ROOT.'include/search_idx.php';
 
-	if ($is_topic_post)
-	{
-		// Delete the topic and all of its posts
-		delete_topic($cur_post['tid']);
-
-		redirect('forum.php?id='.$cur_post['fid'], $lang_common['Topic del redirect'], true);
-	}
-	else
-	{
-		// Delete just this one post
-		delete_post($id, $cur_post['tid']);
+	if ($is_topic_post) {
+		delete_topic($cur_post['tid']); // Delete the topic and all of its posts
+		redirect('forum.php?id='.$cur_post['fid'], $lang_common['Topic del redirect'], true); }
+	else {
+		delete_post($id, $cur_post['tid']); // Delete just this one post
 
 		// Redirect towards the previous post
 		$result = $db->query('SELECT id FROM '.$db->prefix.'board_posts WHERE topic_id='.$cur_post['tid'].' AND id < '.$id.' ORDER BY id DESC LIMIT 1') or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
@@ -77,14 +62,14 @@ echo '<div id="deleteform">'.
 				'<div class="inform">'.
 					'<fieldset>'.
 						'<div class="infldset">'.
-							'<h2><span>'.$lang_common['Delete post'].'</span></h2>'.
+							'<h2><span>'.($is_topic_post ? $lang_common['Delete topic'] : $lang_common['Delete post']).'</span></h2>'.
 						'</div>'.
 						'<div class="infldset">'.
 							(($is_topic_post) ? '<strong>'.$lang_common['Topic warning'].'</strong>' : '<strong>'.$lang_common['Warning'].'</strong>').'<br/>'.
 							$lang_common['Delete info'].
 						'</div>'.
 						'<div class="infldset">'.
-							'<input type="submit" class="bigbutton" name="delete" value="'.$lang_common['Confirm delete'].'" />'.
+							'<input type="submit" class="bigbutton" name="delete" value="'.$lang_common['Delete post confirm'].'" />'.
 						'</div>'.
 					'</fieldset>'.
 				'</div>'.
