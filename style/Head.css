@@ -1074,6 +1074,31 @@ html, body, .pun {
 .pun #postform textarea, .pun #editform textarea, .pun #deleteform textarea, .pun #quickpost textarea {
 	width: 100%; }
 
+/* Page
+----------------------------------------------------------------*/
+
+.pun #page { }
+
+#page .category {
+	clear: left;
+	margin: 6px 0 6px 0; }
+#page .subcategory {
+	padding: 12px 0 12px 24px; }
+
+#page .pagelink {
+	width: 260px;
+	float: left;
+	background: url("../img/icons/INV_Misc_Book_04.png") no-repeat #1c1c1c;
+	background-size: 32px 32px;
+	background-position: 6px 6px;
+	margin: 12px 20px 12px 0;
+	padding: 12px 12px 12px 46px; }
+#page .pagelink:hover {
+	background: url("../img/icons/INV_Misc_Book_04.png") no-repeat #333;
+	background-size: 32px 32px;
+	background-position: 6px 6px;
+    cursor: pointer; }
+
 /* Board
 ----------------------------------------------------------------*/
 

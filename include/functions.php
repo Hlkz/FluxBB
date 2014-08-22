@@ -77,6 +77,8 @@ function check_cookie(&$pun_user)
 		if (!file_exists(PUN_ROOT.'include/lang/'.$pun_user['language']))
 			$pun_user['language'] = $pun_config['o_default_lang'];
 
+		$pun_user['fr'] = $pun_user['language'] == 'French';
+
 		// Set a default style if the user selected style no longer exists
 		if (!file_exists(PUN_ROOT.'style/'.$pun_user['style'].'.css'))
 			$pun_user['style'] = $pun_config['o_default_style'];
@@ -292,6 +294,7 @@ function set_default_user()
 	$pun_user['timezone'] = $pun_config['o_default_timezone'];
 	$pun_user['dst'] = $pun_config['o_default_dst'];
 	$pun_user['language'] = $pun_config['o_default_lang'];
+	$pun_user['fr'] = $pun_user['language'] == 'French';
 	$pun_user['style'] = $pun_config['o_default_style'];
 	$pun_user['is_guest'] = true;
 	$pun_user['is_admmod'] = false;
@@ -2039,4 +2042,47 @@ function get_referrer()
 	}
 	if (!isset($redirect_url))	$redirect_url = null;
 	return $redirect_url;
+}
+
+
+//
+// Display site item
+//
+function display_site_item($id, $name)
+{
+	global $db, $pun_user, $lang_common;
+
+	$str = '<div class="category">';
+	if ($name)	$str .= '<h2>'.$name.'</h2>';
+
+	$result = $db->query('SELECT id, type, redirect_url, post_comment, 
+							name'.($pun_user['fr'] ? '_loc2' : '').' AS name, content'.($pun_user['fr'] ? '_loc2' : '').' AS content 
+							FROM '.$db->prefix.'site_items WHERE parent_id = \''.$id.'\' ORDER BY disp_position')
+							or error($lang_common['DB Error'], __FILE__, __LINE__, $db->error());
+
+	if (!$db->num_rows($result)) {
+		$str .= '</div>';
+		return $str; }
+
+	while ($cur_item = $db->fetch_assoc($result))
+	{
+		switch ($cur_item['type']) {
+			case 0: default: // Category
+				$str .= '<div class="subcategory">'.
+							display_site_item($cur_item['id'], $cur_item['name']).
+						'</div>';
+				break;
+			case 1: // Text
+				if ($cur_item['name'])		$str .= '<h3>'.$cur_item['name'].'</h3>';
+				if ($cur_item['content'])	$str .= '<div class="block">'.parse_message($cur_item['content'], 0).'</div>';
+				break;
+			case 2: // Link
+				$str .= '<div><a class="pagelink" href="'.$cur_item['redirect_url'].'">'.$cur_item['name'].'</a></div>';
+				break;
+		}
+		if ($cur_item['post_comment'])
+			$str .= '<div>< Ici possiblement les commentaires des membres ></div>';
+	}
+	$str .= '</div>';
+	return $str;
 }
