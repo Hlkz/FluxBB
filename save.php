@@ -32,7 +32,7 @@ if (isset($_POST['submit']) || isset($_POST['submit2edit']))
 }
 else if (isset($_POST['refresh']))
 {
-	confirm_referrer('editor.php');
+	//confirm_referrer('editor.php');
 	$table_name = isset($_GET['table']) ? $_GET['table'] : null;
 	redirect('editor.php?table='.$table_name.($_POST['req_0'] ? '&id='.$_POST['req_0'] : ''), '', true);
 }

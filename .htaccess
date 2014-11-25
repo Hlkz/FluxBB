@@ -12,15 +12,24 @@ RewriteRule ^/?$ /index.php [QSA,NC,L]
 # Game
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+game.php(.*) [NC]
 RewriteRule ^ /game? [R=301,L]
-RewriteRule ^game?$ /site.php?page=2 [QSA,NC,L]
-RewriteRule ^game/?$ /site.php?page=2 [QSA,NC,L]
+RewriteRule ^game?$ /site.php?id=2 [QSA,NC,L]
+RewriteRule ^game/?$ /site.php?id=2 [QSA,NC,L]
 #
 
 # News
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+news.php(.*) [NC]
 RewriteRule ^ /news? [R=301,L]
-RewriteRule ^news?$ /site.php?page=1 [QSA,NC,L]
-RewriteRule ^news/?$ /site.php?page=1 [QSA,NC,L]
+RewriteRule ^news?$ /site.php?id=1 [QSA,NC,L]
+RewriteRule ^news/?$ /site.php?id=1 [QSA,NC,L]
+#
+
+# Site
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+site\.php\?id=([0-9]{1,})(.*) [NC]
+RewriteRule ^ /site/page/%1? [R=301,L]
+RewriteRule ^site/page/([0-9]{1,})?$ /site.php?id=$1 [QSA,NC,L]
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+site\.php\?page=([0-9a-zA-Z%20\(\)'-]{1,})(.*) [NC]
+RewriteRule ^ /site/%1? [R=301,L]
+RewriteRule ^site/([0-9a-zA-Z%20\(\)'-]{1,})?$ /site.php?page=$1 [QSA,NC,L]
 #
 
 # Board
@@ -71,21 +80,21 @@ RewriteRule ^db/?$ /database.php [QSA,NC,L]
 #
 
 # View
-RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+view\.php\?table=([a-zA-Z]{1,})&id=([0-9]{1,})(.*) [NC]
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+view\.php\?table=([a-zA-Z_]{1,})&id=([0-9]{1,})(.*) [NC]
 RewriteRule ^ /db/%1=%2? [R=301,L]
-RewriteRule ^db/([a-zA-Z]{1,})=([0-9]{1,})?$ /view.php?table=$1&id=$2 [QSA,NC,L]
-RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+view\.php\?table=([a-zA-Z]{1,})&name=([0-9a-zA-Z%20\(\)']{1,})(.*) [NC]
+RewriteRule ^db/([a-zA-Z_]{1,})=([0-9]{1,})?$ /view.php?table=$1&id=$2 [QSA,NC,L]
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+view\.php\?table=([a-zA-Z_]{1,})&name=([0-9a-zA-Z%20\(\)']{1,})(.*) [NC]
 RewriteRule ^ /db/%1-%2? [R=301,L]
-RewriteRule ^db/([a-zA-Z]{1,})-([0-9a-zA-Z%20\(\)']+)?$ /view.php?table=$1&name=$2 [QSA,NC,L]
+RewriteRule ^db/([a-zA-Z_]{1,})-([0-9a-zA-Z%20\(\)']+)?$ /view.php?table=$1&name=$2 [QSA,NC,L]
 #
 
 # Editor
-RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+editor\.php\?table=([a-zA-Z]{1,})&id=([0-9]{1,})(.*) [NC]
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+editor\.php\?table=([a-zA-Z_]{1,})&id=([0-9]{1,})(.*) [NC]
 RewriteRule ^ /edit/%1=%2? [R=301,L]
-RewriteRule ^edit/([a-zA-Z]{1,})=([0-9]{1,})?$ /editor.php?table=$1&id=$2 [QSA,NC,L]
-RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+editor\.php\?table=([a-zA-Z]{1,})&name=([0-9a-zA-Z%20\(\)']{1,})(.*) [NC]
+RewriteRule ^edit/([a-zA-Z_]{1,})=([0-9]{1,})?$ /editor.php?table=$1&id=$2 [QSA,NC,L]
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+editor\.php\?table=([a-zA-Z_]{1,})&name=([0-9a-zA-Z%20\(\)']{1,})(.*) [NC]
 RewriteRule ^ /edit/%1-%2? [R=301,L]
-RewriteRule ^edit/([a-zA-Z]{1,})-([0-9a-zA-Z%20\(\)']+)?$ /editor.php?table=$1&name=$2 [QSA,NC,L]
+RewriteRule ^edit/([a-zA-Z_]{1,})-([0-9a-zA-Z%20\(\)']+)?$ /editor.php?table=$1&name=$2 [QSA,NC,L]
 #
 
 RewriteEngine On

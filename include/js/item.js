@@ -58,7 +58,7 @@ function update_sql_query()
 	sql += "INSERT INTO `"+$("#req_dbname").val()+"`.`"+$("#req_tablename").val()+"`"+$("#sql_first").attr("value")+"(";
 	var tab = [];
 	for (field = 0; field < $("#field_count").attr("value"); field++)
-		tab[field] = "'"+mysql_real_escape_string($("#req_"+field).val())+"'";
+		tab[field] = "'"+($("#req_"+field).val() ? mysql_real_escape_string($("#req_"+field).val()) : "")+"'";
 	sql += tab.join(', ')+");";
 	$("#req_sql").val(sql);
 };

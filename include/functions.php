@@ -77,7 +77,7 @@ function check_cookie(&$pun_user)
 		if (!file_exists(PUN_ROOT.'include/lang/'.$pun_user['language']))
 			$pun_user['language'] = $pun_config['o_default_lang'];
 
-		$pun_user['fr'] = $pun_user['language'] == 'French';
+		$pun_user['fr'] = ($pun_user['language'] == 'French') ? 1 : 0;
 
 		// Set a default style if the user selected style no longer exists
 		if (!file_exists(PUN_ROOT.'style/'.$pun_user['style'].'.css'))
@@ -294,10 +294,9 @@ function set_default_user()
 	$pun_user['timezone'] = $pun_config['o_default_timezone'];
 	$pun_user['dst'] = $pun_config['o_default_dst'];
 	$pun_user['language'] = $pun_config['o_default_lang'];
-	$pun_user['fr'] = $pun_user['language'] == 'French';
+	$pun_user['fr'] = ($pun_user['language'] == 'French') ? 1 : 0;
 	$pun_user['style'] = $pun_config['o_default_style'];
 	$pun_user['is_guest'] = true;
-	$pun_user['is_admmod'] = false;
 }
 
 
@@ -1211,8 +1210,7 @@ function redirect($destination_url, $delay = false, $message = null)
 	global $db, $pun_config, $lang_common, $pun_user;
 
 	// Prefix with base_url (unless there's already a valid URI)
-	if (strpos($destination_url, 'http://') !== 0 && strpos($destination_url, 'https://') !== 0 && strpos($destination_url, '/') !== 0)
-		$destination_url = get_base_url(true).'/'.$destination_url;
+	$destination_url = correct_url($destination_url);
 
 	// Do a little spring cleaning
 	$destination_url = preg_replace('%([\r\n])|(\%0[ad])|(;\s*data\s*:)%i', '', $destination_url);
@@ -2048,14 +2046,23 @@ function get_referrer()
 //
 // Display site item
 //
-function display_site_item($id, $name)
+function display_site_item($id, $name = null)
 {
 	global $db, $pun_user, $lang_common;
 
-	$str = '<div class="category">';
-	if ($name)	$str .= '<h2>'.$name.'</h2>';
+	$result = $db->query('SELECT id, name'.($pun_user['fr'] ? '_loc2' : '').' AS name, content'.($pun_user['fr'] ? '_loc2' : '').' AS content
+							FROM '.$db->prefix.'site_items
+							WHERE '.($name ? ('url = \''.$name.'\'') : ('id = \''.$id.'\'')))
+							or error($lang_common['DB Error'], __FILE__, __LINE__, $db->error());
+	if (!$db->num_rows($result))	message($lang_common['Bad request'], false, '404 Not Found');
+	$cur_page = $db->fetch_assoc($result);
+	if ($name)	$id = $cur_page['id'];
 
-	$result = $db->query('SELECT id, type, redirect_url, post_comment, 
+	$str = '<div class="category">';
+	if ($cur_page['name'])		$str .= '<h2>'.$cur_page['name'].'</h2>';
+	if ($cur_page['content'])	$str .= '<div class="block">'.parse_message($cur_page['content'], 0).'</div>';
+
+	$result = $db->query('SELECT id, type, url, redirect_url, post_comment, 
 							name'.($pun_user['fr'] ? '_loc2' : '').' AS name, content'.($pun_user['fr'] ? '_loc2' : '').' AS content 
 							FROM '.$db->prefix.'site_items WHERE parent_id = \''.$id.'\' ORDER BY disp_position')
 							or error($lang_common['DB Error'], __FILE__, __LINE__, $db->error());
@@ -2063,13 +2070,15 @@ function display_site_item($id, $name)
 	if (!$db->num_rows($result)) {
 		$str .= '</div>';
 		return $str; }
-
 	while ($cur_item = $db->fetch_assoc($result))
 	{
+		if ($cur_item['url']) {
+			$cur_item['redirect_url'] = PUN_URL.'site/'.$cur_item['url'];
+			$cur_item['type'] = 2; }
 		switch ($cur_item['type']) {
 			case 0: default: // Category
 				$str .= '<div class="subcategory">'.
-							display_site_item($cur_item['id'], $cur_item['name']).
+							display_site_item($cur_item['id']).
 						'</div>';
 				break;
 			case 1: // Text
@@ -2077,7 +2086,7 @@ function display_site_item($id, $name)
 				if ($cur_item['content'])	$str .= '<div class="block">'.parse_message($cur_item['content'], 0).'</div>';
 				break;
 			case 2: // Link
-				$str .= '<div><a class="pagelink" href="'.$cur_item['redirect_url'].'">'.$cur_item['name'].'</a></div>';
+				$str .= '<div><a class="pagelink" href="'.correct_url($cur_item['redirect_url']).'">'.$cur_item['name'].'</a></div>';
 				break;
 		}
 		if ($cur_item['post_comment'])
@@ -2085,4 +2094,15 @@ function display_site_item($id, $name)
 	}
 	$str .= '</div>';
 	return $str;
+}
+
+
+//
+// Add site prefix if needed
+//
+function correct_url($url)
+{
+	if (strpos($url, 'http://') !== 0 && strpos($url, 'https://') !== 0 && strpos($url, '/') !== 0)
+		$url = get_base_url(true).'/'.$url;
+	return $url;
 }

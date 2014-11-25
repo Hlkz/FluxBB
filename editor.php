@@ -30,7 +30,7 @@ $db2 = new DBLayer($db_host, $db_user, $db_pass, $cur_table['DbName'], $db_prefi
 if ($name)	$query = 'SELECT '.$cur_table['PrimaryField'].', '.$cur_table['NameField'].' FROM '.$table_name.' WHERE '.$cur_table['NameField'].'=\''.$db->escape($name).'\'';
 else		$query = 'SELECT '.$cur_table['PrimaryField'].', '.$cur_table['NameField'].' FROM '.$table_name.' WHERE '.$cur_table['PrimaryField'].'=\''.$id.'\'';
 $result = $db2->query($query) or error($lang_item['DB Error'], __FILE__, __LINE__, $db2->error());
-if (!$db2->num_rows($result)) message($lang_item['No item data'], false, '404 Not Found'); 			// No item data
+if (!$db2->num_rows($result))	message($lang_item['No item data'], false, '404 Not Found'); 			// No item data
 $cur_name = $db2->fetch_assoc($result);
 if ($name && !strcmp($name, $cur_name[$cur_table['NameField']]))
 	$id = $cur_name[$cur_table['PrimaryField']];
@@ -69,7 +69,7 @@ $cur = $db2->fetch_assoc($result);
 // Generate SQL Query
 $cur_fields = array();
 for ($field = 0; $field < $field_count; $field++)
-	$cur_fields[$field] = '\''.$db->escape(pun_linebreaks(pun_trim($cur[$fields[$field]['Name']]))).'\'';
+	$cur_fields[$field] = '\''.($cur ? $db->escape(pun_linebreaks(pun_trim($cur[$fields[$field]['Name']]))) : '').'\'';
 $sql = 'DELETE FROM `'.$cur_table['DbName'].'`.`'.$table_name.'` WHERE `'.$cur_table['PrimaryField'].'` = \''.$id.'\';
 
 INSERT INTO `'.$cur_table['DbName'].'`.`'.$table_name.'`';
@@ -163,7 +163,7 @@ for ($nb = /*($name && !$pun_user['is_admin']) ? 1 : */0; $nb < $field_count; $n
 		case 'varchar':
 		default:
 			$lvi = $fields[$nb]['EditorTextLength'] ? $fields[$nb]['EditorTextLength'] : 30;
-			$str .= '<input id="req_'.$nb.'" type="text" name="req_'.$nb.'" onchange="update_sql_query()" value="'.(($cur) ? ($cur[$fields[$nb]['Name']] ? $cur[$fields[$nb]['Name']] : '') : '').'" size="'.$lvi.'" maxlength="'.$lvi.'" tabindex="'.$cur_index++.'"></input>';
+			$str .= '<input id="req_'.$nb.'" type="text" name="req_'.$nb.'" onchange="update_sql_query()" value="'.($cur ? ($cur[$fields[$nb]['Name']] ? $cur[$fields[$nb]['Name']] : ($fields[$nb]['Type'] == 'int' ? '0' : '')) : ($fields[$nb]['Type'] == 'int' ? '0' : '')).'" size="'.$lvi.'" maxlength="'.$lvi.'" tabindex="'.$cur_index++.'"></input>';
 			break;
 	}
 	// Content END | Field END
@@ -198,9 +198,9 @@ $item .= '<div id="tabs-'.$tab_count.'"><div class="field"><div class="fieldname
 
 // Edit Links
 $editlink = '';
-if ($pun_user['is_admin'])
-	$editlink = '<a href="itemedit.php'.$link_name.'">'.$lang_item['Edit item'].'</a>
-				<a href="#tabs-'.$tab_count.'" onclick="update_sql_query_delete()">'.$lang_item['Delete item'].'</a>';
+//if ($pun_user['is_admin'])
+//	$editlink = '<a href="itemedit.php'.$link_name.'">'.$lang_item['Edit item'].'</a>
+//				<a onclick="update_sql_query_delete()">'.$lang_item['Delete item'].'</a>';
 $editlink .= ' <a href="itemsearch.php'.$link_name.'">'.$lang_item['Search item'].'</a>';
 
 $titlename = $name;

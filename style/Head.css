@@ -1250,7 +1250,7 @@ html, body, .pun {
 	padding: 7px; }
 
 #item .tabbutton {
-	padding: 12px 0px 12px 0px; }
+	padding: 12px 24px 12px 24px; }
 #item .tabbuttonul {
 	margin: 12px 0 12px 0; }
 #item .tabbuttonli {
@@ -1258,7 +1258,7 @@ html, body, .pun {
 	color: #f60;
 	background: #1c1c1c;
 	margin: 12px;
-	padding: 12px 32px 12px 32px; }
+	padding: 12px 0px 12px 0px; }
 #item .tabbuttonli:focus {
 	outline:0; }
 #item .tabbuttonli a:hover {

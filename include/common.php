@@ -159,6 +159,7 @@ if ($pun_user['is_guest'])
 	}
 	else
 		$change_lang = $pun_config['o_default_lang'];
+	$pun_user['fr'] = ($pun_user['language'] == 'French') ? 1 : 0;
 }
 else if ($pun_user['id'])
 {
