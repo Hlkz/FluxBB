@@ -1,4 +1,12 @@
 
+function toggle_categories(id)
+{
+    var category = $('#'+id);
+	if (category.is(":visible"))	category.hide(400)
+	else							category.show(400)
+	return true;
+};
+
 function disp_list_or_flag(the_field)
 {
 	var field = $(the_field)

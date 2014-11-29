@@ -2106,3 +2106,22 @@ function correct_url($url)
 		$url = get_base_url(true).'/'.$url;
 	return $url;
 }
+
+
+//
+// Get IconName from Id
+//
+function get_icon_name($id, $type)
+{
+	global $db;
+	if (!$id)	return null;
+	if ($type == 1) {	// Item DisplayInfo
+		$result = $db->query('SELECT Icon1 FROM iwpu.itemdisplayinfo WHERE Id = '.$id) or error($lang_common['DB Error'], __FILE__, __LINE__, $db->error());
+		if (!$db->num_rows($result))	return null;
+		$cur_icon = $db->fetch_assoc($result);
+		return $cur_icon['Icon1']; }
+	$result = $db->query('SELECT Name FROM spell_icons WHERE Id = '.$id) or error($lang_common['DB Error'], __FILE__, __LINE__, $db->error());
+	if (!$db->num_rows($result))	return null;
+	$cur_icon = $db->fetch_assoc($result);
+	return $cur_icon['Name'];
+}

@@ -7,11 +7,11 @@ $lang_item = array(
 'Item'							=>	'Item',
 'Items'							=>	'Item List',
 
-'Edit item'						=>	'Edit',
+'Edit item'						=>	'Editer',
 'Delete item'					=>	'Delete',
 'New item'						=>	'New',
-'Save item'						=>	'Save',
-'Save item + Back'				=>	'Save + Back',
+'Save item'						=>	'Exécuter',
+'Save item + Back'				=>	'Enregistrer',
 'Back'							=>	'Back',
 'Refresh item'					=>	'Refresh',
 'Search item'					=>	'Search',
@@ -20,6 +20,7 @@ $lang_item = array(
 
 'Db name'						=>	'Db name',
 'Table name'					=>	'Table name',
+'Tab'							=>	'Onglet',
 'SQL'							=>	'SQL',
 
 // Errors
@@ -28,7 +29,7 @@ $lang_item = array(
 'No fields data'				=>	'Bad link: no fields data.',
 'No list data'					=>	'Bad link: no list data.',
 'No item data'					=>	'Bad link: no item data.',
-'Access denied'					=>	'Access denied',
+'Access denied'					=>	'Vous n\'avez pas le droit d\'accéder à cette page.',
 'DB Error'						=>	'Database error',
 
 );

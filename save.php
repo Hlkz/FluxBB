@@ -12,11 +12,11 @@ if (isset($_POST['submit']) || isset($_POST['submit2edit']))
 	$table_name = $_POST['req_tablename'];
 
 	// Get Table Info
-	$query = 'SELECT DbName, Edit FROM item_tables WHERE Name = \''.$db->escape($table_name).'\'';
+	$query = 'SELECT DbName, EditLevel FROM item_tables WHERE Name = \''.$db->escape($table_name).'\'';
 	$result = $db->query($query) or error($lang_item['DB Error'], __FILE__, __LINE__, $db->error());
 	if (!$db->num_rows($result)) message($lang_item['No table data'], false, '404 Not Found'); // No table data
 	$cur_table = $db->fetch_assoc($result); // Query OK
-	if (!$cur_table['Edit'] && !$pun_user['is_admin'])	message($lang_item['Access denied'], false, '404 Not Found'); // Access denied
+	if (!$cur_table['EditLevel'] > $pun_user['level'])	message($lang_item['Access denied'], false, '404 Not Found'); // Access denied
 	$db2 = new DBLayer($db_host, $db_user, $db_pass, $cur_table['DbName'], $db_prefix, $p_connect);
 
 	file_put_contents('log.sql', '

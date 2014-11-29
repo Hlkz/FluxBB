@@ -90,7 +90,7 @@ echo '<script src="'.PUN_URL.'include/js/jquery-1.10.2.js"></script>'.
 	'<script src="'.PUN_URL.'include/js/jquery-ui.js"></script>'.
 	'<script> $(function() { $( "#tabs" ).tabs(); }); </script>';
 
-if (PUN_ACTIVE_PAGE == 'view' || PUN_ACTIVE_PAGE == 'editor')
+if (PUN_ACTIVE_PAGE == 'db' || PUN_ACTIVE_PAGE == 'view' || PUN_ACTIVE_PAGE == 'editor')
 	echo '<script src="'.PUN_URL.'include/js/item.js"></script>';
 
 if (PUN_ACTIVE_PAGE == 'register')

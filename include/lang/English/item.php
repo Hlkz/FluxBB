@@ -20,6 +20,7 @@ $lang_item = array(
 
 'Db name'						=>	'Db name',
 'Table name'					=>	'Table name',
+'Tab'							=>	'Tab',
 'SQL'							=>	'SQL',
 
 // Errors

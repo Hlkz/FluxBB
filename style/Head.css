@@ -1203,6 +1203,34 @@ html, body, .pun {
 	height: 12px;
 	width: 864px; }
 
+/* Database
+----------------------------------------------------------------*/
+
+.pun #database { }
+.pun #database h2 {
+	padding: 0px 0px 0px 8px; }
+
+#database .category, #database .subcategory {
+	width: 100%;
+	float: left;
+	padding: 0 0 4px 0; }
+#database .table {
+	width: 200px;
+	float: left;
+	background: url("../img/icons/INV_Misc_Book_04.png") no-repeat #1c1c1c;
+	background-size: 32px 32px;
+	background-position: 4px 4px;
+	margin: 6px 14px 6px 0;
+	padding: 10px 10px 10px 46px; }
+#database .table:hover {
+	background: url("../img/icons/INV_Misc_Book_04.png") no-repeat #333;
+	background-size: 32px 32px;
+	background-position: 5px 5px;
+    cursor: pointer; }
+#database .table:hover .forumlink {
+	color: #0f6; }
+
+
 /* Item
 ----------------------------------------------------------------*/
 
@@ -1220,7 +1248,7 @@ html, body, .pun {
 #item .field .fieldcontent {
 	background: #333;
 	padding: 8px; }
-	
+
 #item .interligne {
 	float:left;
 	width: 100%; }
@@ -1230,22 +1258,17 @@ html, body, .pun {
 	padding: 2px;
 	margin: 0;
 	background: #333;
-	color: #fff;
-}
-
+	color: #fff; }
 #item input[type=text]:focus, #item textarea:focus {
 	border: 0;
 	padding: 2px;
 	margin: 0;
 	background: #333;
 	color: #fff;
-	outline:0;
-}
-
+	outline:0; }
 #item .bbnote {
 	font-style: italic;
 	padding-left: 24px; }
-
 #item #searchresult td {
 	padding: 7px; }
 
@@ -1270,3 +1293,88 @@ html, body, .pun {
 #item .ui-state-active{
 	background: #333;
 	color: #0f6; }
+
+/* Editor
+----------------------------------------------------------------*/
+
+#editor {
+	float:left;
+	width: 100%; }
+#editor .field {
+	font-size: 12px;
+	color: #fff;
+	float: left;
+	margin: 6px 12px 6px 12px;
+	background: #161616; }
+#editor .field .fieldname {
+	padding: 5px; }
+#editor .field .fieldcontent {
+	background: #333;
+	padding: 5px; }
+#editor .interligne {
+	float:left;
+	width: 100%; }
+
+#editor input[type=text], #editor textarea {
+	border: 0;
+	padding: 2px;
+	margin: 0;
+	background: #333;
+	color: #fff; }
+#editor input[type=text]:focus, #editor textarea:focus {
+	border: 0;
+	padding: 2px;
+	margin: 0;
+	background: #333;
+	color: #fff;
+	outline: 0; }
+#editor .bbnote {
+	font-style: italic;
+	padding-left: 24px; }
+
+#editor .tabbutton {
+	padding: 12px 24px 12px 24px; }
+#editor .tabbuttonul {
+	margin: 12px 0 12px 0; }
+#editor .tabbuttonli {
+	border: 0;
+	color: #f60;
+	background: #1c1c1c;
+	margin: 12px;
+	padding: 12px 0px 12px 0px; }
+#editor .tabbuttonli:focus {
+	outline:0; }
+#editor .tabbuttonli a:hover {
+	text-decoration: none; }
+#editor .tabbuttonli a:focus {
+	text-decoration: none;
+	outline:0; }
+
+#editor .ui-state-active{
+	background: #333;
+	color: #0f6; }
+
+.pun .itemtooltip {
+	float: left;
+	margin: 6px 84px 16px 16px;
+	padding: 0 0 0 70px; }
+.pun .itemtooltip td {
+	padding: 8px 4px 1px 9px; }
+.pun .itemtooltip th {
+	padding: 3px;
+	vertical-align: top; }
+.pun .itemtooltip td, .pun .itemtooltip th {
+	background: url(http://wowimg.zamimg.com/images/wow/tooltip.png);
+	font-family: Verdana,"Open Sans",Arial,"Helvetica Neue",Helvetica,sans-serif;
+	font-size: 12px;
+	line-height: 17px;
+	color: white; }
+.pun .itemtooltip .itemtooltip-content {
+	display: inline-block;
+	font-family: Verdana,"Open Sans",Arial,"Helvetica Neue",Helvetica,sans-serif;
+	font-size: 12px;
+	line-height: 17px;
+	color: white; }
+.pun .itemtooltip .itemtooltip-name {
+	font-size: 14px;  }
+
